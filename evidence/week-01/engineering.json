@@ -3,12 +3,12 @@
   "schemaVersion": 1,
   "week": 1,
   "commitSha": "REEMPLAZAR_CON_SHA_DEL_COMMIT_DE_CODIGO_Y_DOCUMENTOS",
-  "decision": "REEMPLAZAR_CON_LA_DECISION_DE_ALCANCE_RIESGO_O_ACEPTACION",
+  "decision": "Durante la Semana 1 se conservará el starter reproducible y se documentarán los riesgos relacionados con trabajo offline, sincronización y reintentos, sin implementar todavía la cola offline ni el mecanismo completo de resolución de conflictos. La implementación de estas funcionalidades se realizará en las semanas correspondientes del proyecto.",
   "alternatives": [
-    "REEMPLAZAR_CON_PRIMERA_ALTERNATIVA_REAL",
-    "REEMPLAZAR_CON_SEGUNDA_ALTERNATIVA_REAL"
+    "Implementar desde la Semana 1 la persistencia offline, la cola de operaciones, la sincronización y el manejo de conflictos.",
+    "Mantener el starter estable durante la Semana 1, documentar los riesgos y criterios de aceptación y dejar la implementación de offline, sincronización y conflictos para las semanas posteriores."
   ],
-  "tradeoff": "REEMPLAZAR_CON_EL_BENEFICIO_Y_EL_COSTO_DE_LA_DECISION",
+  "tradeoff": "La decisión de mantener el starter estable permite conservar una base reproducible y reducir la complejidad técnica durante la definición inicial del caso. El costo aceptado es que las funcionalidades offline, sincronización y resolución de conflictos todavía no estarán implementadas en la Semana 1.",
   "requirementIds": ["AC-02", "AC-04"],
   "verification": [
     {
