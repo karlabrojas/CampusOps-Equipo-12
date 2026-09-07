@@ -13,7 +13,7 @@
         "docs/risk-register.md",
         "evidence/week-01/engineering.json"
       ],
-      "tests": [],
+      "tests": ["npm run test:smoke"],
       "reviews": [],
       "prediction": "Esperaba que los tres riesgos quedaran priorizados de acuerdo con su probabilidad e impacto y que la decisión técnica pudiera relacionarse con una comprobación reproducible del starter sin modificar las pruebas.",
       "command": "npm run test:smoke",
@@ -27,7 +27,7 @@
         "docs/problem-definition.md",
         "evidence/week-01/engineering.json"
       ],
-      "tests": [],
+      "tests": ["npm run test:smoke"],
       "reviews": [],
       "prediction": "Esperaba que la falla controlada se reprodujera al modificar temporalmente el código de la aplicación y que la prueba volviera a pasar después de restaurar el valor original.",
       "command": "npm run test:smoke",
