@@ -35,15 +35,21 @@
       "explanation": "El resultado ocurrió porque se modificó temporalmente el estado disponible de la aplicación a offline, provocando la falla controlada; al restaurar el valor original, la prueba volvió a pasar. Esto se relaciona con mi aportación porque la definición del problema establece el alcance y los criterios de aceptación de CampusOps, y la comprobación confirma que el proyecto puede detectar y corregir fallas de forma reproducible sin modificar las pruebas."
     },
     {
-      "studentId": "REEMPLAZAR_INTEGRANTE_3",
-      "commitShas": ["REEMPLAZAR_CON_SHA_COMPLETO"],
-      "files": ["REEMPLAZAR_CON_ARCHIVO_TRABAJADO"],
-      "tests": [],
+      "studentId": "3523110374",
+      "commitShas": [
+        "6bdc7cd7706a45eb9edcb5cfd3ae225115fff624",
+        "4adf57871ee58866410bd9773308b62e66709d12"
+      ],
+      "files": [
+        "App.tsx",
+        "reports/week-01/baseline.json"
+      ],
+      "tests": ["npm run test:smoke"],
       "reviews": [],
-      "prediction": "REEMPLAZAR_CON_LO_QUE_ESPERABA_OBSERVAR",
-      "command": "REEMPLAZAR_CON_EL_COMANDO_EJECUTADO",
-      "observedResult": "REEMPLAZAR_CON_LO_QUE_OCURRIO",
-      "explanation": "REEMPLAZAR_CON_LA_EXPLICACION_TECNICA"
+      "prediction": "Esperaba que al cambiar setStatus('available') por setStatus('offline') en el useEffect de App.tsx, el smoke test fallara porque valida que el testID 'backend-status' contenga el texto 'available'.",
+      "command": "npm run test:smoke",
+      "observedResult": "El test fallo mostrando Received string: \"Backend: offline\" en vez de \"available\". Tras revertir el cambio a setStatus('available'), el test volvio a pasar (1 passed, 1 total, 74 ms).",
+      "explanation": "Confirme primero que make feedback pasaba completo tras instalar dependencias con npm ci, ya que el timeout original no era una falla de codigo. Luego coordine la falla controlada: en App.tsx, dentro del useEffect que llama a getBackendHealth(), cambie temporalmente el valor pasado a setStatus() de 'available' a 'offline', lo que rompe la UI de forma segura y reversible sin tocar los archivos de test ni los contratos del backend. Reproduje el FAIL, revertí el cambio y verifique el PASS, documentando ambos resultados en reports/week-01/baseline.json."
     }
   ]
 }
