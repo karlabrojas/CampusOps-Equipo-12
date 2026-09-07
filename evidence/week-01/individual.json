@@ -21,15 +21,18 @@
       "explanation": "Documenté y prioricé tres riesgos de CampusOps relacionados con la pérdida de cambios offline, conflictos por reasignación durante el trabajo offline y duplicación de operaciones por reintentos. También documenté la decisión de introducir la falla controlada mediante un cambio temporal y reversible en el código de la aplicación, manteniendo las pruebas sin modificaciones, y relacioné esta decisión con la evidencia registrada en reports/week-01/baseline.json."
     },
     {
-      "studentId": "REEMPLAZAR_INTEGRANTE_2",
-      "commitShas": ["REEMPLAZAR_CON_SHA_COMPLETO"],
-      "files": ["REEMPLAZAR_CON_ARCHIVO_TRABAJADO"],
+      "studentId": "3523110195",
+      "commitShas": ["771493a5f194d77f4b6c870299b4337ca4daeb8b"],
+      "files": [
+        "docs/problem-definition.md",
+        "evidence/week-01/engineering.json"
+      ],
       "tests": [],
       "reviews": [],
-      "prediction": "REEMPLAZAR_CON_LO_QUE_ESPERABA_OBSERVAR",
-      "command": "REEMPLAZAR_CON_EL_COMANDO_EJECUTADO",
-      "observedResult": "REEMPLAZAR_CON_LO_QUE_OCURRIO",
-      "explanation": "REEMPLAZAR_CON_LA_EXPLICACION_TECNICA"
+      "prediction": "Esperaba que la falla controlada se reprodujera al modificar temporalmente el código de la aplicación y que la prueba volviera a pasar después de restaurar el valor original.",
+      "command": "npm run test:smoke",
+      "observedResult": "Al cambiar temporalmente setStatus('available') por setStatus('offline') en App.tsx, npm run test:smoke detectó la falla esperada. Luego de restaurar setStatus('available'), la prueba se ejecutó correctamente.",
+      "explanation": "El resultado ocurrió porque se modificó temporalmente el estado disponible de la aplicación a offline, provocando la falla controlada; al restaurar el valor original, la prueba volvió a pasar. Esto se relaciona con mi aportación porque la definición del problema establece el alcance y los criterios de aceptación de CampusOps, y la comprobación confirma que el proyecto puede detectar y corregir fallas de forma reproducible sin modificar las pruebas."
     },
     {
       "studentId": "REEMPLAZAR_INTEGRANTE_3",
