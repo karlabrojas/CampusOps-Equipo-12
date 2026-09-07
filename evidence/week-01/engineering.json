@@ -1,20 +1,19 @@
 {
-  "_instructions": "Eliminen este campo cuando terminen. Comparen alternativas reales y relacionen la decisión con una comprobación ejecutada.",
   "schemaVersion": 1,
   "week": 1,
-  "commitSha": "REEMPLAZAR_CON_SHA_DEL_COMMIT_DE_CODIGO_Y_DOCUMENTOS",
-  "decision": "Durante la Semana 1 se conservará el starter reproducible y se documentarán los riesgos relacionados con trabajo offline, sincronización y reintentos, sin implementar todavía la cola offline ni el mecanismo completo de resolución de conflictos. La implementación de estas funcionalidades se realizará en las semanas correspondientes del proyecto.",
+  "commitSha": "6bdc7cd7706a45eb9edcb5cfd3ae225115fff624",
+  "decision": "Durante la Semana 1, las fallas controladas se introducirán mediante cambios temporales y reversibles en el código del starter, manteniendo las pruebas sin modificaciones, para preservar la reproducibilidad del baseline y permitir distinguir el síntoma de la causa antes de aplicar la corrección.",
   "alternatives": [
-    "Implementar desde la Semana 1 la persistencia offline, la cola de operaciones, la sincronización y el manejo de conflictos.",
-    "Mantener el starter estable durante la Semana 1, documentar los riesgos y criterios de aceptación y dejar la implementación de offline, sincronización y conflictos para las semanas posteriores."
+    "Modificar temporalmente una prueba para provocar o adaptar el fallo y después restaurarla.",
+    "Modificar temporalmente el código de la aplicación, mantener las pruebas intactas, reproducir el fallo, identificar la causa, corregir el código y ejecutar nuevamente la misma prueba."
   ],
-  "tradeoff": "La decisión de mantener el starter estable permite conservar una base reproducible y reducir la complejidad técnica durante la definición inicial del caso. El costo aceptado es que las funcionalidades offline, sincronización y resolución de conflictos todavía no estarán implementadas en la Semana 1.",
+  "tradeoff": "La segunda alternativa permite comprobar un fallo real del comportamiento de la aplicación sin modificar las pruebas y mantiene la evidencia del diagnóstico reproducible. El costo es que requiere identificar y revertir correctamente el cambio temporal realizado en el código.",
   "requirementIds": ["AC-02", "AC-04"],
   "verification": [
     {
-      "command": "REEMPLAZAR_CON_COMANDO_EJECUTADO",
-      "result": "REEMPLAZAR_CON_RESULTADO_OBSERVADO",
-      "evidence": "REEMPLAZAR_CON_ARCHIVO_REPORTE_O_SALIDA_QUE_LO_DEMUESTRA"
+      "command": "npm run test:smoke",
+      "result": "La prueba falló después de cambiar temporalmente setStatus('available') por setStatus('offline') en App.tsx. El síntoma observado fue que se recibió 'Backend: offline' cuando la prueba esperaba 'available'. La causa identificada fue el cambio intencional del valor asignado al estado. Después de restaurar setStatus('available'), la misma prueba volvió a pasar.",
+      "evidence": "reports/week-01/baseline.json"
     }
   ]
 }
