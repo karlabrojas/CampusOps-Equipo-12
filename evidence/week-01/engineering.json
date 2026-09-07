@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 1,
-  "commitSha": "6bdc7cd7706a45eb9edcb5cfd3ae225115fff624",
+  "commitSha": "8d2b7f996b87ad995835f7f66866f7b4c6bddcdb",
   "decision": "Durante la Semana 1, las fallas controladas se introducirán mediante cambios temporales y reversibles en el código del starter, manteniendo las pruebas sin modificaciones, para preservar la reproducibilidad del baseline y permitir distinguir el síntoma de la causa antes de aplicar la corrección.",
   "alternatives": [
     "Modificar temporalmente una prueba para provocar o adaptar el fallo y después restaurarla.",
