@@ -2,18 +2,23 @@
   "_instructions": "Eliminen este campo cuando terminen. Conserven exactamente tres integrantes y usen SHA Git completos de commits creados por cada persona.",
   "schemaVersion": 1,
   "week": 1,
-  "teamId": "REEMPLAZAR_CON_ID_DEL_EQUIPO",
+  "teamId": "12",
   "members": [
     {
-      "studentId": "REEMPLAZAR_INTEGRANTE_1",
-      "commitShas": ["REEMPLAZAR_CON_SHA_COMPLETO"],
-      "files": ["REEMPLAZAR_CON_ARCHIVO_TRABAJADO"],
+      "studentId": "3523110235",
+      "commitShas": [
+        "94299bdfca34b4eb4b323a912cbfd13f41bf2c2c",
+        "62f5e2d27d6e7af54ac8cb1d98ea8b1fc96f79cb"],
+      "files": [
+        "docs/risk-register.md",
+        "evidence/week-01/engineering.json"
+      ],
       "tests": [],
       "reviews": [],
-      "prediction": "REEMPLAZAR_CON_LO_QUE_ESPERABA_OBSERVAR",
-      "command": "REEMPLAZAR_CON_EL_COMANDO_EJECUTADO",
-      "observedResult": "REEMPLAZAR_CON_LO_QUE_OCURRIO",
-      "explanation": "REEMPLAZAR_CON_LA_EXPLICACION_TECNICA"
+      "prediction": "Esperaba que los tres riesgos quedaran priorizados de acuerdo con su probabilidad e impacto y que la decisión técnica pudiera relacionarse con una comprobación reproducible del starter sin modificar las pruebas.",
+      "command": "npm run test:smoke",
+      "observedResult": "La prueba reprodujo la falla controlada cuando se modificó temporalmente setStatus('available') por setStatus('offline') en App.tsx y volvió a pasar después de restaurar el valor original.",
+      "explanation": "Documenté y prioricé tres riesgos de CampusOps relacionados con la pérdida de cambios offline, conflictos por reasignación durante el trabajo offline y duplicación de operaciones por reintentos. También documenté la decisión de introducir la falla controlada mediante un cambio temporal y reversible en el código de la aplicación, manteniendo las pruebas sin modificaciones, y relacioné esta decisión con la evidencia registrada en reports/week-01/baseline.json."
     },
     {
       "studentId": "REEMPLAZAR_INTEGRANTE_2",
