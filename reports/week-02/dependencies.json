@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "week": 2,
+  "commitSha": "60360ced052ba30b8b7773b75e50430409e54b3e",
+  "generatedAt": "2026-09-12T00:00:00-06:00",
+  "checks": [
+    {
+      "id": "ui-to-domain-boundary",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm run typecheck -- --pretty false",
+      "evidence": "La pantalla de incidencias usa el modelo del dominio y no define un tipo local redundante ni un cast directo a infraestructura."
+    },
+    {
+      "id": "app-domain-contract",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm run typecheck -- --pretty false",
+      "evidence": "El caso de uso GetIncidencias depende del repositorio definido en el dominio y la infraestructura implementa esa interfaz."
+    },
+    {
+      "id": "infrastructure-implementation-boundary",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm run test:smoke -- --runInBand",
+      "evidence": "El repositorio en memoria cumple el contrato del dominio y la app sigue pasando la prueba de humo."
+    },
+    {
+      "id": "architecture-contradiction-corrected",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm run test:smoke -- --runInBand",
+      "evidence": "Se corrigió la dependencia cruzada que mezclaba la UI con un tipo local y un cast; la arquitectura queda alineada con los límites de UI, application, domain e infrastructure."
+    }
+  ]
+}

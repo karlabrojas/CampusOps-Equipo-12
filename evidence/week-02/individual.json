@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "week": 2,
+  "teamId": "12",
+  "members": [
+    {
+      "studentId": "3523110235",
+      "commitShas": [
+        "60360ced052ba30b8b7773b75e50430409e54b3e"
+      ],
+      "files": [
+        "src/domain/models/Incidencia.ts",
+        "src/domain/ports/IncidenciasRepository.ts",
+        "docs/adr/ADR-001-architecture.md"
+      ],
+      "tests": [
+        "npm run typecheck -- --pretty false",
+        "npm run test:smoke -- --runInBand"
+      ],
+      "reviews": [
+        "Revisión del contrato de dominio y del ADR."
+      ],
+      "prediction": "La separación del dominio debería evitar que la UI dependa de infraestructura y permitir cambiar la fuente de datos sin afectar la lógica de negocio.",
+      "command": "npm run test:smoke -- --runInBand",
+      "observedResult": "La prueba pasa y confirma que el flujo base del proyecto sigue funcionando con la arquitectura actual.",
+      "explanation": "Definí y revisé el dominio de incidencias y el contrato del repositorio para que la aplicación y la UI dependan del modelo y no de la implementación concreta. La comprobación ejecutada confirma que la base sigue estable."
+    },
+    {
+      "studentId": "3523110195",
+      "commitShas": [
+        "60360ced052ba30b8b7773b75e50430409e54b3e"
+      ],
+      "files": [
+        "src/application/usecases/GetIncidencias.ts",
+        "src/di/container.ts",
+        "docs/architecture.mmd"
+      ],
+      "tests": [
+        "npm run typecheck -- --pretty false"
+      ],
+      "reviews": [
+        "Validación de flujo de inyección de dependencias y definición del diagrama."
+      ],
+      "prediction": "El caso de uso debe ordenar la lista y mantener la regla de negocio centralizada, mientras que el contenedor conecta implmentación concreta con la interfaz del dominio.",
+      "command": "npm run typecheck -- --pretty false",
+      "observedResult": "La compiIación de TypeScript termina sin errores.",
+      "explanation": "Me encargué del caso de uso y del contenedor para mantener el flujo clean architecture. La validación de tipo confirma que la capa de aplicación sigue conectada con el dominio y la infraestructura sin romper la compilación."
+    },
+    {
+      "studentId": "3523110374",
+      "commitShas": [
+        "60360ced052ba30b8b7773b75e50430409e54b3e"
+      ],
+      "files": [
+        "src/ui/screens/IncidenciasList.tsx",
+        "App.tsx",
+        "docs/architecture.mmd"
+      ],
+      "tests": [
+        "npm run test:smoke -- --runInBand",
+        "node -e \"fetch('http://127.0.0.1:4310/health').then(async r => { console.log('status', r.status); console.log(await r.text()); }).catch(e => { console.error(e); process.exit(1); })\""
+      ],
+      "reviews": [
+        "Revisión de la integración de la pantalla con la app y el backend disponible."
+      ],
+      "prediction": "La vista debe mostrar la lista usando el modelo del dominio y mantener la salud del backend visible sin romper la prueba base.",
+      "command": "npm run test:smoke -- --runInBand",
+      "observedResult": "La prueba de humo pasa y la app conserva el comportamiento esperado. El backend también responde a /health con 200.",
+      "explanation": "Revisé la integración del flujo visual y corregí la dependencia cruzada en la UI para que no dependa de la infraestructura. La evidencia ejecutada confirma que la base y la vista siguen funcionando mientras el backend responde correctamente."
+    }
+  ]
+}
