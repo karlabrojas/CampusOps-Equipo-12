@@ -25,6 +25,25 @@ flowchart LR
 
     D2 --> D1
 
+        U[IncidenciasList]
+    end
+
+    subgraph APP[Application]
+        A[GetIncidencias]
+    end
+
+    subgraph DOMAIN[Domain]
+        D1[Incidencia]
+        D2[IncidenciasRepository]
+    end
+
+    subgraph INFRA[Infrastructure]
+        I[InMemoryIncidenciasRepository]
+    end
+
+    U --> A
+    A --> D2
+    D2 --> D1
     I --> D2
     I --> D1
 
@@ -35,5 +54,8 @@ flowchart LR
 
     class U ui;
     class A1,A2 app;
+    class D1,D2 domain;
+    class I infra;
+    class A app;
     class D1,D2 domain;
     class I infra;
