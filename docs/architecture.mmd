@@ -1,5 +1,30 @@
 flowchart LR
     subgraph UI[UI]
+        U[App]
+    end
+
+    subgraph APP[Application]
+        A1[ListIncidents]
+        A2[GetIncident]
+    end
+
+    subgraph DOMAIN[Domain]
+        D1[Incident]
+        D2[IncidentRepository]
+    end
+
+    subgraph INFRA[Infrastructure]
+        I[InMemoryIncidentRepository]
+    end
+
+    U --> A1
+    U --> A2
+
+    A1 --> D2
+    A2 --> D2
+
+    D2 --> D1
+
         U[IncidenciasList]
     end
 
@@ -28,6 +53,9 @@ flowchart LR
     classDef infra fill:#6b4f2e,stroke:#f4c37d,color:#fff;
 
     class U ui;
+    class A1,A2 app;
+    class D1,D2 domain;
+    class I infra;
     class A app;
     class D1,D2 domain;
     class I infra;
