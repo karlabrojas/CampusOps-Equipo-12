@@ -23,39 +23,26 @@ flowchart LR
     A1 --> D2
     A2 --> D2
 
-    D2 --> D1
-
-        U[IncidenciasList]
-    end
-
-    subgraph APP[Application]
-        A[GetIncidencias]
-    end
-
-    subgraph DOMAIN[Domain]
-        D1[Incidencia]
-        D2[IncidenciasRepository]
-    end
-
-    subgraph INFRA[Infrastructure]
-        I[InMemoryIncidenciasRepository]
-    end
-
-    U --> A
-    A --> D2
-    D2 --> D1
     I --> D2
-    I --> D1
+    D2 --> D1
+
+    subgraph FUTURE[Future Responsibilities]
+        F1[Profiles]
+        F2[Incidents]
+        F3[Session]
+        F4[Persistence]
+        F5[Location / Providers]
+    end
 
     classDef ui fill:#1f4d7a,stroke:#7cc7ff,color:#fff;
     classDef app fill:#2d6a4f,stroke:#8de3b5,color:#fff;
     classDef domain fill:#5a3f7a,stroke:#d9b3ff,color:#fff;
     classDef infra fill:#6b4f2e,stroke:#f4c37d,color:#fff;
+    classDef future fill:#666,stroke:#aaa,color:#fff,stroke-dasharray: 5 5;
 
     class U ui;
     class A1,A2 app;
     class D1,D2 domain;
     class I infra;
-    class A app;
-    class D1,D2 domain;
-    class I infra;
+    class F1,F2,F3,F4,F5 future;
+    
