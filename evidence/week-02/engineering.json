@@ -4,15 +4,9 @@
   "commitSha": "85a404415fa0b8079686f8212ee657a0e9efdd7f",
   "decision": "Elegimos separar la arquitectura en UI, application, domain e infrastructure para mantener los límites del caso de uso de incidencias y evitar que la vista dependa de detalles de almacenamiento. La pantalla usa un caso de uso, el dominio define el modelo y el contrato del repositorio, y la infraestructura implementa la adaptación con datos ficticios que pueden sustituirse por un backend real.",
   "alternatives": [
-  {
-    "name": "Acoplamiento directo UI → Infraestructura",
-    "summary": "La interfaz de usuario accede directamente a implementaciones concretas del repositorio o de la fuente de datos. Esta alternativa reduce la estructura inicial, pero incrementa el acoplamiento, dificulta las pruebas y aumenta el costo de cambiar la implementación."
-  },
-  {
-    "name": "Arquitectura por capas con Domain, Application e Infrastructure",
-    "summary": "La UI consume casos de uso de Application, el dominio define entidades y contratos, y la infraestructura implementa dichos contratos. Esta alternativa mejora la testabilidad, reduce el acoplamiento y facilita reemplazar proveedores de datos sin modificar la lógica de negocio."
-  }
-],
+    "Acoplamiento directo UI → Infraestructura: la interfaz de usuario accede directamente a implementaciones concretas del repositorio o de la fuente de datos. Esta alternativa reduce la estructura inicial, pero incrementa el acoplamiento, dificulta las pruebas y aumenta el costo de cambiar la implementación.",
+    "Arquitectura por capas con Domain, Application e Infrastructure: la UI consume casos de uso de Application, el dominio define entidades y contratos, y la infraestructura implementa dichos contratos. Esta alternativa mejora la testabilidad, reduce el acoplamiento y facilita reemplazar proveedores de datos sin modificar la lógica de negocio."
+  ],
   "tradeoff": "La separación por capas exige más archivos y una pequeña sobrecarga inicial, pero mejora la prueba, reduce el acoplamiento y permite reemplazar el proveedor sin tocar la lógica del negocio.",
   "requirementIds": ["AC-01", "AC-02", "AC-03", "AC-04", "AC-05"],
   "verification": [
