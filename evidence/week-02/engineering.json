@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 2,
-  "commitSha": "85a404415fa0b8079686f8212ee657a0e9efdd7f",
+  "commitSha": "fd833d3b3082c7afe580c5f0b4bad9d0a83dc9ef",
   "decision": "Elegimos separar la arquitectura en UI, application, domain e infrastructure para mantener los límites del caso de uso de incidencias y evitar que la vista dependa de detalles de almacenamiento. La pantalla usa un caso de uso, el dominio define el modelo y el contrato del repositorio, y la infraestructura implementa la adaptación con datos ficticios que pueden sustituirse por un backend real.",
   "alternatives": [
     "Acoplamiento directo UI → Infraestructura: la interfaz de usuario accede directamente a implementaciones concretas del repositorio o de la fuente de datos. Esta alternativa reduce la estructura inicial, pero incrementa el acoplamiento, dificulta las pruebas y aumenta el costo de cambiar la implementación.",
