@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 2,
-  "commitSha": "60360ced052ba30b8b7773b75e50430409e54b3e",
+  "commitSha": "85a404415fa0b8079686f8212ee657a0e9efdd7f",
   "decision": "Elegimos separar la arquitectura en UI, application, domain e infrastructure para mantener los límites del caso de uso de incidencias y evitar que la vista dependa de detalles de almacenamiento. La pantalla usa un caso de uso, el dominio define el modelo y el contrato del repositorio, y la infraestructura implementa la adaptación con datos ficticios que pueden sustituirse por un backend real.",
   "alternatives": [
   {
