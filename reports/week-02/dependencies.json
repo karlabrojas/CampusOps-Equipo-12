@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "week": 2,
+  "commitSha": "fd833d3b3082c7afe580c5f0b4bad9d0a83dc9ef",
+  "generatedAt": "2026-09-12T00:00:00-06:00",
+  "checks": [
+    {
+      "id": "ui-to-application-boundary",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm run typecheck -- --pretty false",
+      "evidence": "La UI consume los casos de uso ListIncidents y GetIncident definidos en la capa Application y no depende directamente de Infrastructure."
+    },
+    {
+      "id": "application-domain-contract",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm run typecheck -- --pretty false",
+      "evidence": "Los casos de uso ListIncidents y GetIncident dependen del contrato IncidentRepository definido en Domain."
+    },
+    {
+      "id": "infrastructure-domain-implementation",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm run test:smoke -- --runInBand",
+      "evidence": "InMemoryIncidentRepository implementa el contrato IncidentRepository y la aplicación continúa funcionando con la implementación actual."
+    },
+    {
+      "id": "architecture-boundaries-verified",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm run test:smoke -- --runInBand",
+      "evidence": "La arquitectura mantiene los límites entre UI, Application, Domain e Infrastructure y evita una dependencia directa entre UI e Infrastructure."
+    }
+  ]
+}

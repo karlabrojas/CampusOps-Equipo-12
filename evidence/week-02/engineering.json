@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "week": 2,
+  "commitSha": "fd833d3b3082c7afe580c5f0b4bad9d0a83dc9ef",
+  "decision": "Elegimos separar la arquitectura en UI, application, domain e infrastructure para mantener los límites del caso de uso de incidencias y evitar que la vista dependa de detalles de almacenamiento. La pantalla usa un caso de uso, el dominio define el modelo y el contrato del repositorio, y la infraestructura implementa la adaptación con datos ficticios que pueden sustituirse por un backend real.",
+  "alternatives": [
+    "Acoplamiento directo UI → Infraestructura: la interfaz de usuario accede directamente a implementaciones concretas del repositorio o de la fuente de datos. Esta alternativa reduce la estructura inicial, pero incrementa el acoplamiento, dificulta las pruebas y aumenta el costo de cambiar la implementación.",
+    "Arquitectura por capas con Domain, Application e Infrastructure: la UI consume casos de uso de Application, el dominio define entidades y contratos, y la infraestructura implementa dichos contratos. Esta alternativa mejora la testabilidad, reduce el acoplamiento y facilita reemplazar proveedores de datos sin modificar la lógica de negocio."
+  ],
+  "tradeoff": "La separación por capas exige más archivos y una pequeña sobrecarga inicial, pero mejora la prueba, reduce el acoplamiento y permite reemplazar el proveedor sin tocar la lógica del negocio.",
+  "requirementIds": ["AC-01", "AC-02", "AC-03", "AC-04", "AC-05"],
+  "verification": [
+    {
+      "command": "npm run typecheck -- --pretty false",
+      "result": "pass",
+      "evidence": "TypeScript compila sin errores tras dejar la pantalla usando el modelo del dominio y la capa de aplicación."
+    },
+    {
+      "command": "npm run test:smoke -- --runInBand",
+      "result": "pass",
+      "evidence": "La prueba de humo pasa y confirma que la app mantiene el flujo principal y la resolución de estado del backend."
+    },
+    {
+      "command": "node -e \"fetch('http://127.0.0.1:4310/health').then(async r => { console.log('status', r.status); console.log(await r.text()); }).catch(e => { console.error(e); process.exit(1); })\"",
+      "result": "pass",
+      "evidence": "El backend responde con status 200 y el payload esperado: {\"ok\":true,\"service\":\"dmi-controlled-backend\",\"contractVersion\":1}."
+    }
+  ]
+}

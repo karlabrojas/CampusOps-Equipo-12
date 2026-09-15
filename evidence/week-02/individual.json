@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "week": 2,
+  "teamId": "12",
+  "members": [
+    {
+      "studentId": "3523110235",
+      "commitShas": [
+        "5755e8d6af444ce96f2922602ae10ce6e0697121",
+        "5a0f3c4dafc6281e3544fa897589978203d87286"
+      ],
+      "files": [
+        "src/campusops/contracts.ts",
+        "src/campusops/application/listIncidents.ts",
+        "src/campusops/application/getIncident.ts",
+        "src/campusops/application/listIncidents.test.ts",
+        "src/campusops/application/getIncident.test.ts",
+        "src/campusops/infrastructure/inMemoryIncidentRepository.ts",
+        "docs/architecture.mmd",
+        "docs/adr/ADR-001-architecture.md"
+      ],
+      "tests": [
+        "npm run typecheck",
+        "npm test -- --runInBand src/campusops/application",
+        "make public-test-week-02"
+      ],
+      "reviews": [
+        "Revisión de dependencias entre UI, Application, Domain y Infrastructure",
+        "Revisión de imports reales del proyecto para validar el diagrama de arquitectura",
+        "Revisión del ADR-001 y de las alternativas, consecuencias y trade-offs"
+      ],
+      "prediction": "Esperaba que los casos de uso permitieran consultar una incidencia por identificador y obtener el listado de incidencias mediante un repositorio definido por contrato, manteniendo separadas las responsabilidades entre Application e Infrastructure. También esperaba que el repositorio en memoria implementara correctamente las operaciones requeridas y que las pruebas unitarias validaran los escenarios principales de consulta. A nivel arquitectónico, esperaba que el diagrama mostrara claramente las fronteras y responsabilidades de UI, Application, Domain e Infrastructure, que no existiera una dependencia directa de UI hacia Infrastructure y que el ADR documentara la alternativa seleccionada, sus trade-offs, consecuencias y posibles evoluciones futuras.",
+      "command": "make public-test-week-02",
+      "observedResult": "La ejecución del evaluador público de la Semana 2 confirmó que los checks de archivos base, perfil de React Native, scripts, integridad del workflow, análisis de secretos, evidencia requerida, evidencia individual, typecheck, lint y la prueba pública de arquitectura pasaron correctamente. La prueba course-tests/public/week-02.test.ts obtuvo 1 prueba aprobada y confirmó que la arquitectura expone las fronteras requeridas y que no existe una dependencia directa UI → Infrastructure. El resultado global del evaluador fue 'fail' debido únicamente a que reports/week-02/dependencies.json y evidence/week-02/engineering.json contienen un commitSha que no corresponde a HEAD ni a su padre directo. Esto corresponde a un problema de actualización de evidencia y no significa que la implementación realizada haya fallado.",
+      "explanation": "Implementé la capa Application para consultar incidencias mediante los casos de uso GetIncident y ListIncidents. También definí los contratos Incident e IncidentRepository y desarrollé InMemoryIncidentRepository como implementación de infraestructura para proporcionar los datos utilizados por los casos de uso. Agregué pruebas unitarias para validar el comportamiento de GetIncident y ListIncidents, y verifiqué mediante el typecheck que la implementación fuera compatible con la configuración estricta de TypeScript. Además, trabajé en la documentación de la arquitectura mediante architecture.mmd. Durante la revisión comparé la documentación con los imports reales del proyecto y confirmé que Application e Infrastructure utilizan actualmente los contratos definidos en src/campusops/contracts.ts. Por ello, mantuve la documentación alineada con el estado actual del código y evité atribuir dependencias que todavía no están implementadas."    },
+    {
+      "studentId": "3523110195",
+      "commitShas": [
+        "fdba04b0b1809a8b75fa3aaa93da8cbe63cd372d",
+        "e4750bcac4ecc2ac24b00bb26e9c7fca03f69969",
+        "7b1484d3e636020c261602a1497fdd7e5a0ce24c",
+        "15c419bf18e3ac35887d6ded5fe799de68aa98c6"
+      ],
+      "files": [
+        "src/campusops/domain/Incident.ts",
+        "src/campusops/domain/IncidentRepository.ts",
+        "src/campusops/domain/tests/IncidentRepository.test.ts",
+        "docs/adr/ADR-001-architecture.md",
+        "docs/architecture.mmd",
+        "reports/week-02/dependencies.json",
+        "evidence/week-02/engineering.json"
+      ],
+      "tests": [
+      "npm run typecheck",
+      "npm run test:smoke",
+      "npm test"
+      ],
+      "reviews": [
+        "Validación de la separación entre UI, Application, Domain e Infrastructure.",
+        "Revisión del ADR para asegurar consistencia con la arquitectura implementada.",
+        "Verificación de la evidencia técnica de Week 2."
+      ],
+      "prediction": "La arquitectura por capas permitirá sustituir la implementación actual en memoria por otra fuente de datos sin modificar los casos de uso ni las entidades del dominio. El principal costo es una mayor complejidad inicial debido a la separación de responsabilidades.",
+      "command": "npm run typecheck",
+      "observedResult": "La compilación de TypeScript finaliza sin errores.",
+      "explanation": "Me encargué de la definición de la capa Domain mediante la entidad Incident y el contrato IncidentRepository, además de documentar la arquitectura mediante el ADR y el diagrama de dependencias. También preparé la evidencia técnica de Week 2 asegurando que la documentación, los límites arquitectónicos y las verificaciones estuvieran alineados con la implementación actual."
+    },
+    {
+      "studentId": "3523110374",
+      "commitShas": [
+        "60360ced052ba30b8b7773b75e50430409e54b3e"
+      ],
+      "files": [
+        "src/ui/screens/IncidenciasList.tsx",
+        "App.tsx",
+        "docs/architecture.mmd"
+      ],
+      "tests": [
+        "npm run test:smoke -- --runInBand",
+        "node -e \"fetch('http://127.0.0.1:4310/health').then(async r => { console.log('status', r.status); console.log(await r.text()); }).catch(e => { console.error(e); process.exit(1); })\""
+      ],
+      "reviews": [
+        "Revisión de la integración de la pantalla con la app y el backend disponible."
+      ],
+      "prediction": "La vista debe mostrar la lista usando el modelo del dominio y mantener la salud del backend visible sin romper la prueba base.",
+      "command": "npm run test:smoke -- --runInBand",
+      "observedResult": "La prueba de humo pasa y la app conserva el comportamiento esperado. El backend también responde a /health con 200.",
+      "explanation": "Revisé la integración del flujo visual y corregí la dependencia cruzada en la UI para que no dependa de la infraestructura. La evidencia ejecutada confirma que la base y la vista siguen funcionando mientras el backend responde correctamente."
+    }
+  ]
+}
