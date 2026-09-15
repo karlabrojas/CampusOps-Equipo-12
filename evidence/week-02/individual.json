@@ -28,23 +28,34 @@
     {
       "studentId": "3523110195",
       "commitShas": [
-        "60360ced052ba30b8b7773b75e50430409e54b3e"
+        "fdba04b0b1809a8b75fa3aaa93da8cbe63cd372d",
+        "e4750bcac4ecc2ac24b00bb26e9c7fca03f69969",
+        "7b1484d3e636020c261602a1497fdd7e5a0ce24c",
+        "15c419bf18e3ac35887d6ded5fe799de68aa98c6"
       ],
       "files": [
-        "src/application/usecases/GetIncidencias.ts",
-        "src/di/container.ts",
-        "docs/architecture.mmd"
+        "src/campusops/domain/Incident.ts",
+        "src/campusops/domain/IncidentRepository.ts",
+        "src/campusops/domain/tests/IncidentRepository.test.ts",
+        "docs/adr/ADR-001-architecture.md",
+        "docs/architecture.mmd",
+        "reports/week-02/dependencies.json",
+        "evidence/week-02/engineering.json"
       ],
       "tests": [
-        "npm run typecheck -- --pretty false"
+      "npm run typecheck",
+      "npm run test:smoke",
+      "npm test"
       ],
       "reviews": [
-        "Validación de flujo de inyección de dependencias y definición del diagrama."
+        "Validación de la separación entre UI, Application, Domain e Infrastructure.",
+        "Revisión del ADR para asegurar consistencia con la arquitectura implementada.",
+        "Verificación de la evidencia técnica de Week 2."
       ],
-      "prediction": "El caso de uso debe ordenar la lista y mantener la regla de negocio centralizada, mientras que el contenedor conecta implmentación concreta con la interfaz del dominio.",
-      "command": "npm run typecheck -- --pretty false",
-      "observedResult": "La compiIación de TypeScript termina sin errores.",
-      "explanation": "Me encargué del caso de uso y del contenedor para mantener el flujo clean architecture. La validación de tipo confirma que la capa de aplicación sigue conectada con el dominio y la infraestructura sin romper la compilación."
+      "prediction": "La arquitectura por capas permitirá sustituir la implementación actual en memoria por otra fuente de datos sin modificar los casos de uso ni las entidades del dominio. El principal costo es una mayor complejidad inicial debido a la separación de responsabilidades.",
+      "command": "npm run typecheck",
+      "observedResult": "La compilación de TypeScript finaliza sin errores.",
+      "explanation": "Me encargué de la definición de la capa Domain mediante la entidad Incident y el contrato IncidentRepository, además de documentar la arquitectura mediante el ADR y el diagrama de dependencias. También preparé la evidencia técnica de Week 2 asegurando que la documentación, los límites arquitectónicos y las verificaciones estuvieran alineados con la implementación actual."
     },
     {
       "studentId": "3523110374",
