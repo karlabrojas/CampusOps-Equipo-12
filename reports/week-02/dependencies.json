@@ -5,32 +5,32 @@
   "generatedAt": "2026-09-12T00:00:00-06:00",
   "checks": [
     {
-      "id": "ui-to-domain-boundary",
+      "id": "ui-to-application-boundary",
       "status": "pass",
       "scenarioType": "boundary",
       "command": "npm run typecheck -- --pretty false",
-      "evidence": "La pantalla de incidencias usa el modelo del dominio y no define un tipo local redundante ni un cast directo a infraestructura."
+      "evidence": "La UI consume los casos de uso ListIncidents y GetIncident definidos en la capa Application y no depende directamente de Infrastructure."
     },
     {
-      "id": "app-domain-contract",
+      "id": "application-domain-contract",
       "status": "pass",
       "scenarioType": "nominal",
       "command": "npm run typecheck -- --pretty false",
-      "evidence": "El caso de uso GetIncidencias depende del repositorio definido en el dominio y la infraestructura implementa esa interfaz."
+      "evidence": "Los casos de uso ListIncidents y GetIncident dependen del contrato IncidentRepository definido en Domain."
     },
     {
-      "id": "infrastructure-implementation-boundary",
+      "id": "infrastructure-domain-implementation",
       "status": "pass",
       "scenarioType": "boundary",
       "command": "npm run test:smoke -- --runInBand",
-      "evidence": "El repositorio en memoria cumple el contrato del dominio y la app sigue pasando la prueba de humo."
+      "evidence": "InMemoryIncidentRepository implementa el contrato IncidentRepository y la aplicación continúa funcionando con la implementación actual."
     },
     {
-      "id": "architecture-contradiction-corrected",
+      "id": "architecture-boundaries-verified",
       "status": "pass",
       "scenarioType": "failure",
       "command": "npm run test:smoke -- --runInBand",
-      "evidence": "Se corrigió la dependencia cruzada que mezclaba la UI con un tipo local y un cast; la arquitectura queda alineada con los límites de UI, application, domain e infrastructure."
+      "evidence": "La arquitectura mantiene los límites entre UI, Application, Domain e Infrastructure y evita una dependencia directa entre UI e Infrastructure."
     }
   ]
 }
