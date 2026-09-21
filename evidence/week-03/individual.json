@@ -26,16 +26,33 @@
       "explanation": "Participé en la implementación y verificación de los controles de seguridad correspondientes a la Semana 3, manteniendo la relación con el modelo de amenazas desarrollado previamente. El trabajo incluye el modelo de amenazas en docs/threat-model.md, el control relacionado con la asignación de incidencias en assignIncident.ts, el mecanismo de redacción de información sensible en redact.ts y la verificación del workflow de feedback. Ejecuté el toolchain de la Semana 3 y verifiqué que el typecheck no presentara errores, que lint finalizara con 0 errores aunque con 3 warnings por BOM Unicode, que audit:ci identificara las vulnerabilidades reportadas por las dependencias y que las dos pruebas públicas de la Semana 3 pasaran correctamente. El fallo global corresponde a la actualización del formato de los commitSha en los archivos de evidencia."
     },
     {
-      "studentId": "3523110374",
-      "commitShas": [""],
-      "files": [""],
-      "tests": [""],
-      "reviews": [""],
-      "prediction": "",
-      "command": "",
-      "observedResult": "",
-      "explanation": ""
-    },
+  "studentId": "3523110374",
+  "commitShas": [
+    "1566ef551890027dfb9044074d0d49a13576b272",
+    "3fddd734fb7186c558290ed7fff592541fffd582"
+  ],
+  "files": [
+    "src/campusops/application/assignIncident.ts",
+    "src/campusops/application/getIncident.ts",
+    "src/campusops/application/getIncident.test.ts",
+    "src/campusops/infrastructure/inMemoryIncidentRepository.ts",
+    "src/campusops/security/redact.ts",
+    "src/campusops/security/secretScan.ts",
+    ".github/workflows/week-03-security.yml",
+    "package.json"
+  ],
+  "tests": [
+    "src/campusops/security/t01-view-incident.test.ts",
+    "src/campusops/security/t02-assign-incident.test.ts",
+    "src/campusops/security/t03-log-redaction.test.ts",
+    "src/campusops/security/t04-secret-scan.test.ts"
+  ],
+  "reviews": [],
+  "prediction": "Esperaba que las cuatro suites de seguridad (T-01 a T-04) pasaran, porque el fix del commit 1566ef5 implementa los controles de autorización, redacción de secretos y eliminación del archivo filtrado que el commit 3fddd73 había dejado marcados como faltantes.",
+  "command": "npm run test:security",
+  "observedResult": "Pasaron las 4 suites (t01-view-incident, t02-assign-incident, t03-log-redaction y t04-secret-scan): 4 suites y 23 pruebas aprobadas, 0 fallidas.",
+  "explanation": "En el commit 3fddd73 agregué las pruebas de seguridad T-01 a T-04, el detector de secretos secretScan.ts y el workflow week-03-security.yml; las pruebas quedaron marcadas como fallando a propósito porque aún faltaban los controles. En el commit 1566ef5 implementé la autorización del actor en las consultas (getIncident.ts) y en la asignación de incidencias (assignIncident.ts), la redacción de secretos en los registros (redact.ts) y eliminé el archivo con el secreto filtrado. Al correr npm run test:security después del fix, las pruebas pasan, lo que confirma que cada control quedó implementado y verificado."
+},
     {
       "studentId": "3523110195",
       "commitShas": [""],
