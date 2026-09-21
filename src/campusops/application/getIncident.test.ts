@@ -6,7 +6,7 @@ describe("GetIncident", () => {
     const repository = new InMemoryIncidentRepository();
     const useCase = new GetIncident(repository);
 
-    const incident = await useCase.execute("campus-inc-001");
+    const incident = await useCase.execute("campus-inc-001", "coordinator-1");
 
     expect(incident).not.toBeNull();
     expect(incident?.id).toBe("campus-inc-001");
@@ -20,7 +20,7 @@ describe("GetIncident", () => {
     const repository = new InMemoryIncidentRepository();
     const useCase = new GetIncident(repository);
 
-    const incident = await useCase.execute("does-not-exist");
+    const incident = await useCase.execute("does-not-exist", "coordinator-1");
 
     expect(incident).toBeNull();
   });
