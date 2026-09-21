@@ -1,0 +1,39 @@
+name: Week 03 Security Checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: week-03-security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Security checks T-01 to T-04
+        run: |
+          mkdir -p reports/week-03
+          npm run test:security -- --json --outputFile=reports/week-03/security-jest.json
+      - name: Upload security results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-results-week-03
+          if-no-files-found: warn
+          path: reports/week-03/security-jest.json
