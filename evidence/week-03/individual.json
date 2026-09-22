@@ -5,7 +5,9 @@
   "members": [
     {
       "studentId": "3523110235",
-      "commitShas": ["a6e7e134bbf004b87c5cd6599ad7aa1b626d2144"],
+      "commitShas": [
+        "a6e7e134bbf004b87c5cd6599ad7aa1b626d2144"
+      ],
       "files": [
         "docs/threat-model.md"
       ],
@@ -19,50 +21,57 @@
         "Revisión del control de acceso relacionado con la asignación de incidencias",
         "Revisión de la redacción de datos sensibles en registros para evitar la exposición de información",
         "Revisión del workflow de feedback para preservar comprobaciones críticas y aplicar el principio de mínimo privilegio"
-    ],
+      ],
       "prediction": "Esperaba que la implementación de la Semana 3 mantuviera la coherencia entre el modelo de amenazas y los controles de seguridad implementados, especialmente para evitar la alteración no autorizada de asignaciones y la exposición de datos sensibles en registros. También esperaba que el workflow de feedback conservara las comprobaciones críticas de seguridad y respetara el principio de mínimo privilegio. Finalmente, esperaba que el typecheck, lint y las pruebas públicas de la Semana 3 se ejecutaran correctamente.",
       "command": "make public-test-week-03",
       "observedResult": "La ejecución del evaluador público de la Semana 3 pasó correctamente los checks de archivos base, perfil de React Native, scripts, integridad del workflow y análisis de secretos. La prueba pública course-tests/public/week-03.test.ts pasó correctamente con 2 pruebas aprobadas: la conservación de comprobaciones críticas y mínimo privilegio en el workflow de feedback, y la relación entre activos, amenazas, controles y verificación en el modelo de amenazas. El resultado global del evaluador fue 'fail' únicamente porque reports/week-03/security.json, evidence/week-03/engineering.json y evidence/week-03/individual.json contienen commitSha que no cumplen el formato requerido de SHA completo en minúsculas. El lint reportó 3 warnings por BOM Unicode y 0 errores.",
       "explanation": "Participé en la implementación y verificación de los controles de seguridad correspondientes a la Semana 3, manteniendo la relación con el modelo de amenazas desarrollado previamente. El trabajo incluye el modelo de amenazas en docs/threat-model.md, el control relacionado con la asignación de incidencias en assignIncident.ts, el mecanismo de redacción de información sensible en redact.ts y la verificación del workflow de feedback. Ejecuté el toolchain de la Semana 3 y verifiqué que el typecheck no presentara errores, que lint finalizara con 0 errores aunque con 3 warnings por BOM Unicode, que audit:ci identificara las vulnerabilidades reportadas por las dependencias y que las dos pruebas públicas de la Semana 3 pasaran correctamente. El fallo global corresponde a la actualización del formato de los commitSha en los archivos de evidencia."
     },
     {
-  "studentId": "3523110374",
-  "commitShas": [
-    "1566ef551890027dfb9044074d0d49a13576b272",
-    "3fddd734fb7186c558290ed7fff592541fffd582"
-  ],
-  "files": [
-    "src/campusops/application/assignIncident.ts",
-    "src/campusops/application/getIncident.ts",
-    "src/campusops/application/getIncident.test.ts",
-    "src/campusops/infrastructure/inMemoryIncidentRepository.ts",
-    "src/campusops/security/redact.ts",
-    "src/campusops/security/secretScan.ts",
-    ".github/workflows/week-03-security.yml",
-    "package.json"
-  ],
-  "tests": [
-    "src/campusops/security/t01-view-incident.test.ts",
-    "src/campusops/security/t02-assign-incident.test.ts",
-    "src/campusops/security/t03-log-redaction.test.ts",
-    "src/campusops/security/t04-secret-scan.test.ts"
-  ],
-  "reviews": [],
-  "prediction": "Esperaba que las cuatro suites de seguridad (T-01 a T-04) pasaran, porque el fix del commit 1566ef5 implementa los controles de autorización, redacción de secretos y eliminación del archivo filtrado que el commit 3fddd73 había dejado marcados como faltantes.",
-  "command": "npm run test:security",
-  "observedResult": "Pasaron las 4 suites (t01-view-incident, t02-assign-incident, t03-log-redaction y t04-secret-scan): 4 suites y 23 pruebas aprobadas, 0 fallidas.",
-  "explanation": "En el commit 3fddd73 agregué las pruebas de seguridad T-01 a T-04, el detector de secretos secretScan.ts y el workflow week-03-security.yml; las pruebas quedaron marcadas como fallando a propósito porque aún faltaban los controles. En el commit 1566ef5 implementé la autorización del actor en las consultas (getIncident.ts) y en la asignación de incidencias (assignIncident.ts), la redacción de secretos en los registros (redact.ts) y eliminé el archivo con el secreto filtrado. Al correr npm run test:security después del fix, las pruebas pasan, lo que confirma que cada control quedó implementado y verificado."
-},
+      "studentId": "3523110374",
+      "commitShas": [
+        "1566ef551890027dfb9044074d0d49a13576b272",
+        "3fddd734fb7186c558290ed7fff592541fffd582"
+      ],
+      "files": [
+        "src/campusops/application/assignIncident.ts",
+        "src/campusops/application/getIncident.ts",
+        "src/campusops/application/getIncident.test.ts",
+        "src/campusops/infrastructure/inMemoryIncidentRepository.ts",
+        "src/campusops/security/redact.ts",
+        "src/campusops/security/secretScan.ts",
+        ".github/workflows/week-03-security.yml",
+        "package.json"
+      ],
+      "tests": [
+        "src/campusops/security/t01-view-incident.test.ts",
+        "src/campusops/security/t02-assign-incident.test.ts",
+        "src/campusops/security/t03-log-redaction.test.ts",
+        "src/campusops/security/t04-secret-scan.test.ts"
+      ],
+      "reviews": [],
+      "prediction": "Esperaba que las cuatro suites de seguridad (T-01 a T-04) pasaran, porque el fix del commit 1566ef5 implementa los controles de autorización, redacción de secretos y eliminación del archivo filtrado que el commit 3fddd73 había dejado marcados como faltantes.",
+      "command": "npm run test:security",
+      "observedResult": "Pasaron las 4 suites (t01-view-incident, t02-assign-incident, t03-log-redaction y t04-secret-scan): 4 suites y 23 pruebas aprobadas, 0 fallidas.",
+      "explanation": "En el commit 3fddd73 agregué las pruebas de seguridad T-01 a T-04, el detector de secretos secretScan.ts y el workflow week-03-security.yml; las pruebas quedaron marcadas como fallando a propósito porque aún faltaban los controles. En el commit 1566ef5 implementé la autorización del actor en las consultas (getIncident.ts) y en la asignación de incidencias (assignIncident.ts), la redacción de secretos en los registros (redact.ts) y eliminé el archivo con el secreto filtrado. Al correr npm run test:security después del fix, las pruebas pasan, lo que confirma que cada control quedó implementado y verificado."
+    },
     {
       "studentId": "3523110195",
-      "commitShas": [""],
-      "files": [""],
-      "tests": [""],
-      "reviews": [""],
-      "prediction": "",
-      "command": "",
-      "observedResult": "",
-      "explanation": ""
+      "commitShas": [
+        "e9c4d22d02782e1be709775b5d6d16eec78b68e0"
+      ],
+      "files": [
+        ".github/workflows/week-03-ci-amenazas-feedback.yml"
+      ],
+      "tests": [
+        "npm run typecheck",
+        "make public-test-week-03"
+      ],
+      "reviews": [],
+      "prediction": "Esperaba que la arquitectura documentada reflejara correctamente la implementación actual del proyecto, manteniendo la separación entre UI, Application, Domain e Infrastructure. También esperaba que el ADR justificara la decisión arquitectónica mediante la comparación de alternativas y que la evidencia de Week 2 mantuviera consistencia con los cambios implementados y las verificaciones ejecutadas.",
+      "command": "make public-test-week-03",
+      "observedResult": "La prueba pública de Week 3 aprobó las dos verificaciones definidas: la preservación de comprobaciones críticas y mínimo privilegio en el workflow de feedback, y la presencia de los conceptos activo, amenaza, control y verificación en el modelo de amenazas.",
+      "explanation": "Participé en la configuración y revisión del workflow académico de retroalimentación para la Semana 3. El trabajo consistió en asegurar que el pipeline utilizara Node.js 22 mediante actions/setup-node@v4, ejecutara una instalación reproducible con make setup y mantuviera las verificaciones académicas definidas para la semana mediante verify-week-03, public-test-week-03 y evidence-week-03. También verifiqué que el workflow aplicara el principio de mínimo privilegio con permissions: contents: read, evitara mecanismos que oculten errores de ejecución y generara los artefactos de evidencia correspondientes. La validación confirmó que el workflow preserva las comprobaciones críticas y mantiene la trazabilidad de la evidencia solicitada para la evaluación."
     }
   ]
 }
