@@ -5,7 +5,7 @@ const SYNTHETIC_INCIDENTS: readonly Incident[] = [
     id: "campus-inc-001",
     reporterId: "reporter-1",
     category: "electrical",
-    description: "Falla eléctrica en un laboratorio de prueba.",
+    description: "Falla el\u00e9ctrica en un laboratorio de prueba.",
     location: {
       source: "manual",
       label: "Laboratorio A-101",
@@ -34,11 +34,20 @@ const SYNTHETIC_INCIDENTS: readonly Incident[] = [
 ];
 
 export class InMemoryIncidentRepository implements IncidentRepository {
+  // Cada instancia trabaja con su propia copia: las pruebas no se contaminan entre si.
+  private incidents: Incident[] = SYNTHETIC_INCIDENTS.map((incident) => ({ ...incident }));
+
   async findAll(): Promise<readonly Incident[]> {
-    return SYNTHETIC_INCIDENTS;
+    return this.incidents;
   }
 
   async findById(id: string): Promise<Incident | null> {
-    return SYNTHETIC_INCIDENTS.find((incident) => incident.id === id) ?? null;
+    return this.incidents.find((incident) => incident.id === id) ?? null;
+  }
+
+  async save(incident: Incident): Promise<void> {
+    this.incidents = this.incidents.map((current) =>
+      current.id === incident.id ? incident : current,
+    );
   }
 }

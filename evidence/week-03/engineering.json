@@ -1,0 +1,28 @@
+{
+"schemaVersion": 1,
+"week": 3,
+"commitSha": "d3d4535063bb91647e9be9dbcbd1cec5cb575088",
+"decision": "Priorizar la detección de exposición de secretos y el mantenimiento de comprobaciones de seguridad automatizadas en CI. El workflow ejecuta una búsqueda de secretos y conserva los resultados de las comprobaciones, evitando que un incumplimiento obligatorio quede oculto.",
+"alternatives": [
+"Realizar las comprobaciones de seguridad únicamente de forma manual antes de entregar la aplicación.",
+"Ejecutar comprobaciones de seguridad automatizadas en CI y conservar sus resultados como evidencia reproducible."
+],
+"tradeoff": "La automatización en CI aumenta la reproducibilidad y permite detectar incumplimientos de seguridad durante la integración, pero añade tiempo de ejecución y requiere mantener las herramientas y reglas del workflow.",
+"requirementIds": [
+"AC-02",
+"AC-03",
+"AC-04"
+],
+"verification": [
+{
+"command": "python3 tools/course_public_evaluator.py --week 03 --mode verify --execute-toolchain",
+"result": "pass",
+"evidence": "workflow_integrity terminó con status pass y detail bypass markers=[]; secret_scan terminó con status pass y detail hits=[]."
+},
+{
+"command": "npm test -- --ci --runInBand course-tests/public/week-03.test.ts",
+"result": "pass",
+"evidence": "Las dos pruebas públicas de Semana 3 pasaron: feedback workflow preserves critical checks and least privilege y threat model links assets, threats, controls and verification."
+}
+]
+}

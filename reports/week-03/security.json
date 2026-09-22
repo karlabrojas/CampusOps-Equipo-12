@@ -1,0 +1,36 @@
+{
+"schemaVersion": 1,
+"week": 3,
+"commitSha": "d3d4535063bb91647e9be9dbcbd1cec5cb575088",
+"generatedAt": "2026-09-21T12:47:43-06:00",
+"checks": [
+{
+"id": "secret-scan",
+"status": "pass",
+"scenarioType": "nominal",
+"command": "python3 tools/course_public_evaluator.py --week 03 --mode verify --execute-toolchain",
+"evidence": "El check secret_scan terminó con status pass y detail hits=[]; no se detectaron secretos."
+},
+{
+"id": "workflow-integrity",
+"status": "pass",
+"scenarioType": "nominal",
+"command": "python3 tools/course_public_evaluator.py --week 03 --mode verify --execute-toolchain",
+"evidence": "El check workflow_integrity terminó con status pass y detail bypass markers=[]; no se detectaron marcadores de bypass."
+},
+{
+"id": "dependency-audit",
+"status": "pass",
+"scenarioType": "boundary",
+"command": "make feedback",
+"evidence": "npm run audit:ci terminó durante la comprobación con reporte de 2 vulnerabilidades de severidad high, incluyendo avisos relacionados con xmldom y js-yaml; el proceso de auditoría completó la comprobación."
+},
+{
+"id": "public-security-schema-failure",
+"status": "pass",
+"scenarioType": "failure",
+"command": "make public-test-week-03",
+"evidence": "La prueba pública detectó correctamente el incumplimiento del contrato en reports/week-03/security.json: schema:reports/week-03/security.json terminó con status fail y detail 'commitSha must be a full lowercase Git SHA'. El proceso terminó con código de error."
+}
+]
+}
