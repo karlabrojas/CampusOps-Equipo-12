@@ -1,7 +1,7 @@
 {
 "schemaVersion": 1,
 "week": 3,
-"commitSha": "",
+"commitSha": "d3d4535063bb91647e9be9dbcbd1cec5cb575088",
 "decision": "Priorizar la detección de exposición de secretos y el mantenimiento de comprobaciones de seguridad automatizadas en CI. El workflow ejecuta una búsqueda de secretos y conserva los resultados de las comprobaciones, evitando que un incumplimiento obligatorio quede oculto.",
 "alternatives": [
 "Realizar las comprobaciones de seguridad únicamente de forma manual antes de entregar la aplicación.",
