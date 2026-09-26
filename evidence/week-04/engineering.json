@@ -1,0 +1,48 @@
+{
+    "schemaVersion": 1,
+    "week": 4,
+    "commitSha": "",
+    "decision": "Se selecciona la minimización de datos como mecanismo de almacenamiento para CampusOps. Las incidencias almacenarán únicamente la información estrictamente necesaria para operar, utilizando identificadores como reportanteId o tecnicoId en lugar de duplicar datos personales completos. Esta decisión responde a la amenaza identificada en Semana 3 relacionada con la exposición de información sensible y sigue el principio de mínimo privilegio.",
+    "alternatives": [
+        {
+            "name": "Cifrado de datos sensibles",
+            "summary": "Almacenar los datos personales completos de los usuarios, pero cifrados antes de persistirlos.",
+            "benefits": [
+                "Protege la confidencialidad de la información almacenada.",
+                "Reduce el impacto de una filtración de la base de datos.",
+                "Es una práctica común en sistemas con información sensible."
+            ],
+            "costs": [
+                "Requiere gestión segura de claves de cifrado.",
+                "Incrementa la complejidad de implementación y mantenimiento.",
+                "Los datos deben descifrarse cada vez que se necesiten."
+            ]
+        },
+        {
+            "name": "Minimización de datos",
+            "summary": "Almacenar únicamente los identificadores necesarios para relacionar una incidencia con un usuario, evitando guardar datos personales dentro de cada registro.",
+            "benefits": [
+                "Reduce la cantidad de información sensible almacenada.",
+                "Disminuye la superficie de ataque.",
+                "Evita la duplicación de datos personales.",
+                "Es simple de implementar dentro de la arquitectura actual."
+            ],
+            "costs": [
+                "Requiere consultas adicionales para obtener información completa del usuario.",
+                "Algunas operaciones pueden depender de otras entidades para resolver referencias."
+            ]
+        }
+    ],
+    "tradeoff": "La minimización de datos ofrece una protección preventiva al reducir la información sensible almacenada, mientras que el cifrado protege información que sigue existiendo dentro del sistema. Se eligió la minimización porque reduce el impacto potencial de una exposición de datos, requiere menor complejidad técnica y se adapta mejor al alcance académico y a la arquitectura actual de CampusOps.",
+    "requirementIds": [
+        "AC-01",
+        "AC-02",
+        "AC-03",
+        "AC-04"
+    ],
+    "verification": [
+        {
+        
+        }
+    ]
+}
