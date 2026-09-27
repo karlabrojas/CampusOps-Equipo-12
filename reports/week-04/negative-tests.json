@@ -1,0 +1,58 @@
+﻿[
+  {
+    "id": "T-05-01",
+    "status": "pass",
+    "scenarioType": "nominal",
+    "command": "npx jest t05-hidden-data-persistence --verbose",
+    "evidence": "El dueno del incidente ve su reporterId y ubicacion reales"
+  },
+  {
+    "id": "T-05-02",
+    "status": "pass",
+    "scenarioType": "failure",
+    "command": "npx jest t05-hidden-data-persistence --verbose",
+    "evidence": "Un tercero no ve el reporterId ni la ubicacion reales (quedan [HIDDEN])"
+  },
+  {
+    "id": "T-05-03",
+    "status": "pass",
+    "scenarioType": "failure",
+    "command": "npx jest t05-hidden-data-persistence --verbose",
+    "evidence": "El log generado para un tercero no contiene el reporterId ni la ubicacion reales"
+  },
+  {
+    "id": "T-05-04",
+    "status": "pass",
+    "scenarioType": "failure",
+    "command": "npx jest t05-hidden-data-persistence --verbose",
+    "evidence": "El storage de preferencias guarda la version enmascarada, no el dato crudo"
+  },
+  {
+    "id": "T-05-05",
+    "status": "pass",
+    "scenarioType": "failure",
+    "command": "npx jest t05-hidden-data-persistence --verbose",
+    "evidence": "El reporte generado (JSON) no expone el reporterId ni la ubicacion reales"
+  },
+  {
+    "id": "T-05-06",
+    "status": "pass",
+    "scenarioType": "boundary",
+    "command": "npx jest t05-hidden-data-persistence --verbose",
+    "evidence": "Un incidente inexistente no expone datos ni produce un cierre inesperado (no throw)"
+  },
+  {
+    "id": "T-05-07",
+    "status": "pass",
+    "scenarioType": "nominal",
+    "command": "npx jest t05-hidden-data-persistence --verbose",
+    "evidence": "El incidente original no se modifica al generar la version enmascarada (sin corrupcion de datos)"
+  },
+  {
+    "id": "T-05-08",
+    "status": "pass",
+    "scenarioType": "boundary",
+    "command": "npx jest t05-hidden-data-persistence --verbose",
+    "evidence": "El dueno real sigue viendo sus datos correctamente tras un intento fallido previo"
+  }
+]
