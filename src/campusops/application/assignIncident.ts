@@ -1,4 +1,4 @@
-﻿import type { Incident, IncidentRepository } from "../contracts";
+import type { Incident, IncidentRepository } from "../contracts";
 
 export interface IncidentStore extends IncidentRepository {
   save(incident: Incident): Promise<void>;

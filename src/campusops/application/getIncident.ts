@@ -1,4 +1,4 @@
-﻿import type { Incident, IncidentRepository } from "../contracts";
+import type { Incident, IncidentRepository } from "../contracts";
 
 type ActorRole = "reporter" | "technician" | "coordinator";
 

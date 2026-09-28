@@ -1,4 +1,4 @@
-﻿import type { Incident } from "../contracts";
+import type { Incident } from "../contracts";
 
 const HIDDEN = "[HIDDEN]";
 
@@ -46,7 +46,7 @@ export function saveLastViewedIncident(
 export function generateIncidentReport(
   incidents: readonly Incident[],
   viewerId: string,
-): ReadonlyArray<Record<string, unknown>> {
+): readonly Record<string, unknown>[] {
   return incidents.map((incident) => maskIncidentForViewer(incident, viewerId));
 }
 

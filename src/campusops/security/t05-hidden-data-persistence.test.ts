@@ -1,4 +1,4 @@
-﻿import {
+import {
   maskIncidentForViewer,
   logIncidentEvent,
   saveLastViewedIncident,
