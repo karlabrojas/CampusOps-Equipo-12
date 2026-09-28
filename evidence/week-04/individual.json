@@ -4,7 +4,7 @@
   "teamId": "12",
   "members": [
     {
-      "studentId": "TU_MATRICULA",
+      "studentId": "3523110374",
       "commitShas": [
         "7a9d97022ed180ea219095097a79a2b4fb0c0f02"
         ],  
@@ -44,19 +44,28 @@
     {
       "studentId": "3523110235",
       "commitShas": [
-        ""
+        "b2b8f7154f1a384eab40603d42bb05adf16613a0",
+        "eabfd8bba9eb189b289439616c7486262cf1714d",
+        "e353cb4da4d87ba40b4417083aafe376b574f446"
       ],
       "files": [
-        ""
+        "src/course-evaluation/index.ts",
+        "src/campusops/security/redact.ts",
+        "src/campusops/security/secretScan.ts",
+        "src/campusops/security/t04-secret-scan.test.ts",
+        "src/campusops/security/t05-telemetry-redaction.test.ts",
+        "docs/security-controls.md",
+        "reports/week-04/secret-scan.json"
       ],
       "tests": [
-        ""
+        "src/campusops/security/t04-secret-scan.test.ts",
+        "src/campusops/security/t05-telemetry-redaction.test.ts"
       ],
       "reviews": [],
-      "prediction": "",
-      "command": "",
-      "observedResult": "",
-      "explanation": ""
+      "prediction": "Esperaba que los controles de Semana 4 evitaran la exposición de secretos y datos personales en los puntos de salida revisados, que la sanitización funcionara también con estructuras anidadas y arreglos, y que los campos técnicos no sensibles se conservaran.",
+      "command": "npm run test:security",
+      "observedResult": "Pasaron 6 suites con 34 pruebas aprobadas. Las pruebas de secret scan detectaron los patrones de secretos ficticios definidos y el escaneo sin secretos produjo cero coincidencias. Las pruebas de redacción de telemetría verificaron la sanitización de campos sensibles en objetos anidados y arreglos sin modificar el objeto original.",
+      "explanation": "Implementé controles de seguridad para detectar y sanitizar secretos y datos sensibles. Agregué patrones para claves privadas, tokens de GitHub, claves AWS y nombres de variables públicas que representan secretos. También conecté la redacción de telemetría para ocultar campos sensibles de forma recursiva, incluyendo estructuras anidadas y arreglos, manteniendo los datos técnicos no sensibles. Agregué pruebas negativas para verificar estos controles y documenté los controles y riesgos residuales en security-controls.md."
     }
   ]
 }
