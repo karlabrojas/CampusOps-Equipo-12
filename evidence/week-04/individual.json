@@ -27,19 +27,25 @@
     {
       "studentId": "3523110195",
       "commitShas": [
-        ""
+        "caa5f24a01059331a103ac9c2327557b246733cd",
+        "4cca2f13445523c908ee17daf2650e0bc4f72559"
       ],
       "files": [
-        ""
+        "src/campusops/domain/Incident.ts",
+        "src/campusops/domain/UserReference.ts",
+        "src/campusops/domain/tests/Incident.test.ts",
+        "src/campusops/infrastructure/inMemoryIncidentRepository.spec.ts",
+        "evidence/week-04/engineering.json"
       ],
       "tests": [
-        ""
+        "src/campusops/domain/tests/Incident.test.ts",
+        "src/campusops/infrastructure/inMemoryIncidentRepository.spec.ts"
       ],
       "reviews": [],
-      "prediction": "",
-      "command": "",
-      "observedResult": "",
-      "explanation": ""
+      "prediction": "Esperaba que el modelo Incident guardara referencias mínimas (reporterId y assignedTechnicianId) en vez de duplicar datos personales, que la ubicación y el estado del trabajo quedaran estructurados, y que el repositorio no expusiera nombre, correo ni teléfono del reportante.",
+      "command": "npm test -- --runInBand src/campusops/domain/tests/Incident.test.ts src/campusops/infrastructure/inMemoryIncidentRepository.spec.ts",
+      "observedResult": "Pasaron 2 suites y 2 pruebas, sin fallos. Incident conserva reporterId y la asignación de técnico; la prueba del repositorio confirma que las incidencias no contienen reporterName, reporterEmail ni reporterPhone.",
+      "explanation": "Actualicé el modelo de dominio para representar incidencias mediante referencias de usuario y datos operativos mínimos, con ubicación y trabajo como estructuras de solo lectura. Añadí UserReference y pruebas del modelo y del repositorio para comprobar que no se persisten datos personales redundantes. También documenté la decisión de minimización de datos, sus alternativas y la verificación en engineering.json."
     },
     {
       "studentId": "3523110235",
