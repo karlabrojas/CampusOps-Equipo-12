@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "week": 4,
+  "teamId": "12",
+  "members": [
+    {
+      "studentId": "TU_MATRICULA",
+      "commitShas": [
+        "7a9d97022ed180ea219095097a79a2b4fb0c0f02"
+        ],  
+      "files": [
+        "src/campusops/security/incidentPrivacy.ts",
+        "src/campusops/security/t05-hidden-data-persistence.test.ts",
+        "reports/week-04/negative-tests.json",
+        "reports/week-04/t05-jest-output.txt",
+        "reports/week-04/t05-threat-relation.md"
+      ],
+      "tests": [
+        "src/campusops/security/t05-hidden-data-persistence.test.ts"
+      ],
+      "reviews": [],
+      "prediction": "Esperaba que, tras enmascarar reporterId y location.label para quien no es el reportante original, el dato real no apareciera en logs, preferencias ni reportes; que un incidente inexistente se manejara sin excepción no controlada; y que el objeto Incident original no se modificara.",
+      "command": "npx jest t05-hidden-data-persistence --verbose",
+      "observedResult": "Pasaron las 8 pruebas (nominales, de falla y de límite), 0 fallidas. Ningún log, registro de storage ni reporte generado contiene el reporterId ni la ubicación reales de un tercero.",
+      "explanation": "Implementé incidentPrivacy.ts, que construye una versión enmascarada del Incident con [HIDDEN] y es la única usada para generar logs, guardar preferencias y generar reportes. Escribí 8 pruebas que verifican el comportamiento real del sistema y no solo que el dato desaparezca en la interfaz, incluyendo caminos de error sin cierre inesperado ni corrupción de datos. Documenté la relación con las amenazas A-02 (incidencias) y A-04 (ubicaciones) en t05-threat-relation.md. Mi trabajo se integró a dev mediante el PR #29."
+    },
+    {
+      "studentId": "3523110195",
+      "commitShas": [
+        ""
+      ],
+      "files": [
+        ""
+      ],
+      "tests": [
+        ""
+      ],
+      "reviews": [],
+      "prediction": "",
+      "command": "",
+      "observedResult": "",
+      "explanation": ""
+    },
+    {
+      "studentId": "3523110235",
+      "commitShas": [
+        ""
+      ],
+      "files": [
+        ""
+      ],
+      "tests": [
+        ""
+      ],
+      "reviews": [],
+      "prediction": "",
+      "command": "",
+      "observedResult": "",
+      "explanation": ""
+    }
+  ]
+}
