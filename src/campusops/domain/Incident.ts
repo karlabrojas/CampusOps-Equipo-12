@@ -5,12 +5,24 @@ export type IncidentStatus =
   | 'resolved'
   | 'closed';
 
-export interface Incident {
-  id: string;
-  title: string;
-  description: string;
-  location: string;
-  category: string;
+export type IncidentLocation = Readonly<{
+  source: 'provider' | 'manual';
+  label: string;
+  latitude?: number;
+  longitude?: number;
+}>;
+
+export type IncidentWork = Readonly<{
+  assignedTechnicianId: string | null;
   status: IncidentStatus;
-  createdAt: Date;
-}
+}>;
+
+export type Incident = Readonly<{
+  id: string;
+  reporterId: string;
+  category: string;
+  description: string;
+  location: IncidentLocation;
+  work: IncidentWork;
+  version: number;
+}>;
