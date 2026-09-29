@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 4,
-  "commitSha": "ba357786bbb01cb6e270b3c0bb30169f9f91c671",
+  "commitSha": "c1307375e216644afc602ee517b121f75af305ca",
   "decision": "Se selecciona la minimización de datos como mecanismo de almacenamiento para CampusOps. Las incidencias almacenan únicamente la información estrictamente necesaria para operar, utilizando identificadores como reporterId y assignedTechnicianId en lugar de duplicar datos personales completos dentro de cada incidente. Esta decisión responde a la amenaza identificada en Semana 3 relacionada con la exposición de información sensible y sigue el principio de mínimo privilegio.",
   "alternatives": [
     "Cifrado de datos sensibles: almacenar los datos personales completos cifrados antes de persistirlos.",
