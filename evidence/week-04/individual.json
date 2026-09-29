@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "week": 4,
+  "teamId": "12",
+  "members": [
+    {
+      "studentId": "3523110374",
+      "commitShas": [
+        "7a9d97022ed180ea219095097a79a2b4fb0c0f02"
+        ],  
+      "files": [
+        "src/campusops/security/incidentPrivacy.ts",
+        "src/campusops/security/t05-hidden-data-persistence.test.ts",
+        "reports/week-04/negative-tests.json",
+        "reports/week-04/t05-jest-output.txt",
+        "reports/week-04/t05-threat-relation.md"
+      ],
+      "tests": [
+        "src/campusops/security/t05-hidden-data-persistence.test.ts"
+      ],
+      "reviews": [],
+      "prediction": "Esperaba que, tras enmascarar reporterId y location.label para quien no es el reportante original, el dato real no apareciera en logs, preferencias ni reportes; que un incidente inexistente se manejara sin excepción no controlada; y que el objeto Incident original no se modificara.",
+      "command": "npx jest t05-hidden-data-persistence --verbose",
+      "observedResult": "Pasaron las 8 pruebas (nominales, de falla y de límite), 0 fallidas. Ningún log, registro de storage ni reporte generado contiene el reporterId ni la ubicación reales de un tercero.",
+      "explanation": "Implementé incidentPrivacy.ts, que construye una versión enmascarada del Incident con [HIDDEN] y es la única usada para generar logs, guardar preferencias y generar reportes. Escribí 8 pruebas que verifican el comportamiento real del sistema y no solo que el dato desaparezca en la interfaz, incluyendo caminos de error sin cierre inesperado ni corrupción de datos. Documenté la relación con las amenazas A-02 (incidencias) y A-04 (ubicaciones) en t05-threat-relation.md. Mi trabajo se integró a dev mediante el PR #29."
+    },
+    {
+      "studentId": "3523110195",
+      "commitShas": [
+        "caa5f24a01059331a103ac9c2327557b246733cd",
+        "4cca2f13445523c908ee17daf2650e0bc4f72559",
+        "7c17d6cc55832e1de7245c95dddecc6b103042e3",
+        "c46862a92bcf784242a004cfd44b6b9f7ebbdea7"
+      ],
+      "files": [
+        "src/campusops/domain/Incident.ts",
+        "src/campusops/domain/UserReference.ts",
+        "src/campusops/domain/tests/Incident.test.ts",
+        "src/campusops/infrastructure/inMemoryIncidentRepository.spec.ts",
+        "evidence/week-04/engineering.json"
+      ],
+      "tests": [
+        "src/campusops/domain/tests/Incident.test.ts",
+        "src/campusops/infrastructure/inMemoryIncidentRepository.spec.ts"
+      ],
+      "reviews": [],
+      "prediction": "Esperaba que el modelo Incident guardara referencias mínimas (reporterId y assignedTechnicianId) en vez de duplicar datos personales, que la ubicación y el estado del trabajo quedaran estructurados, y que el repositorio no expusiera nombre, correo ni teléfono del reportante.",
+      "command": "npm test -- --runInBand src/campusops/domain/tests/Incident.test.ts src/campusops/infrastructure/inMemoryIncidentRepository.spec.ts",
+      "observedResult": "Pasaron 2 suites y 2 pruebas, sin fallos. Incident conserva reporterId y la asignación de técnico; la prueba del repositorio confirma que las incidencias no contienen reporterName, reporterEmail ni reporterPhone.",
+      "explanation": "Actualicé el modelo de dominio para representar incidencias mediante referencias de usuario y datos operativos mínimos, con ubicación y trabajo como estructuras de solo lectura. Añadí UserReference y pruebas del modelo y del repositorio para comprobar que no se persisten datos personales redundantes. También documenté la decisión de minimización de datos, sus alternativas y la verificación en engineering.json."
+    },
+    {
+      "studentId": "3523110235",
+      "commitShas": [
+        "b2b8f7154f1a384eab40603d42bb05adf16613a0",
+        "eabfd8bba9eb189b289439616c7486262cf1714d",
+        "e353cb4da4d87ba40b4417083aafe376b574f446"
+      ],
+      "files": [
+        "src/course-evaluation/index.ts",
+        "src/campusops/security/redact.ts",
+        "src/campusops/security/secretScan.ts",
+        "src/campusops/security/t04-secret-scan.test.ts",
+        "src/campusops/security/t05-telemetry-redaction.test.ts",
+        "docs/security-controls.md",
+        "reports/week-04/secret-scan.json"
+      ],
+      "tests": [
+        "src/campusops/security/t04-secret-scan.test.ts",
+        "src/campusops/security/t05-telemetry-redaction.test.ts"
+      ],
+      "reviews": [],
+      "prediction": "Esperaba que los controles de Semana 4 evitaran la exposición de secretos y datos personales en los puntos de salida revisados, que la sanitización funcionara también con estructuras anidadas y arreglos, y que los campos técnicos no sensibles se conservaran.",
+      "command": "npm run test:security",
+      "observedResult": "Pasaron 6 suites con 34 pruebas aprobadas. Las pruebas de secret scan detectaron los patrones de secretos ficticios definidos y el escaneo sin secretos produjo cero coincidencias. Las pruebas de redacción de telemetría verificaron la sanitización de campos sensibles en objetos anidados y arreglos sin modificar el objeto original.",
+      "explanation": "Implementé controles de seguridad para detectar y sanitizar secretos y datos sensibles. Agregué patrones para claves privadas, tokens de GitHub, claves AWS y nombres de variables públicas que representan secretos. También conecté la redacción de telemetría para ocultar campos sensibles de forma recursiva, incluyendo estructuras anidadas y arreglos, manteniendo los datos técnicos no sensibles. Agregué pruebas negativas para verificar estos controles y documenté los controles y riesgos residuales en security-controls.md."
+    }
+  ]
+}

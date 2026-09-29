@@ -1,4 +1,4 @@
-﻿const REDACTED = "[REDACTED]";
+const REDACTED = "[REDACTED]";
 
 const PRIVATE_KEY_BLOCK =
   /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----[\s\S]*?-----END (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/g;

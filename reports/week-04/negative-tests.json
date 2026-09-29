@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "week": 4,
+  "commitSha": "29dbe448cc06ea55feb1002810a1392b02aeb34a",
+  "generatedAt": "",
+  "checks": [
+    {
+      "id": "T-05-01",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest src/campusops/security/t05-hidden-data-persistence.test.ts --verbose",
+      "evidence": "El propietario de la incidencia ve su reporterId y ubicacion reales."
+    },
+    {
+      "id": "T-05-02",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest src/campusops/security/t05-hidden-data-persistence.test.ts --verbose",
+      "evidence": "Un tercero no ve el reporterId ni la ubicacion reales; ambos campos quedan como [HIDDEN]."
+    },
+    {
+      "id": "T-05-03",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest src/campusops/security/t05-hidden-data-persistence.test.ts --verbose",
+      "evidence": "El log generado para un tercero no contiene el reporterId ni la ubicacion reales."
+    },
+    {
+      "id": "T-05-04",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest src/campusops/security/t05-hidden-data-persistence.test.ts --verbose",
+      "evidence": "El almacenamiento de preferencias conserva la version enmascarada y no el dato sensible original."
+    },
+    {
+      "id": "T-05-05",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest src/campusops/security/t05-hidden-data-persistence.test.ts --verbose",
+      "evidence": "El reporte generado no expone el reporterId ni la ubicacion reales para un tercero."
+    },
+    {
+      "id": "T-05-06",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest src/campusops/security/t05-hidden-data-persistence.test.ts --verbose",
+      "evidence": "Una incidencia inexistente se maneja sin exponer datos sensibles ni provocar una excepcion no controlada."
+    },
+    {
+      "id": "T-05-07",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest src/campusops/security/t05-hidden-data-persistence.test.ts --verbose",
+      "evidence": "La incidencia original no se modifica al generar la representacion enmascarada."
+    },
+    {
+      "id": "T-05-08",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest src/campusops/security/t05-hidden-data-persistence.test.ts --verbose",
+      "evidence": "El propietario real sigue viendo sus datos correctamente despues de un intento fallido previo."
+    },
+    {
+      "id": "T-05-09",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest src/campusops/security/t05-telemetry-redaction.test.ts --verbose",
+      "evidence": "Los campos sensibles dentro de objetos anidados y arreglos son reemplazados por [REDACTED]."
+    },
+    {
+      "id": "T-05-10",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest src/campusops/security/t05-telemetry-redaction.test.ts --verbose",
+      "evidence": "La sanitizacion de telemetria no modifica el objeto de entrada original."
+    },
+    {
+      "id": "T-05-11",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest src/campusops/security/t05-telemetry-redaction.test.ts --verbose",
+      "evidence": "Los campos tecnicos no sensibles se conservan durante la sanitizacion."
+    }
+  ]
+}

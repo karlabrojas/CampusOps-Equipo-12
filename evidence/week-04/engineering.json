@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "week": 4,
+  "commitSha": "29dbe448cc06ea55feb1002810a1392b02aeb34a",
+  "decision": "Se selecciona la minimización de datos como mecanismo de almacenamiento para CampusOps. Las incidencias almacenan únicamente la información estrictamente necesaria para operar, utilizando identificadores como reporterId y assignedTechnicianId en lugar de duplicar datos personales completos dentro de cada incidente. Esta decisión responde a la amenaza identificada en Semana 3 relacionada con la exposición de información sensible y sigue el principio de mínimo privilegio.",
+  "alternatives": [
+    "Cifrado de datos sensibles: almacenar los datos personales completos cifrados antes de persistirlos.",
+    "Minimización de datos: almacenar únicamente identificadores de usuario y evitar duplicar información personal en las incidencias."
+  ],
+  "tradeoff": "La minimización de datos reduce la exposición de información sensible y requiere menos complejidad que el cifrado. A cambio, algunas consultas necesitan resolver referencias a usuarios para obtener información completa.",
+  "requirementIds": [
+    "AC-01",
+    "AC-02",
+    "AC-03",
+    "AC-04"
+  ],
+  "verification": [
+    {
+      "command": "npm run typecheck",
+      "result": "pass",
+      "evidence": "El modelo Incident definido en src/campusops/contracts.ts almacena únicamente reporterId y assignedTechnicianId como referencias a usuarios. No existen campos para nombre, correo electrónico, teléfono u otros datos personales dentro de la entidad Incident."
+    },
+    {
+      "command": "npm test",
+      "result": "pass",
+      "evidence": "La implementación InMemoryIncidentRepository utiliza el modelo Incident basado en identificadores de usuario y mantiene la compatibilidad con las pruebas existentes sin almacenar información personal redundante."
+    }
+  ]
+}

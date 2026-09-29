@@ -1,0 +1,16 @@
+PASS src/campusops/security/t05-hidden-data-persistence.test.ts
+  T-05 los datos ocultos no permanecen en logs, preferencias ni reportes
+    √ nominal: el dueno ve su reporterId y ubicacion reales (1 ms)
+    √ failure: un tercero no ve el reporterId ni la ubicacion reales
+    √ no permanece en logs: el log de un tercero no contiene el dato real (1 ms)
+    √ no permanece en preferencias: el storage guarda la version enmascarada
+    √ no permanece en reportes: el reporte generado no expone el dato real
+    √ camino de error: un incidente inexistente no expone datos ni truena la app (1 ms)
+    √ no hay corrupcion de datos: el incidente original no se modifica al ocultar
+    √ boundary: el dueno real sigue viendo sus datos tras un intento fallido previo
+
+Test Suites: 1 passed, 1 total
+Tests:       8 passed, 8 total
+Snapshots:   0 total
+Time:        0.759 s, estimated 9 s
+Ran all test suites matching /t05-hidden-data-persistence/i.
