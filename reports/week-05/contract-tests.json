@@ -1,0 +1,71 @@
+{
+	"schemaVersion": 1,
+	"week": 5,
+	"commitSha": "b7097407c3ec8a70f795d7cb6e5394e37eb0382e",
+	"generatedAt": "2026-10-02T12:47:20.0237343-06:00",
+	"checks": [
+		{
+			"id": "W05-01-parse-remote-resource",
+			"status": "pass",
+			"scenarioType": "nominal",
+			"command": "npm test -- --runInBand course-tests/public/week-05.test.ts src/api/campusOpsClient.test.ts src/campusops/application/listIncidents.test.ts src/campusops/application/getIncident.test.ts",
+			"evidence": "El parser acepta sobres validos y payload null, ignora campos futuros del sobre y rechaza ID vacio, version no numerica y entrada null."
+		},
+		{
+			"id": "W05-02-list-incidents",
+			"status": "pass",
+			"scenarioType": "nominal",
+			"command": "npm test -- --runInBand course-tests/public/week-05.test.ts src/api/campusOpsClient.test.ts src/campusops/application/listIncidents.test.ts src/campusops/application/getIncident.test.ts",
+			"evidence": "GET /v1/incidents valida cada recurso y proyecta DTO remotos al modelo Incident; se conservaron solo los campos definidos por la aplicacion."
+		},
+		{
+			"id": "W05-03-get-incident-detail",
+			"status": "pass",
+			"scenarioType": "nominal",
+			"command": "npm test -- --runInBand course-tests/public/week-05.test.ts src/api/campusOpsClient.test.ts src/campusops/application/listIncidents.test.ts src/campusops/application/getIncident.test.ts",
+			"evidence": "GET /v1/incidents/:id valida y convierte el DTO; el caso de uso GetIncident conserva sus pruebas aprobadas."
+		},
+		{
+			"id": "W05-04-detail-not-found",
+			"status": "pass",
+			"scenarioType": "boundary",
+			"command": "npm test -- --runInBand course-tests/public/week-05.test.ts src/api/campusOpsClient.test.ts src/campusops/application/listIncidents.test.ts src/campusops/application/getIncident.test.ts",
+			"evidence": "Un 404 al consultar el detalle se convierte en null; el cliente no lo confunde con otros errores HTTP."
+		},
+		{
+			"id": "W05-05-create-incident",
+			"status": "pass",
+			"scenarioType": "nominal",
+			"command": "npm test -- --runInBand course-tests/public/week-05.test.ts src/api/campusOpsClient.test.ts src/campusops/application/listIncidents.test.ts src/campusops/application/getIncident.test.ts",
+			"evidence": "POST /v1/incidents serializa categoria, descripcion y ubicacion; envia Content-Type e Idempotency-Key y convierte el DTO de respuesta."
+		},
+		{
+			"id": "W05-06-create-retry-idempotency",
+			"status": "pass",
+			"scenarioType": "boundary",
+			"command": "npm test -- --runInBand course-tests/public/week-05.test.ts src/api/campusOpsClient.test.ts src/campusops/application/listIncidents.test.ts src/campusops/application/getIncident.test.ts",
+			"evidence": "Tras un fallo de red simulado, el error conserva operationId; el reintento usa la misma clave y la respuesta simulada indica duplicate=true."
+		},
+		{
+			"id": "W05-07-invalid-remote-domain-data",
+			"status": "pass",
+			"scenarioType": "failure",
+			"command": "npm test -- --runInBand course-tests/public/week-05.test.ts src/api/campusOpsClient.test.ts src/campusops/application/listIncidents.test.ts src/campusops/application/getIncident.test.ts",
+			"evidence": "El cliente rechaza payload null y categorias fuera del dominio antes de exponer datos a la aplicacion."
+		},
+		{
+			"id": "W05-08-http-network-errors",
+			"status": "pass",
+			"scenarioType": "failure",
+			"command": "npm test -- --runInBand course-tests/public/week-05.test.ts src/api/campusOpsClient.test.ts src/campusops/application/listIncidents.test.ts src/campusops/application/getIncident.test.ts",
+			"evidence": "429 se representa con codigo y Retry-After de 1000 ms; los errores de HTTP y red no exponen el texto privado ni el token de la respuesta/excepcion."
+		},
+		{
+			"id": "W05-09-session-required",
+			"status": "pass",
+			"scenarioType": "failure",
+			"command": "npm test -- --runInBand course-tests/public/week-05.test.ts src/api/campusOpsClient.test.ts src/campusops/application/listIncidents.test.ts src/campusops/application/getIncident.test.ts",
+			"evidence": "Sin sesion valida, el cliente devuelve error de sesion y no invoca el transporte HTTP."
+		}
+	]
+}
