@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "week": 5,
+  "teamId": "12",
+  "members": [
+    {
+      "studentId": "3523110374",
+      "commitShas": ["f7dd2ce3375858596ce84dfb9bf042a5b660b0c5"],
+      "files": [
+        "src/course-evaluation/index.ts",
+        "evidence/week-05/engineering.json",
+        "evidence/week-05/individual.json"
+      ],
+      "tests": [],
+      "reviews": [
+        "Integración y verificación de feature/week-05-api-client-contract y feature/week-05-response-validation al unir dev: 26 pruebas de src/api y src/course-evaluation en pass, más make feedback y make verify-week-05."
+      ],
+      "prediction": "Esperaba que al unir origin/dev en la rama de integración el único conflicto fuera la validación de parseRemoteResource, que se pudiera resolver sin perder el trabajo de los otros dos integrantes, y que la verificación del repositorio integrado siguiera en verde.",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci src/api src/course-evaluation",
+      "observedResult": "Pasaron 3 suites y 26 pruebas, 0 fallidas. Además typecheck, lint, make feedback y make verify-week-05 terminaron en pass sobre el commit de integración.",
+      "explanation": "Integré dev en feature/week-05-integration-evidence, resolví el conflicto de src/course-evaluation/index.ts conservando la validación equivalente de parseRemoteResource y verifiqué el repositorio integrado. Comprobé que no hay HTTP directo fuera de src/api y que src/api no emite logs, ejecuté las comprobaciones finales y documenté la decisión y su verificación reproducible en engineering.json."
+    }
+  ]
+}

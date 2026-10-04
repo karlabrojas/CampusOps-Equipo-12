@@ -73,23 +73,18 @@ export function parseRemoteResource(input: unknown): ParseResult {
     return { ok: false, error: "contract" };
   }
 
-  const record = input as Record<string, unknown>;
-
+  const resource = input as Record<string, unknown>;
+  const { id, version, status, payload } = resource;
   if (
-    typeof record.id !== "string" ||
-    record.id.trim() === "" ||
-    typeof record.version !== "number" ||
-    !Number.isInteger(record.version) ||
-    record.version < 0 ||
-    typeof record.status !== "string" ||
-    record.status.trim() === ""
-  ) {
-    return { ok: false, error: "contract" };
-  }
-
-  if (
-    record.payload !== null &&
-    (typeof record.payload !== "object" || Array.isArray(record.payload))
+    typeof id !== "string" ||
+    id.trim().length === 0 ||
+    typeof status !== "string" ||
+    status.trim().length === 0 ||
+    typeof version !== "number" ||
+    !Number.isInteger(version) ||
+    version < 0 ||
+    (payload !== null &&
+      (typeof payload !== "object" || Array.isArray(payload)))
   ) {
     return { ok: false, error: "contract" };
   }
@@ -97,10 +92,10 @@ export function parseRemoteResource(input: unknown): ParseResult {
   return {
     ok: true,
     value: {
-      id: record.id,
-      version: record.version,
-      status: record.status,
-      payload: record.payload as JsonObject | null,
+      id,
+      version,
+      status,
+      payload: payload as JsonObject | null,
     },
   };
 }
