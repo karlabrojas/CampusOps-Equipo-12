@@ -47,6 +47,33 @@
       "command": "npm test -- --runInBand src/course-evaluation/parseRemoteResource.test.ts src/api/backendErrors.test.ts",
       "observedResult": "Las pruebas terminaron correctamente: 15 pruebas de parseRemoteResource y 4 pruebas de backendErrors pasaron. También typecheck, lint y backend:self-test terminaron sin errores.",
       "explanation": "Implementé la validación del sobre remoto mediante parseRemoteResource, incluyendo la aceptación de payload:null y el rechazo de estructuras malformadas. También implementé BackendError y fetchWithTimeout para distinguir errores HTTP, timeout y red. Documenté y verifiqué escenarios de HTTP 500, timeout, JSON malformado, contrato inválido y payload nullable en failure-matrix.json."
+    },
+    {
+      "studentId": "3523110195",
+      "commitShas": [
+        "46550071ad2249165765217659570e86de793621",
+        "b7097407c3ec8a70f795d7cb6e5394e37eb0382e",
+        "39b6ba78646d3f2e4be28bbc70c55f2309004ba2",
+        "eae2924f033b7fec263e2a31ebb18bc060f7f3a2"
+      ],
+      "files": [
+        "docs/api-contract.md",
+        "src/api/courseBackend.ts",
+        "src/api/campusOpsClient.ts",
+        "src/api/campusOpsClient.test.ts",
+        "src/course-evaluation/index.ts",
+        "reports/week-05/contract-tests.json"
+      ],
+      "tests": [
+        "npm test -- --runInBand course-tests/public/week-05.test.ts src/api/campusOpsClient.test.ts src/campusops/application/listIncidents.test.ts src/campusops/application/getIncident.test.ts"
+      ],
+      "reviews": [
+        "Revisión del contrato del cliente API y validación del sobre remoto antes de integrar la rama final del cliente con los casos de uso."
+      ],
+      "prediction": "Esperaba que el cliente aislara el transporte HTTP del dominio, validara el sobre de cada incidencia con parseRemoteResource, mantuviera la clave de idempotencia en reintentos y devolviera errores tipados sin filtrar tokens ni datos sensibles.",
+      "command": "npm test -- --runInBand course-tests/public/week-05.test.ts src/api/campusOpsClient.test.ts src/campusops/application/listIncidents.test.ts src/campusops/application/getIncident.test.ts",
+      "observedResult": "Pasaron 4 suites y 15 pruebas, 0 fallidas. El cliente valida list/detail/create, el parser acepta payload null y rechaza estructuras malformadas, y la reintencidad con operationId se conserva para reintentos sin duplicar la operación.",
+      "explanation": "Documenté el contrato del cliente CampusOps en docs/api-contract.md, implementé la capa del cliente en src/api/campusOpsClient.ts y reforcé la validación del sobre remoto en src/course-evaluation/index.ts. También centralicé errores de backend en src/api/courseBackend.ts, añadí pruebas del flujo normal y de errores en src/api/campusOpsClient.test.ts y dejé la evidencia reproducible en reports/week-05/contract-tests.json. La capa de transporte queda separada del dominio y las pantallas no realizan HTTP directamente."
     }
   ]
 }
