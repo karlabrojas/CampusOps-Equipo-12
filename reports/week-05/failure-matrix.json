@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "week": 5,
+  "commitSha": "6f22e1cff47309ef812c4b5009c3716c67a3ed4d",
+  "generatedAt": "2026-10-01T04:53:51Z",
+  "checks": [
+    {
+      "id": "FM-01",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "node -e \"fetch('http://127.0.0.1:4310/v1/resources', {headers:{Authorization:'Bearer course-valid-token','X-Course-Scenario':'server_error'}}).then(async r => console.log(JSON.stringify({status:r.status, body:await r.text()})))\"",
+      "evidence": "El backend controlado respondió HTTP 500 con el cuerpo {\"code\":\"controlled_failure\"}."
+    },
+    {
+      "id": "FM-02",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "time node -e \"const controller=new AbortController(); setTimeout(()=>controller.abort(),250); fetch('http://127.0.0.1:4310/v1/resources',{headers:{Authorization:'Bearer course-valid-token','X-Course-Scenario':'slow'},signal:controller.signal}).then(async r=>console.log(JSON.stringify({status:r.status,body:await r.text()}))).catch(e=>console.log(JSON.stringify({name:e.name,message:e.message})))\"",
+      "evidence": "La petición fue abortada por timeout a 250 ms; el resultado observado fue AbortError y el tiempo real fue aproximadamente 0.291 s."
+    },
+    {
+      "id": "FM-03",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "node -e \"fetch('http://127.0.0.1:4310/v1/resources',{headers:{Authorization:'Bearer course-valid-token','X-Course-Scenario':'malformed'}}).then(async r=>console.log(JSON.stringify({status:r.status,body:await r.text()})))\"",
+      "evidence": "El backend respondió HTTP 200 pero entregó el cuerpo JSON malformado {\"items\": [}."
+    },
+    {
+      "id": "FM-04",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand src/course-evaluation/parseRemoteResource.test.ts",
+      "evidence": "La prueba de contrato rechazó una respuesta remota con version de tipo string y devolvió {\"ok\":false,\"error\":\"contract\"}; la suite terminó con 15 tests passed."
+    },
+    {
+      "id": "FM-05",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --runInBand src/course-evaluation/parseRemoteResource.test.ts",
+      "evidence": "La prueba de payload nullable aceptó payload:null como respuesta válida; la suite terminó con 15 tests passed."
+    },
+    {
+      "id": "FM-06",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand src/api/backendErrors.test.ts",
+      "evidence": "La suite verificó errores distinguibles para HTTP 500, timeout y fallo de red; terminó con 4 tests passed."
+    }
+  ]
+}
