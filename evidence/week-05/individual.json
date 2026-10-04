@@ -19,6 +19,34 @@
       "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci src/api src/course-evaluation",
       "observedResult": "Pasaron 3 suites y 26 pruebas, 0 fallidas. Además typecheck, lint, make feedback y make verify-week-05 terminaron en pass sobre el commit de integración.",
       "explanation": "Integré dev en feature/week-05-integration-evidence, resolví el conflicto de src/course-evaluation/index.ts conservando la validación equivalente de parseRemoteResource y verifiqué el repositorio integrado. Comprobé que no hay HTTP directo fuera de src/api y que src/api no emite logs, ejecuté las comprobaciones finales y documenté la decisión y su verificación reproducible en engineering.json."
+    },
+    {
+      "studentId": "3523110235",
+      "commitShas": [
+        "6f22e1cff47309ef812c4b5009c3716c67a3ed4d",
+        "99d7df7adf0311601bdabdb9742e6f02379ad503"
+      ],
+      "files": [
+        "src/api/backendErrors.ts",
+        "src/api/backendErrors.test.ts",
+        "src/course-evaluation/index.ts",
+        "src/course-evaluation/parseRemoteResource.test.ts",
+        "reports/week-05/failure-matrix.json"
+      ],
+      "tests": [
+        "npm test -- --runInBand src/course-evaluation/parseRemoteResource.test.ts",
+        "npm test -- --runInBand src/api/backendErrors.test.ts",
+        "npm run typecheck",
+        "npm run lint",
+        "npm run backend:self-test"
+      ],
+      "reviews": [
+        "Revisión de la integración de la validación de respuestas remotas y clasificación de errores antes de la integración final."
+      ],
+      "prediction": "Esperaba que las respuestas remotas válidas fueran aceptadas, que payload:null se considerara un caso válido y que respuestas malformadas, HTTP 500, timeout y errores de red pudieran distinguirse sin exponer información sensible.",
+      "command": "npm test -- --runInBand src/course-evaluation/parseRemoteResource.test.ts src/api/backendErrors.test.ts",
+      "observedResult": "Las pruebas terminaron correctamente: 15 pruebas de parseRemoteResource y 4 pruebas de backendErrors pasaron. También typecheck, lint y backend:self-test terminaron sin errores.",
+      "explanation": "Implementé la validación del sobre remoto mediante parseRemoteResource, incluyendo la aceptación de payload:null y el rechazo de estructuras malformadas. También implementé BackendError y fetchWithTimeout para distinguir errores HTTP, timeout y red. Documenté y verifiqué escenarios de HTTP 500, timeout, JSON malformado, contrato inválido y payload nullable en failure-matrix.json."
     }
   ]
 }
