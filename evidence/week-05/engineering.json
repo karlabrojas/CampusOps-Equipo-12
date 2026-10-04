@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "week": 5,
+  "commitSha": "f7dd2ce3375858596ce84dfb9bf042a5b660b0c5",
+  "decision": "Se integra la semana 5 uniendo origin/dev en la rama de integración mediante merge, conservando el historial de las tres ramas. El único conflicto (src/course-evaluation/index.ts, parseRemoteResource) se resolvió conservando la validación equivalente de dev, de modo que toda respuesta remota pasa por parseRemoteResource antes de mapearse a datos de aplicación, y el cliente de src/api es la única capa que realiza HTTP.",
+  "alternatives": [
+    "Rebase de la rama de integración sobre dev: deja un historial lineal pero reescribe commits ya publicados por otros integrantes.",
+    "Resolver el conflicto aceptando íntegra la versión de la rama de integración: más rápido, pero descartaría la validación de respuestas implementada en dev."
+  ],
+  "tradeoff": "El merge conserva los SHAs originales de cada integrante y no pierde trabajo, a cambio de un commit de merge adicional y de resolver el conflicto a mano. Un rebase habría dado un historial más limpio pero con mayor riesgo de perder cambios ajenos.",
+  "requirementIds": ["AC-01", "AC-02", "AC-03", "AC-04"],
+  "verification": [
+    {
+      "command": "npm run typecheck && npm run lint",
+      "result": "pass",
+      "evidence": "tsc --noEmit y eslint terminaron sin errores sobre el árbol integrado en f7dd2ce."
+    },
+    {
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci src/api src/course-evaluation",
+      "result": "pass",
+      "evidence": "3 suites y 26 pruebas pasaron: campusOpsClient.test.ts (lista, detalle, creación con clave de idempotencia estable y reintento exacto, rechazo de payload nulo o malformado, errores sin exponer datos crudos, sin petición si no hay sesión válida), backendErrors.test.ts (HTTP 500, timeout, fallo de red) y parseRemoteResource.test.ts (payload inválido rechazado, payload null permitido)."
+    },
+    {
+      "command": "Get-ChildItem src -Recurse -Include *.ts,*.tsx | Where-Object { $_.FullName -notmatch '\\\\api\\\\|\\.test\\.|\\.spec\\.' } | Select-String -Pattern 'fetch\\(|XMLHttpRequest|axios'",
+      "result": "pass",
+      "evidence": "Sin coincidencias fuera de src/api y de los archivos de prueba, por lo que las pantallas no realizan HTTP directo; el cliente de src/api es la única capa que llama al backend."
+    },
+    {
+      "command": "Select-String -Path src\\api\\*.ts -Pattern 'console\\.|logger|log\\('",
+      "result": "pass",
+      "evidence": "src/api no emite logs (sin coincidencias). Además, campusOpsClient.test.ts lanza un error con 'Bearer sensitive-token' desde el fetcher y verifica que el error expuesto por findAll no contiene 'sensitive-token'."
+    },
+    {
+      "command": "Test-Connection 8.8.8.8 -Count 1 -Quiet; npx jest --no-watchman --cacheDirectory .jest-cache --ci src/api src/course-evaluation; npm run backend:self-test; npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/public/week-05.test.ts (ejecutados con la red desconectada)",
+      "result": "pass",
+      "evidence": "Con el equipo sin conexión (Test-Connection a 8.8.8.8 devolvió False) pasaron las 26 pruebas de src/api y src/course-evaluation, backend:self-test terminó en PASS y las 5 pruebas públicas de week-05.test.ts pasaron; al reconectar, Test-Connection devolvió True. Las pruebas del cliente usan un fetcher doble (jest.fn) con baseUrl http://backend.test y las de backendErrors usan el backend controlado en 127.0.0.1:4310."
+    },
+    {
+      "command": "npm run backend:self-test",
+      "result": "pass",
+      "evidence": "El backend controlado reportó PASS en roles, conflicto de reasignación, respuesta perdida, idempotencia, evidencia y geocodificación."
+    },
+    {
+      "command": "make verify-week-05 PYTHON=python",
+      "result": "pass",
+      "evidence": "Las 10 comprobaciones del evaluador quedaron en pass (base_files, react_native_profile, toolchain_scripts, workflow_integrity, secret_scan y toolchain_1 a toolchain_5). En Windows se resolvió npm.cmd con un sitecustomize.py temporal fuera del repositorio; el script del curso no se modificó."
+    },
+    {
+      "command": "make feedback",
+      "result": "pass",
+      "evidence": "typecheck, lint, test:smoke, audit:ci (umbral critical) y bundle:release terminaron correctamente."
+    },
+    {
+      "command": "Get-Content reports\\week-05\\failure-matrix.json",
+      "result": "pass",
+      "evidence": "La matriz de fallas registra FM-01 a FM-06 en pass: HTTP 500, timeout a 250 ms con AbortError, JSON malformado, version inválida rechazada con error contract, payload null aceptado y errores distinguibles de HTTP 500, timeout y red."
+    }
+  ]
+}
