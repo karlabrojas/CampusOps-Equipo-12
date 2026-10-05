@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 5,
-  "commitSha": "f7dd2ce3375858596ce84dfb9bf042a5b660b0c5",
+  "commitSha": "be306f6e58262779bc0c6bc6e8de80e42079ffef",
   "decision": "Se integra la semana 5 uniendo origin/dev en la rama de integración mediante merge, conservando el historial de las tres ramas. El único conflicto (src/course-evaluation/index.ts, parseRemoteResource) se resolvió conservando la validación equivalente de dev, de modo que toda respuesta remota pasa por parseRemoteResource antes de mapearse a datos de aplicación, y el cliente de src/api es la única capa que realiza HTTP.",
   "alternatives": [
     "Rebase de la rama de integración sobre dev: deja un historial lineal pero reescribe commits ya publicados por otros integrantes.",
