@@ -100,14 +100,134 @@ export function parseRemoteResource(input: unknown): ParseResult {
   };
 }
 
-export function coordinateRefresh(_events: readonly AuthEvent[]): Readonly<{
+export function coordinateRefresh(events: readonly AuthEvent[]): Readonly<{
   status: "anonymous" | "authenticated";
   activeGeneration: number | null;
   refreshCalls: number;
   retriedRequestIds: readonly string[];
   persistedToken: string | null;
 }> {
-  return pending("coordinateRefresh");
+  let status: "anonymous" | "authenticated" = "anonymous";
+  let activeGeneration: number | null = null;
+  let refreshCalls = 0;
+  let persistedToken: string | null = null;
+
+  const pendingRequests = new Map<number, Set<string>>();
+  const retriedRequestIds: string[] = [];
+  const retriedSet = new Set<string>();
+
+  for (const event of events) {
+    switch (event.type) {
+      case "request401": {
+        const generation = event.generation;
+        const requestId = event.requestId;
+
+        if (
+          generation === undefined ||
+          !Number.isInteger(generation) ||
+          generation < 0 ||
+          !requestId ||
+          requestId.trim().length === 0
+        ) {
+          break;
+        }
+
+        // Si el token ya avanzó, la petición puede reintentarse
+        // con la generación más reciente sin iniciar otra renovación.
+        if (activeGeneration !== null && generation < activeGeneration) {
+          if (!retriedSet.has(requestId)) {
+            retriedSet.add(requestId);
+            retriedRequestIds.push(requestId);
+          }
+          break;
+        }
+
+        // Una renovación por generación, compartida por las peticiones.
+        if (!pendingRequests.has(generation)) {
+          pendingRequests.set(generation, new Set<string>());
+          refreshCalls++;
+        }
+
+        pendingRequests.get(generation)!.add(requestId);
+        break;
+      }
+
+      case "refreshSucceeded": {
+        const generation = event.generation;
+        const token = event.token;
+
+        if (
+          generation === undefined ||
+          !Number.isInteger(generation) ||
+          generation < 0 ||
+          !token ||
+          token.trim().length === 0
+        ) {
+          break;
+        }
+
+        if (activeGeneration !== null && generation <= activeGeneration) {
+          break;
+        }
+
+        activeGeneration = generation;
+        status = "authenticated";
+        persistedToken = token;
+
+        const requests = pendingRequests.get(generation - 1);
+        if (requests) {
+          for (const requestId of requests) {
+            if (!retriedSet.has(requestId)) {
+              retriedSet.add(requestId);
+              retriedRequestIds.push(requestId);
+            }
+          }
+          pendingRequests.delete(generation - 1);
+        }
+        break;
+      }
+
+      case "refreshFailed": {
+        const generation = event.generation;
+
+        if (
+          generation === undefined ||
+          !Number.isInteger(generation) ||
+          generation < 0
+        ) {
+          status = "anonymous";
+          activeGeneration = null;
+          persistedToken = null;
+          pendingRequests.clear();
+          break;
+        }
+
+        if (activeGeneration === null || generation >= activeGeneration) {
+          status = "anonymous";
+          activeGeneration = null;
+          persistedToken = null;
+          pendingRequests.clear();
+        }
+        break;
+      }
+
+      case "logout": {
+        status = "anonymous";
+        activeGeneration = null;
+        persistedToken = null;
+        pendingRequests.clear();
+        break;
+      }
+    }
+  }
+
+  return {
+    status,
+    activeGeneration,
+    refreshCalls,
+    retriedRequestIds,
+    persistedToken,
+  };
 }
 
 export function resolveSync(

@@ -46,6 +46,8 @@ export type CampusOpsClientOptions = Readonly<{
   baseUrl?: string;
   fetcher?: typeof fetch;
   operationIdFactory?: () => string;
+  refreshSession?: () => Promise<string>;
+  clearSession?: () => void | Promise<void>;
 }>;
 
 const INCIDENT_CATEGORIES = new Set<IncidentCategory>([
@@ -141,12 +143,18 @@ export class CampusOpsClient implements IncidentRepository {
   private readonly fetcher: typeof fetch | undefined;
   private readonly getSession: CampusOpsClientOptions["getSession"];
   private readonly operationIdFactory: () => string;
+  private readonly refreshSession: CampusOpsClientOptions["refreshSession"];
+  private readonly clearSession: CampusOpsClientOptions["clearSession"];
+
+  private refreshPromise: Promise<string> | null = null;
 
   constructor(options: CampusOpsClientOptions) {
     this.baseUrl = options.baseUrl;
     this.fetcher = options.fetcher;
     this.getSession = options.getSession;
     this.operationIdFactory = options.operationIdFactory ?? generateOperationId;
+    this.refreshSession = options.refreshSession;
+    this.clearSession = options.clearSession;
   }
 
   async findAll(): Promise<Incident[]> {
@@ -248,6 +256,7 @@ export class CampusOpsClient implements IncidentRepository {
     operationId?: string,
   ): Promise<unknown> {
     const session = this.getSession();
+
     if (
       !session ||
       !nonemptyString(session.actorId) ||
@@ -259,31 +268,127 @@ export class CampusOpsClient implements IncidentRepository {
       );
     }
 
-    const headers: Record<string, string> = {
-      Accept: "application/json",
-      Authorization: `Bearer ${session.accessToken}`,
-      "X-Course-Actor": session.actorId,
+    const send = async (accessToken: string): Promise<unknown> => {
+      const headers: Record<string, string> = {
+        Accept: "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "X-Course-Actor": session.actorId,
+      };
+
+      if (method === "POST") {
+        headers["Content-Type"] = "application/json";
+        headers["Idempotency-Key"] = operationId ?? "";
+      }
+
+      try {
+        return await requestCourseBackend(path, {
+          ...(this.baseUrl === undefined ? {} : { baseUrl: this.baseUrl }),
+          ...(this.fetcher === undefined ? {} : { fetcher: this.fetcher }),
+          init: {
+            method,
+            headers,
+            ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+          },
+        });
+      } catch (error) {
+        if (error instanceof BackendRequestError) {
+          throw apiErrorFromTransport(error);
+        }
+        throw error;
+      }
     };
-    if (method === "POST") {
-      headers["Content-Type"] = "application/json";
-      headers["Idempotency-Key"] = operationId ?? "";
+
+    try {
+      return await send(session.accessToken);
+    } catch (error) {
+      if (
+        !(error instanceof CampusOpsApiError) ||
+        error.kind !== "http" ||
+        error.status !== 401 ||
+        !this.refreshSession
+      ) {
+        throw error;
+      }
     }
 
     try {
-      return await requestCourseBackend(path, {
-        ...(this.baseUrl === undefined ? {} : { baseUrl: this.baseUrl }),
-        ...(this.fetcher === undefined ? {} : { fetcher: this.fetcher }),
-        init: {
-          method,
-          headers,
-          ...(body === undefined ? {} : { body: JSON.stringify(body) }),
-        },
-      });
-    } catch (error) {
-      if (error instanceof BackendRequestError) {
-        throw apiErrorFromTransport(error);
+      const currentSession = this.getSession();
+
+      // Si otra petición ya renovó la sesión, reutilizar el token nuevo.
+      if (
+        currentSession &&
+        currentSession.actorId === session.actorId &&
+        currentSession.accessToken !== session.accessToken &&
+        nonemptyString(currentSession.accessToken)
+      ) {
+        return send(currentSession.accessToken);
       }
-      throw error;
+
+      let accessToken: string;
+
+      try {
+        accessToken = await this.coordinateRefresh();
+      } catch {
+        throw new CampusOpsApiError(
+          "session",
+          "Session expired and could not be refreshed",
+        );
+      }
+
+      // Los errores del reintento se conservan, por ejemplo un HTTP 403.
+      return send(accessToken);
+    } catch {
+      throw new CampusOpsApiError(
+        "session",
+        "Session expired and could not be refreshed",
+      );
     }
+  }
+
+  private coordinateRefresh(): Promise<string> {
+    if (this.refreshPromise) {
+      return this.refreshPromise;
+    }
+
+    if (!this.refreshSession) {
+      return Promise.reject(
+        new CampusOpsApiError("session", "Session refresh is unavailable"),
+      );
+    }
+
+    // La promesa se crea antes de ejecutar el callback.
+    // Así también se comparte si refreshSession lanza sincrónicamente.
+    const refresh = Promise.resolve().then(async () => {
+      const token = await this.refreshSession!();
+
+      if (!nonemptyString(token)) {
+        throw new Error("Session refresh returned an invalid token");
+      }
+
+      return token;
+    });
+
+    this.refreshPromise = refresh;
+
+    void refresh.then(
+      () => {
+        if (this.refreshPromise === refresh) {
+          this.refreshPromise = null;
+        }
+      },
+      async () => {
+        try {
+          await this.clearSession?.();
+        } catch {
+          // No exponer datos sensibles de la limpieza de sesión.
+        } finally {
+          if (this.refreshPromise === refresh) {
+            this.refreshPromise = null;
+          }
+        }
+      },
+    );
+
+    return refresh;
   }
 }
