@@ -1,0 +1,36 @@
+stateDiagram-v2
+    [*] --> Unauthenticated
+
+    Unauthenticated --> SigningIn: login(actorId)
+    SigningIn --> Authenticated: login valid / persist session
+    SigningIn --> Unauthenticated: invalid response or request/storage failure
+
+    Unauthenticated --> Authenticated: restore valid persisted session
+    Unauthenticated --> Expired: restore expired persisted session
+    Expired --> Refreshing: refresh token available
+    Expired --> Unauthenticated: no refresh token / clear persisted session
+
+    Authenticated --> Expired: expiresAt reached
+    Authenticated --> Refreshing: protected request returns 401
+    Expired --> Refreshing: obtain valid session
+    Refreshing --> Authenticated: refresh succeeds / persist rotated tokens
+    Refreshing --> Unauthenticated: refresh fails / clear memory and storage
+
+    Authenticated --> LoggingOut: logout
+    SigningIn --> LoggingOut: logout
+    Expired --> LoggingOut: logout
+    Refreshing --> LoggingOut: logout / invalidate in-flight refresh
+    Unauthenticated --> LoggingOut: logout
+    LoggingOut --> Unauthenticated: persisted credentials deleted
+    LoggingOut --> LoggingOut: storage deletion fails / report error
+
+    note right of LoggingOut
+        Credentials are removed from memory before storage deletion.
+        A late login or refresh response cannot restore the session.
+        Do not report logout success until storage deletion completes.
+    end note
+
+    note right of Authenticated
+        The access and refresh tokens are stored with Expo SecureStore.
+        Tokens are never written to logs.
+    end note

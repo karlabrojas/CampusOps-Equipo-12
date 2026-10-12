@@ -10,6 +10,12 @@ jest.mock('../src/api/courseBackend', () => ({
   }),
 }));
 
+jest.mock('expo-secure-store', () => ({
+  getItemAsync: jest.fn().mockResolvedValue(null),
+  setItemAsync: jest.fn().mockResolvedValue(undefined),
+  deleteItemAsync: jest.fn().mockResolvedValue(undefined),
+}));
+
 test('renders the reproducible baseline and resolves backend state', async () => {
   const view = await render(<App />);
   expect(view.getByText('CampusOps')).toBeTruthy();
