@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "week": 6,
+  "teamId": "12",
+  "members": [
+    {
+      "studentId": "3523110195",
+      "commitShas": [
+        "783ba1e64d5a0f0b979ff1062e8f240c6b5c99a6"
+      ],
+      "files": [
+        "App.tsx",
+        "app.json",
+        "package.json",
+        "package-lock.json",
+        "docs/session-state-machine.mmd",
+        "docs/CAMPUSOPS_API.md",
+        "src/api/campusOpsClient.ts",
+        "src/auth/sessionManager.ts",
+        "src/auth/sessionManager.test.ts",
+        "src/course-evaluation/index.ts",
+        "course-tests/smoke.test.tsx"
+      ],
+      "tests": [
+        "npm test -- --runInBand src/auth/sessionManager.test.ts src/api/campusOpsClient.test.ts course-tests/public/week-06.test.ts course-tests/smoke.test.tsx",
+        "npm run typecheck",
+        "npx eslint App.tsx src/auth/sessionManager.ts src/auth/sessionManager.test.ts src/api/campusOpsClient.ts src/course-evaluation/index.ts course-tests/smoke.test.tsx",
+        "npm run backend:self-test",
+        "npx expo config --type public",
+        "git diff --check"
+      ],
+      "reviews": [
+        "Revisión del ciclo de sesión y de las transiciones de login, expiración, refresh y logout.",
+        "Verificación de que la UI no expone tokens, el logout limpia SecureStore y las renovaciones concurrentes se comparten."
+      ],
+      "prediction": "Esperaba que el login validara la respuesta y persistiera una sesión, que la expiración moviera la sesión a renovación, que solicitudes concurrentes compartieran un único refresh y que un refresh fallido o logout limpiara las credenciales sin exponer tokens en el estado de UI ni en logs.",
+      "command": "npm test -- --runInBand src/auth/sessionManager.test.ts src/api/campusOpsClient.test.ts course-tests/public/week-06.test.ts course-tests/smoke.test.tsx",
+      "observedResult": "Pasaron 4 suites y 19 pruebas, con 0 fallidas. Las pruebas cubren login, restauración, expiración y renovación exitosa, renovación fallida, refresh concurrente compartido, logout con limpieza de memoria y almacenamiento, protección frente a una respuesta de refresh tardía tras logout y reintento de una petición API después de un 401. También pasaron el typecheck, lint enfocado, self-test del backend, validación de configuración Expo y git diff --check.",
+      "explanation": "Implementé el ciclo de sesión en src/auth/sessionManager.ts con persistencia en expo-secure-store, estados explícitos, reloj y almacenamiento inyectables para pruebas y bloqueo de refresh compartido. Conecté SessionManager a src/api/campusOpsClient.ts para renovar ante un 401 y reintentar una sola vez, y añadí la interfaz inicial de login/logout en App.tsx. El diagrama docs/session-state-machine.mmd describe las transiciones; actualicé la documentación API y las pruebas de sesión. El backend usado es un fixture académico. Las pruebas verifican el modelo y los adaptadores locales, no una autenticación de producción."
+    }
+  ]
+}
