@@ -259,4 +259,78 @@ describe("CampusOpsClient", () => {
 
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
+
+  it("clears the session when refreshSession throws synchronously", async () => {
+    let clearCalls = 0;
+    const fetcher = jest.fn(async () =>
+      jsonResponse({ code: "unauthorized" }, 401),
+    );
+
+    const client = new CampusOpsClient({
+      baseUrl: "http://backend.test",
+      getSession: () => ({
+        actorId: "reporter-1",
+        accessToken: "expired-token",
+      }),
+      fetcher: fetcher as typeof fetch,
+      refreshSession: () => {
+        throw new Error("refresh failed");
+      },
+      clearSession: () => {
+        clearCalls += 1;
+      },
+    });
+
+    await expect(client.findAll()).rejects.toMatchObject({
+      kind: "session",
+    });
+
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(clearCalls).toBe(1);
+  });
+
+  it("preserves an HTTP 403 returned by the retry after refresh", async () => {
+    let session = {
+      actorId: "reporter-1",
+      accessToken: "expired-token",
+    };
+    let clearCalls = 0;
+
+    const fetcher = jest.fn(
+      async (_input: RequestInfo | URL, init?: RequestInit) => {
+        const headers = init?.headers as Record<string, string>;
+
+        if (headers.Authorization === "Bearer expired-token") {
+          return jsonResponse({ code: "unauthorized" }, 401);
+        }
+
+        return jsonResponse({ code: "forbidden" }, 403);
+      },
+    );
+
+    const client = new CampusOpsClient({
+      baseUrl: "http://backend.test",
+      getSession: () => session,
+      fetcher: fetcher as typeof fetch,
+      refreshSession: async () => {
+        session = {
+          actorId: "reporter-1",
+          accessToken: "refreshed-token",
+        };
+        return "refreshed-token";
+      },
+      clearSession: () => {
+        clearCalls += 1;
+      },
+    });
+
+    await expect(client.findAll()).rejects.toMatchObject({
+      kind: "http",
+      status: 403,
+      code: "forbidden",
+    });
+
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(clearCalls).toBe(0);
+  });
 });
