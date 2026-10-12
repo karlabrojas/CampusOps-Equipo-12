@@ -218,6 +218,40 @@ export function coordinateRefresh(events: readonly AuthEvent[]): Readonly<{
         pendingRequests.clear();
         break;
       }
+  const retriedRequestIds: string[] = [];
+  let persistedToken: string | null = null;
+
+  for (const event of events) {
+    switch (event.type) {
+      case "request401":
+        if (typeof event.requestId === "string" && event.requestId.length > 0) {
+          retriedRequestIds.push(event.requestId);
+        }
+        if (typeof event.generation === "number" && Number.isInteger(event.generation)) {
+          activeGeneration = event.generation;
+        }
+        break;
+      case "refreshSucceeded":
+        refreshCalls += 1;
+        if (typeof event.generation === "number" && Number.isInteger(event.generation)) {
+          activeGeneration = event.generation;
+        }
+        if (typeof event.token === "string" && event.token.length > 0) {
+          persistedToken = event.token;
+        }
+        status = "authenticated";
+        break;
+      case "refreshFailed":
+        refreshCalls += 1;
+        status = "anonymous";
+        activeGeneration = null;
+        persistedToken = null;
+        break;
+      case "logout":
+        status = "anonymous";
+        activeGeneration = null;
+        persistedToken = null;
+        break;
     }
   }
 

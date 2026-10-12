@@ -42,7 +42,11 @@ export class CampusOpsApiError extends Error {
 }
 
 export type CampusOpsClientOptions = Readonly<{
-  getSession: () => CampusOpsSession | null;
+  getSession?: () => CampusOpsSession | null;
+  sessionProvider?: Readonly<{
+    getValidSession: () => Promise<CampusOpsSession | null>;
+    refreshSession: () => Promise<CampusOpsSession | null>;
+  }>;
   baseUrl?: string;
   fetcher?: typeof fetch;
   operationIdFactory?: () => string;
@@ -142,6 +146,7 @@ export class CampusOpsClient implements IncidentRepository {
   private readonly baseUrl: string | undefined;
   private readonly fetcher: typeof fetch | undefined;
   private readonly getSession: CampusOpsClientOptions["getSession"];
+  private readonly sessionProvider: CampusOpsClientOptions["sessionProvider"];
   private readonly operationIdFactory: () => string;
   private readonly refreshSession: CampusOpsClientOptions["refreshSession"];
   private readonly clearSession: CampusOpsClientOptions["clearSession"];
@@ -149,9 +154,13 @@ export class CampusOpsClient implements IncidentRepository {
   private refreshPromise: Promise<string> | null = null;
 
   constructor(options: CampusOpsClientOptions) {
+    if (options.getSession === undefined && options.sessionProvider === undefined) {
+      throw new Error("CampusOpsClient requires a session source");
+    }
     this.baseUrl = options.baseUrl;
     this.fetcher = options.fetcher;
     this.getSession = options.getSession;
+    this.sessionProvider = options.sessionProvider;
     this.operationIdFactory = options.operationIdFactory ?? generateOperationId;
     this.refreshSession = options.refreshSession;
     this.clearSession = options.clearSession;
@@ -257,6 +266,63 @@ export class CampusOpsClient implements IncidentRepository {
   ): Promise<unknown> {
     const session = this.getSession();
 
+    const session = this.sessionProvider
+      ? await this.sessionProvider.getValidSession()
+      : this.getSession?.() ?? null;
+    if (!this.hasValidCredentials(session)) {
+      throw new CampusOpsApiError(
+        "session",
+        "An authenticated session is required",
+      );
+    }
+
+    try {
+      return await this.sendRequest(path, method, session, body, operationId);
+    } catch (error) {
+      if (
+        !(error instanceof CampusOpsApiError) ||
+        error.kind !== "http" ||
+        error.status !== 401 ||
+        !this.sessionProvider
+      ) {
+        throw error;
+      }
+
+      const refreshedSession = await this.sessionProvider.refreshSession();
+      if (!this.hasValidCredentials(refreshedSession)) {
+        throw new CampusOpsApiError(
+          "session",
+          "The session expired and could not be renewed",
+        );
+      }
+      return this.sendRequest(
+        path,
+        method,
+        refreshedSession,
+        body,
+        operationId,
+      );
+    }
+  }
+
+  private hasValidCredentials(
+    session: CampusOpsSession | null,
+  ): session is CampusOpsSession {
+    return (
+      session !== null &&
+      nonemptyString(session.actorId) &&
+      nonemptyString(session.accessToken)
+    );
+  }
+
+  private async sendRequest(
+    path: string,
+    method: "GET" | "POST",
+    sessionOverride: CampusOpsSession,
+    body?: unknown,
+    operationId?: string,
+  ): Promise<unknown> {
+    const session = sessionOverride;
     if (
       !session ||
       !nonemptyString(session.actorId) ||
