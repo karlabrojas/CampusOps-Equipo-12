@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "week": 6,
+  "commitSha": "d2ba7750bc668b8e0ef1c78ccca342dc5c9c2884",
+  "generatedAt": "2026-10-05T18:40:24.4753008-06:00",
+  "checks": [
+    {
+      "id": "W06-01-refresh-coalescing",
+      "status": "pass",
+      "scenarioType": "concurrency",
+      "command": "npm test -- --runInBand course-tests/public/week-06.test.ts",
+      "evidence": "Tres solicitudes con 401 concurrentes se convierten en un único refresh, y las solicitudes quedan reintentadas con el token nuevo."
+    },
+    {
+      "id": "W06-02-logout-clears-session",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --runInBand course-tests/public/week-06.test.ts",
+      "evidence": "El evento logout limpia el estado persistido y deja la sesión en anonymous con token nullo."
+    }
+  ]
+}

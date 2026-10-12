@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "week": 6,
+  "commitSha": "d2ba7750bc668b8e0ef1c78ccca342dc5c9c2884",
+  "decision": "Se implementa la coordinación del refresh compartido mediante la función coordinateRefresh. El estado de autenticación se mantiene en una sola generación activa, los 401 concurrentes se coalescen en un único refresh y el logout limpia el estado persistido para evitar ciclos infinitos o sesiones inconsistentes.",
+  "alternatives": [
+    "Ejecutar un refresh por cada 401 recibido: correcto en teoría, pero genera condiciones de carrera, varias llamadas innecesarias al backend y tokens inconsistentes.",
+    "Ignorar el 401 y dejar la sesión activa: rompe el flujo de autenticación y puede quedar la app en un estado imposible con token vencido."
+  ],
+  "tradeoff": "La solución centraliza la coordinación del refresh y el estado de sesión en un único punto, a cambio de introducir un modelo de generación y de reforzar la limpieza de tokens en caso de fallo del refresh.",
+  "requirementIds": ["AC-06-01", "AC-06-02"],
+  "verification": [
+    {
+      "command": "npm test -- --runInBand course-tests/public/week-06.test.ts",
+      "result": "pass",
+      "evidence": "Las 2 pruebas públicas de la semana 6 pasan: la coalescencia de 401s en un único refresh y el logout que limpia la sesión."
+    }
+  ]
+}

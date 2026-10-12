@@ -1,0 +1,39 @@
+flowchart TD
+    A[No autenticado] --> B[Login]
+    B --> C[Sesión válida]
+    C --> D[Petición /profile]
+    C --> E[Petición /incidents]
+    C --> F[Petición /assignments]
+
+    D --> G{401?}
+    E --> G
+    F --> G
+
+    G -->|No| H[Respuesta OK]
+    G -->|Sí| I{¿Existe refresh en curso?}
+
+    I -->|No| J[Iniciar refresh único]
+    J --> K[Solicitar nuevo access token]
+    K --> L[Guardar token nuevo]
+    L --> M[Reintentar peticiones fallidas]
+    M --> N[OK]
+
+    I -->|Sí| O[Esperar refresh activo]
+    O --> L
+
+    J --> P{Refresh falla?}
+    P -->|Sí| Q[Eliminar accessToken]
+    Q --> R[Eliminar refreshToken]
+    R --> S[Limpiar sesión]
+    S --> T[Volver a Login]
+    P -->|No| M
+
+    classDef state fill:#1f4d7a,stroke:#7cc7ff,color:#fff;
+    classDef ok fill:#2d6a4f,stroke:#8de3b5,color:#fff;
+    classDef warn fill:#7a4a12,stroke:#efb15a,color:#fff;
+    classDef bad fill:#6a1b1b,stroke:#f39c9c,color:#fff;
+
+    class A,B,C,D,E,F,G,I,J,K,L,M,N,O,P,Q,R,S,T state;
+    class H,N ok;
+    class P warn;
+    class Q,R,S,T bad;

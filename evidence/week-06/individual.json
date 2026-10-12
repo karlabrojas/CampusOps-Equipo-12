@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "week": 6,
+  "teamId": "12",
+  "members": [
+    {
+      "studentId": "3523110195",
+      "commitShas": [
+        "d2ba7750bc668b8e0ef1c78ccca342dc5c9c2884"
+      ],
+      "files": [
+        "src/course-evaluation/index.ts",
+        "docs/session-state-machine.mmd",
+        "reports/week-06/auth-tests.json",
+        "reports/week-06/concurrency.json",
+        "actividad-semana-6.md"
+      ],
+      "tests": [
+        "npm test -- --runInBand course-tests/public/week-06.test.ts"
+      ],
+      "reviews": [
+        "Revisión del flujo de sesión y del coalescing del refresh para evitar múltiples renovaciones concurrentes, así como del cierre seguro del estado ante logout."
+      ],
+      "prediction": "Esperaba que varias peticiones con 401 se consolidaran en un solo refresh, que el token nuevo se persisitiera y que el logout limpiara el estado sin entrar en un ciclo infinito.",
+      "command": "npm test -- --runInBand course-tests/public/week-06.test.ts",
+      "observedResult": "Las 2 pruebas de la Semana 6 pasaron: la coalescencia del refresh y la limpieza del estado al hacer logout.",
+      "explanation": "Implementé la coordinación del refresh compartido en src/course-evaluation/index.ts usando el resumen de eventos de autenticación para consolidar 401 concurrentes, registrar la generación activa, guardar el token nuevo y limpiar la sesión en logout. Además documenté el flujo en docs/session-state-machine.mmd y dejé la evidencia reproducible en reports/week-06 junto con la entrega del classroom en actividad-semana-6.md."
+    }
+  ]
+}

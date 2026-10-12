@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "week": 6,
+  "generatedAt": "2026-10-05T18:40:24.4753008-06:00",
+  "summary": {
+    "concurrentRequests": 3,
+    "refreshCalls": 1,
+    "status": "authenticated",
+    "retriedRequestIds": ["a", "b", "c"],
+    "persistedToken": "course-token-1"
+  },
+  "checks": [
+    {
+      "id": "W06-CONC-01",
+      "status": "pass",
+      "scenario": "three requests receive 401 in parallel",
+      "result": "Only one refresh is executed and all three requests retry successfully."
+    },
+    {
+      "id": "W06-CONC-02",
+      "status": "pass",
+      "scenario": "refresh fails",
+      "result": "Session is cleared, tokens are removed, and the user returns to login."
+    }
+  ]
+}
