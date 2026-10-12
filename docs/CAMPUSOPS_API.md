@@ -35,7 +35,9 @@ Se conservan `/v1/resources`, `/v1/resources/action` y `/v1/session/refresh` par
 
 ### Semanas 5–6 — DTO y sesión
 
-`parseRemoteResource` valida el sobre `{ id, version, status, payload }`: ID/estado no vacíos, versión entera no negativa y payload objeto o null. Ignora campos futuros del sobre. El cliente valida además el dominio antes de ejecutar una operación; un payload null válido no autoriza inventar datos. `coordinateRefresh` conserva el contrato de concurrencia/expiración/logout existente, aplicado a solicitudes de incidencias. Probar también autorización real contra el backend.
+`parseRemoteResource` valida el sobre `{ id, version, status, payload }`: ID/estado no vacíos, versión entera no negativa y payload objeto o null. Ignora campos futuros del sobre. El cliente valida además el dominio antes de ejecutar una operación; un payload null válido no autoriza inventar datos.
+
+`SessionManager` implementa login, restauración segura, detección de expiración, refresh compartido, logout e invalidación de respuestas tardías. Persiste la sesión con `expo-secure-store`; el estado observado por la UI sólo contiene actor, rol y expiración, no tokens. `CampusOpsClient` acepta el gestor como `sessionProvider`: adquiere una sesión válida antes de la petición, renueva al recibir `401` y reintenta la petición una sola vez. Una renovación fallida termina en estado no autenticado y limpia el almacenamiento. El diagrama fuente de estas transiciones está en `docs/session-state-machine.mmd`. Los tests usan reloj/storage/fetcher inyectados; no usan esperas temporizadas.
 
 ### Semana 8 — sincronización
 
