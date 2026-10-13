@@ -154,7 +154,10 @@ export class CampusOpsClient implements IncidentRepository {
   private refreshPromise: Promise<string> | null = null;
 
   constructor(options: CampusOpsClientOptions) {
-    if (options.getSession === undefined && options.sessionProvider === undefined) {
+    if (
+      options.getSession === undefined &&
+      options.sessionProvider === undefined
+    ) {
       throw new Error("CampusOpsClient requires a session source");
     }
     this.baseUrl = options.baseUrl;
@@ -257,18 +260,16 @@ export class CampusOpsClient implements IncidentRepository {
       throw error;
     }
   }
-
   private async request(
     path: string,
     method: "GET" | "POST",
     body?: unknown,
     operationId?: string,
   ): Promise<unknown> {
-    const session = this.getSession();
-
     const session = this.sessionProvider
       ? await this.sessionProvider.getValidSession()
-      : this.getSession?.() ?? null;
+      : (this.getSession?.() ?? null);
+
     if (!this.hasValidCredentials(session)) {
       throw new CampusOpsApiError(
         "session",
@@ -280,27 +281,69 @@ export class CampusOpsClient implements IncidentRepository {
       return await this.sendRequest(path, method, session, body, operationId);
     } catch (error) {
       if (
-        !(error instanceof CampusOpsApiError) ||
-        error.kind !== "http" ||
-        error.status !== 401 ||
-        !this.sessionProvider
+        !this.isUnauthorized(error) ||
+        (!this.sessionProvider && !this.refreshSession)
       ) {
         throw error;
       }
 
-      const refreshedSession = await this.sessionProvider.refreshSession();
-      if (!this.hasValidCredentials(refreshedSession)) {
+      // Un solo reintento: se llama a sendRequest, no a request, así que un
+      // segundo 401 se propaga como error y no puede generar un bucle.
+      const renewed = await this.renewSession(session);
+      return this.sendRequest(path, method, renewed, body, operationId);
+    }
+  }
+
+  private isUnauthorized(error: unknown): boolean {
+    return (
+      error instanceof CampusOpsApiError &&
+      error.kind === "http" &&
+      error.status === 401
+    );
+  }
+
+  private async renewSession(
+    stale: CampusOpsSession,
+  ): Promise<CampusOpsSession> {
+    // Camino 1: SessionManager (ya comparte una sola renovación).
+    if (this.sessionProvider) {
+      let refreshed: CampusOpsSession | null;
+      try {
+        refreshed = await this.sessionProvider.refreshSession();
+      } catch {
         throw new CampusOpsApiError(
           "session",
           "The session expired and could not be renewed",
         );
       }
-      return this.sendRequest(
-        path,
-        method,
-        refreshedSession,
-        body,
-        operationId,
+      if (!this.hasValidCredentials(refreshed)) {
+        throw new CampusOpsApiError(
+          "session",
+          "The session expired and could not be renewed",
+        );
+      }
+      return refreshed;
+    }
+
+    // Camino 2: callback refreshSession con promesa compartida.
+    // Si otra petición ya renovó, se reutiliza el token nuevo.
+    const current = this.getSession?.() ?? null;
+    if (
+      current !== null &&
+      current.actorId === stale.actorId &&
+      current.accessToken !== stale.accessToken &&
+      nonemptyString(current.accessToken)
+    ) {
+      return { actorId: stale.actorId, accessToken: current.accessToken };
+    }
+
+    try {
+      const accessToken = await this.coordinateRefresh();
+      return { actorId: stale.actorId, accessToken };
+    } catch {
+      throw new CampusOpsApiError(
+        "session",
+        "Session expired and could not be refreshed",
       );
     }
   }
@@ -318,96 +361,36 @@ export class CampusOpsClient implements IncidentRepository {
   private async sendRequest(
     path: string,
     method: "GET" | "POST",
-    sessionOverride: CampusOpsSession,
+    session: CampusOpsSession,
     body?: unknown,
     operationId?: string,
   ): Promise<unknown> {
-    const session = sessionOverride;
-    if (
-      !session ||
-      !nonemptyString(session.actorId) ||
-      !nonemptyString(session.accessToken)
-    ) {
-      throw new CampusOpsApiError(
-        "session",
-        "An authenticated session is required",
-      );
-    }
-
-    const send = async (accessToken: string): Promise<unknown> => {
-      const headers: Record<string, string> = {
-        Accept: "application/json",
-        Authorization: `Bearer ${accessToken}`,
-        "X-Course-Actor": session.actorId,
-      };
-
-      if (method === "POST") {
-        headers["Content-Type"] = "application/json";
-        headers["Idempotency-Key"] = operationId ?? "";
-      }
-
-      try {
-        return await requestCourseBackend(path, {
-          ...(this.baseUrl === undefined ? {} : { baseUrl: this.baseUrl }),
-          ...(this.fetcher === undefined ? {} : { fetcher: this.fetcher }),
-          init: {
-            method,
-            headers,
-            ...(body === undefined ? {} : { body: JSON.stringify(body) }),
-          },
-        });
-      } catch (error) {
-        if (error instanceof BackendRequestError) {
-          throw apiErrorFromTransport(error);
-        }
-        throw error;
-      }
+    const headers: Record<string, string> = {
+      Accept: "application/json",
+      Authorization: `Bearer ${session.accessToken}`,
+      "X-Course-Actor": session.actorId,
     };
 
-    try {
-      return await send(session.accessToken);
-    } catch (error) {
-      if (
-        !(error instanceof CampusOpsApiError) ||
-        error.kind !== "http" ||
-        error.status !== 401 ||
-        !this.refreshSession
-      ) {
-        throw error;
-      }
+    if (method === "POST") {
+      headers["Content-Type"] = "application/json";
+      headers["Idempotency-Key"] = operationId ?? "";
     }
 
     try {
-      const currentSession = this.getSession();
-
-      // Si otra petición ya renovó la sesión, reutilizar el token nuevo.
-      if (
-        currentSession &&
-        currentSession.actorId === session.actorId &&
-        currentSession.accessToken !== session.accessToken &&
-        nonemptyString(currentSession.accessToken)
-      ) {
-        return send(currentSession.accessToken);
+      return await requestCourseBackend(path, {
+        ...(this.baseUrl === undefined ? {} : { baseUrl: this.baseUrl }),
+        ...(this.fetcher === undefined ? {} : { fetcher: this.fetcher }),
+        init: {
+          method,
+          headers,
+          ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+        },
+      });
+    } catch (error) {
+      if (error instanceof BackendRequestError) {
+        throw apiErrorFromTransport(error);
       }
-
-      let accessToken: string;
-
-      try {
-        accessToken = await this.coordinateRefresh();
-      } catch {
-        throw new CampusOpsApiError(
-          "session",
-          "Session expired and could not be refreshed",
-        );
-      }
-
-      // Los errores del reintento se conservan, por ejemplo un HTTP 403.
-      return send(accessToken);
-    } catch {
-      throw new CampusOpsApiError(
-        "session",
-        "Session expired and could not be refreshed",
-      );
+      throw error;
     }
   }
 

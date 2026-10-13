@@ -116,11 +116,24 @@ export function coordinateRefresh(events: readonly AuthEvent[]): Readonly<{
   const retriedRequestIds: string[] = [];
   const retriedSet = new Set<string>();
 
+  const markRetried = (requestId: string): void => {
+    if (!retriedSet.has(requestId)) {
+      retriedSet.add(requestId);
+      retriedRequestIds.push(requestId);
+    }
+  };
+
+  const clearSession = (): void => {
+    status = "anonymous";
+    activeGeneration = null;
+    persistedToken = null;
+    pendingRequests.clear();
+  };
+
   for (const event of events) {
     switch (event.type) {
       case "request401": {
-        const generation = event.generation;
-        const requestId = event.requestId;
+        const { generation, requestId } = event;
 
         if (
           generation === undefined ||
@@ -132,29 +145,23 @@ export function coordinateRefresh(events: readonly AuthEvent[]): Readonly<{
           break;
         }
 
-        // Si el token ya avanzó, la petición puede reintentarse
-        // con la generación más reciente sin iniciar otra renovación.
+        // El token ya avanzó: se reintenta sin iniciar otra renovación.
         if (activeGeneration !== null && generation < activeGeneration) {
-          if (!retriedSet.has(requestId)) {
-            retriedSet.add(requestId);
-            retriedRequestIds.push(requestId);
-          }
+          markRetried(requestId);
           break;
         }
 
-        // Una renovación por generación, compartida por las peticiones.
+        // Una sola renovación por generación, compartida por las solicitudes.
         if (!pendingRequests.has(generation)) {
           pendingRequests.set(generation, new Set<string>());
           refreshCalls++;
         }
-
         pendingRequests.get(generation)!.add(requestId);
         break;
       }
 
       case "refreshSucceeded": {
-        const generation = event.generation;
-        const token = event.token;
+        const { generation, token } = event;
 
         if (
           generation === undefined ||
@@ -166,6 +173,7 @@ export function coordinateRefresh(events: readonly AuthEvent[]): Readonly<{
           break;
         }
 
+        // Respuesta obsoleta o duplicada: se ignora.
         if (activeGeneration !== null && generation <= activeGeneration) {
           break;
         }
@@ -174,83 +182,39 @@ export function coordinateRefresh(events: readonly AuthEvent[]): Readonly<{
         status = "authenticated";
         persistedToken = token;
 
-        const requests = pendingRequests.get(generation - 1);
-        if (requests) {
-          for (const requestId of requests) {
-            if (!retriedSet.has(requestId)) {
-              retriedSet.add(requestId);
-              retriedRequestIds.push(requestId);
-            }
+        // CAMBIO 1: se reintentan todas las pendientes de generaciones
+        // anteriores, no solo las de generation - 1.
+        for (const [pendingGeneration, requests] of pendingRequests) {
+          if (pendingGeneration < generation) {
+            for (const requestId of requests) markRetried(requestId);
+            pendingRequests.delete(pendingGeneration);
           }
-          pendingRequests.delete(generation - 1);
         }
         break;
       }
 
       case "refreshFailed": {
-        const generation = event.generation;
+        const { generation } = event;
 
         if (
           generation === undefined ||
           !Number.isInteger(generation) ||
-          generation < 0
+          generation < 0 ||
+          activeGeneration === null ||
+          generation >= activeGeneration
         ) {
-          status = "anonymous";
-          activeGeneration = null;
-          persistedToken = null;
-          pendingRequests.clear();
-          break;
-        }
-
-        if (activeGeneration === null || generation >= activeGeneration) {
-          status = "anonymous";
-          activeGeneration = null;
-          persistedToken = null;
-          pendingRequests.clear();
+          clearSession();
         }
         break;
       }
 
       case "logout": {
-        status = "anonymous";
-        activeGeneration = null;
-        persistedToken = null;
-        pendingRequests.clear();
+        clearSession();
         break;
       }
-  const retriedRequestIds: string[] = [];
-  let persistedToken: string | null = null;
 
-  for (const event of events) {
-    switch (event.type) {
-      case "request401":
-        if (typeof event.requestId === "string" && event.requestId.length > 0) {
-          retriedRequestIds.push(event.requestId);
-        }
-        if (typeof event.generation === "number" && Number.isInteger(event.generation)) {
-          activeGeneration = event.generation;
-        }
-        break;
-      case "refreshSucceeded":
-        refreshCalls += 1;
-        if (typeof event.generation === "number" && Number.isInteger(event.generation)) {
-          activeGeneration = event.generation;
-        }
-        if (typeof event.token === "string" && event.token.length > 0) {
-          persistedToken = event.token;
-        }
-        status = "authenticated";
-        break;
-      case "refreshFailed":
-        refreshCalls += 1;
-        status = "anonymous";
-        activeGeneration = null;
-        persistedToken = null;
-        break;
-      case "logout":
-        status = "anonymous";
-        activeGeneration = null;
-        persistedToken = null;
+      // CAMBIO 2: evento desconocido, se ignora.
+      default:
         break;
     }
   }
