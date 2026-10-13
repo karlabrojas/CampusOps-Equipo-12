@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "week": 6,
-  "commitSha": "55e07ea7dc0ce77b8444385e3377a22e6004b9e3",
-  "generatedAt": "2026-10-12T18:23:43.400Z",
+  "commitSha": "f40c80bbbfd735e52027efc8f49b0dd66a21cd41",
+  "generatedAt": "2026-10-13T04:05:47.426Z",
   "summary": {
     "suites": 2,
     "tests": 23,
@@ -11,109 +11,11 @@
   },
   "checks": [
     {
-      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion positiva nominal: el tecnico asignado resuelve su incidencia",
-      "status": "pass",
-      "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
-      "evidence": "jest assertion \"nominal: el tecnico asignado resuelve su incidencia\" passed in 2 ms (src/campusops/security/t06-role-authorization.test.ts)"
-    },
-    {
-      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion positiva nominal: coordinacion cierra una incidencia resuelta",
-      "status": "pass",
-      "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
-      "evidence": "jest assertion \"nominal: coordinacion cierra una incidencia resuelta\" passed in 0 ms (src/campusops/security/t06-role-authorization.test.ts)"
-    },
-    {
-      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion positiva nominal: coordinacion reabre una incidencia cerrada y conserva al tecnico",
-      "status": "pass",
-      "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
-      "evidence": "jest assertion \"nominal: coordinacion reabre una incidencia cerrada y conserva al tecnico\" passed in 0 ms (src/campusops/security/t06-role-authorization.test.ts)"
-    },
-    {
-      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion positiva nominal: coordinacion reabre una incidencia resuelta",
-      "status": "pass",
-      "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
-      "evidence": "jest assertion \"nominal: coordinacion reabre una incidencia resuelta\" passed in 0 ms (src/campusops/security/t06-role-authorization.test.ts)"
-    },
-    {
-      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion negativa (ejecucion directa, sin UI) failure: un tecnico NO asignado no puede resolver y nada cambia",
-      "status": "pass",
-      "scenarioType": "failure",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
-      "evidence": "jest assertion \"failure: un tecnico NO asignado no puede resolver y nada cambia\" passed in 18 ms (src/campusops/security/t06-role-authorization.test.ts)"
-    },
-    {
-      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion negativa (ejecucion directa, sin UI) failure: un reportante no puede resolver ni siquiera su propia incidencia",
-      "status": "pass",
-      "scenarioType": "failure",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
-      "evidence": "jest assertion \"failure: un reportante no puede resolver ni siquiera su propia incidencia\" passed in 13 ms (src/campusops/security/t06-role-authorization.test.ts)"
-    },
-    {
-      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion negativa (ejecucion directa, sin UI) failure: un reportante no puede cerrar ni reabrir",
-      "status": "pass",
-      "scenarioType": "failure",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
-      "evidence": "jest assertion \"failure: un reportante no puede cerrar ni reabrir\" passed in 1 ms (src/campusops/security/t06-role-authorization.test.ts)"
-    },
-    {
-      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion negativa (ejecucion directa, sin UI) failure: un tecnico (aunque este asignado) no puede cerrar ni reabrir",
-      "status": "pass",
-      "scenarioType": "failure",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
-      "evidence": "jest assertion \"failure: un tecnico (aunque este asignado) no puede cerrar ni reabrir\" passed in 1 ms (src/campusops/security/t06-role-authorization.test.ts)"
-    },
-    {
-      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion negativa (ejecucion directa, sin UI) boundary: un actor desconocido es rechazado en las tres operaciones",
-      "status": "pass",
-      "scenarioType": "boundary",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
-      "evidence": "jest assertion \"boundary: un actor desconocido es rechazado en las tres operaciones\" passed in 1 ms (src/campusops/security/t06-role-authorization.test.ts)"
-    },
-    {
-      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion negativa (ejecucion directa, sin UI) boundary: coordinacion no puede cerrar una incidencia que no esta resuelta",
-      "status": "pass",
-      "scenarioType": "boundary",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
-      "evidence": "jest assertion \"boundary: coordinacion no puede cerrar una incidencia que no esta resuelta\" passed in 0 ms (src/campusops/security/t06-role-authorization.test.ts)"
-    },
-    {
-      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion negativa (ejecucion directa, sin UI) boundary: no se puede reabrir una incidencia sin tecnico asignado",
-      "status": "pass",
-      "scenarioType": "boundary",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
-      "evidence": "jest assertion \"boundary: no se puede reabrir una incidencia sin tecnico asignado\" passed in 0 ms (src/campusops/security/t06-role-authorization.test.ts)"
-    },
-    {
-      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion negativa (ejecucion directa, sin UI) boundary: una version base obsoleta se rechaza sin modificar la incidencia",
-      "status": "pass",
-      "scenarioType": "boundary",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
-      "evidence": "jest assertion \"boundary: una version base obsoleta se rechaza sin modificar la incidencia\" passed in 0 ms (src/campusops/security/t06-role-authorization.test.ts)"
-    },
-    {
-      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion negativa (ejecucion directa, sin UI) boundary: una incidencia inexistente devuelve not-found",
-      "status": "pass",
-      "scenarioType": "boundary",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
-      "evidence": "jest assertion \"boundary: una incidencia inexistente devuelve not-found\" passed in 0 ms (src/campusops/security/t06-role-authorization.test.ts)"
-    },
-    {
-      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion negativa (ejecucion directa, sin UI) failure: resolver dos veces la misma incidencia se rechaza",
-      "status": "pass",
-      "scenarioType": "failure",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
-      "evidence": "jest assertion \"failure: resolver dos veces la misma incidencia se rechaza\" passed in 1 ms (src/campusops/security/t06-role-authorization.test.ts)"
-    },
-    {
       "id": "src/auth/session-auth-failures.test.ts::T-07 refresh fallido failure: un refresh rechazado deja la sesion no autenticada y sin tokens persistidos",
       "status": "pass",
       "scenarioType": "failure",
       "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
-      "evidence": "jest assertion \"failure: un refresh rechazado deja la sesion no autenticada y sin tokens persistidos\" passed in 3 ms (src/auth/session-auth-failures.test.ts)"
+      "evidence": "jest assertion \"failure: un refresh rechazado deja la sesion no autenticada y sin tokens persistidos\" passed in 5 ms (src/auth/session-auth-failures.test.ts)"
     },
     {
       "id": "src/auth/session-auth-failures.test.ts::T-07 refresh fallido failure: una respuesta de refresh con contrato invalido limpia la sesion",
@@ -127,7 +29,7 @@
       "status": "pass",
       "scenarioType": "failure",
       "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
-      "evidence": "jest assertion \"failure: un refresh token obsoleto no genera renovaciones repetidas (sin loop)\" passed in 1 ms (src/auth/session-auth-failures.test.ts)"
+      "evidence": "jest assertion \"failure: un refresh token obsoleto no genera renovaciones repetidas (sin loop)\" passed in 0 ms (src/auth/session-auth-failures.test.ts)"
     },
     {
       "id": "src/auth/session-auth-failures.test.ts::T-07 refresh obsoleto/invalido failure: solicitudes concurrentes con refresh obsoleto comparten UN solo intento",
@@ -148,28 +50,126 @@
       "status": "pass",
       "scenarioType": "nominal",
       "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
-      "evidence": "jest assertion \"nominal: logout elimina el token persistido y pasa por loggingOut a unauthenticated\" passed in 0 ms (src/auth/session-auth-failures.test.ts)"
+      "evidence": "jest assertion \"nominal: logout elimina el token persistido y pasa por loggingOut a unauthenticated\" passed in 1 ms (src/auth/session-auth-failures.test.ts)"
     },
     {
       "id": "src/auth/session-auth-failures.test.ts::T-07 logout sin tokens failure: despues del logout no hay credenciales ni se intenta renovar",
       "status": "pass",
       "scenarioType": "failure",
       "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
-      "evidence": "jest assertion \"failure: despues del logout no hay credenciales ni se intenta renovar\" passed in 1 ms (src/auth/session-auth-failures.test.ts)"
+      "evidence": "jest assertion \"failure: despues del logout no hay credenciales ni se intenta renovar\" passed in 0 ms (src/auth/session-auth-failures.test.ts)"
     },
     {
       "id": "src/auth/session-auth-failures.test.ts::T-07 logout sin tokens boundary: restaurar tras el logout no recupera ninguna sesion",
       "status": "pass",
       "scenarioType": "boundary",
       "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
-      "evidence": "jest assertion \"boundary: restaurar tras el logout no recupera ninguna sesion\" passed in 0 ms (src/auth/session-auth-failures.test.ts)"
+      "evidence": "jest assertion \"boundary: restaurar tras el logout no recupera ninguna sesion\" passed in 1 ms (src/auth/session-auth-failures.test.ts)"
     },
     {
       "id": "src/auth/session-auth-failures.test.ts::T-07 tokens fuera de logs y de la UI failure: login, expiracion, refresh con error y logout no escriben tokens en consola ni en el estado de UI",
       "status": "pass",
       "scenarioType": "failure",
       "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
-      "evidence": "jest assertion \"failure: login, expiracion, refresh con error y logout no escriben tokens en consola ni en el estado de UI\" passed in 2 ms (src/auth/session-auth-failures.test.ts)"
+      "evidence": "jest assertion \"failure: login, expiracion, refresh con error y logout no escriben tokens en consola ni en el estado de UI\" passed in 1 ms (src/auth/session-auth-failures.test.ts)"
+    },
+    {
+      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion positiva nominal: el tecnico asignado resuelve su incidencia",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
+      "evidence": "jest assertion \"nominal: el tecnico asignado resuelve su incidencia\" passed in 0 ms (src/campusops/security/t06-role-authorization.test.ts)"
+    },
+    {
+      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion positiva nominal: coordinacion cierra una incidencia resuelta",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
+      "evidence": "jest assertion \"nominal: coordinacion cierra una incidencia resuelta\" passed in 0 ms (src/campusops/security/t06-role-authorization.test.ts)"
+    },
+    {
+      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion positiva nominal: coordinacion reabre una incidencia cerrada y conserva al tecnico",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
+      "evidence": "jest assertion \"nominal: coordinacion reabre una incidencia cerrada y conserva al tecnico\" passed in 0 ms (src/campusops/security/t06-role-authorization.test.ts)"
+    },
+    {
+      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion positiva nominal: coordinacion reabre una incidencia resuelta",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
+      "evidence": "jest assertion \"nominal: coordinacion reabre una incidencia resuelta\" passed in 1 ms (src/campusops/security/t06-role-authorization.test.ts)"
+    },
+    {
+      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion negativa (ejecucion directa, sin UI) failure: un tecnico NO asignado no puede resolver y nada cambia",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
+      "evidence": "jest assertion \"failure: un tecnico NO asignado no puede resolver y nada cambia\" passed in 3 ms (src/campusops/security/t06-role-authorization.test.ts)"
+    },
+    {
+      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion negativa (ejecucion directa, sin UI) failure: un reportante no puede resolver ni siquiera su propia incidencia",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
+      "evidence": "jest assertion \"failure: un reportante no puede resolver ni siquiera su propia incidencia\" passed in 4 ms (src/campusops/security/t06-role-authorization.test.ts)"
+    },
+    {
+      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion negativa (ejecucion directa, sin UI) failure: un reportante no puede cerrar ni reabrir",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
+      "evidence": "jest assertion \"failure: un reportante no puede cerrar ni reabrir\" passed in 1 ms (src/campusops/security/t06-role-authorization.test.ts)"
+    },
+    {
+      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion negativa (ejecucion directa, sin UI) failure: un tecnico (aunque este asignado) no puede cerrar ni reabrir",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
+      "evidence": "jest assertion \"failure: un tecnico (aunque este asignado) no puede cerrar ni reabrir\" passed in 0 ms (src/campusops/security/t06-role-authorization.test.ts)"
+    },
+    {
+      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion negativa (ejecucion directa, sin UI) boundary: un actor desconocido es rechazado en las tres operaciones",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
+      "evidence": "jest assertion \"boundary: un actor desconocido es rechazado en las tres operaciones\" passed in 1 ms (src/campusops/security/t06-role-authorization.test.ts)"
+    },
+    {
+      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion negativa (ejecucion directa, sin UI) boundary: coordinacion no puede cerrar una incidencia que no esta resuelta",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
+      "evidence": "jest assertion \"boundary: coordinacion no puede cerrar una incidencia que no esta resuelta\" passed in 1 ms (src/campusops/security/t06-role-authorization.test.ts)"
+    },
+    {
+      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion negativa (ejecucion directa, sin UI) boundary: no se puede reabrir una incidencia sin tecnico asignado",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
+      "evidence": "jest assertion \"boundary: no se puede reabrir una incidencia sin tecnico asignado\" passed in 0 ms (src/campusops/security/t06-role-authorization.test.ts)"
+    },
+    {
+      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion negativa (ejecucion directa, sin UI) boundary: una version base obsoleta se rechaza sin modificar la incidencia",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
+      "evidence": "jest assertion \"boundary: una version base obsoleta se rechaza sin modificar la incidencia\" passed in 0 ms (src/campusops/security/t06-role-authorization.test.ts)"
+    },
+    {
+      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion negativa (ejecucion directa, sin UI) boundary: una incidencia inexistente devuelve not-found",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
+      "evidence": "jest assertion \"boundary: una incidencia inexistente devuelve not-found\" passed in 1 ms (src/campusops/security/t06-role-authorization.test.ts)"
+    },
+    {
+      "id": "src/campusops/security/t06-role-authorization.test.ts::T-06 autorizacion negativa (ejecucion directa, sin UI) failure: resolver dos veces la misma incidencia se rechaza",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/security/t06-role-authorization.test.ts src/auth/session-auth-failures.test.ts",
+      "evidence": "jest assertion \"failure: resolver dos veces la misma incidencia se rechaza\" passed in 0 ms (src/campusops/security/t06-role-authorization.test.ts)"
     }
   ]
 }

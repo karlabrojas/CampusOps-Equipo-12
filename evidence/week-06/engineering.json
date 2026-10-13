@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "week": 6,
+  "commitSha": "7101d7bb89549766656e53f118877b293cc8dcf7",
+  "decision": "La renovacion de sesion es compartida (single-flight): cuando varias peticiones reciben 401 al mismo tiempo, solo se ejecuta un refresh y todas esperan la misma promesa. En CampusOpsClient.coordinateRefresh la promesa compartida se crea antes de invocar el callback y se libera al terminar; si el refresh falla se llama a clearSession y la sesion queda no autenticada. Cada peticion se reintenta una sola vez tras una renovacion exitosa, por lo que no hay bucle de renovaciones. En SessionManager el refreshSession reutiliza refreshPromise y logout incrementa la revision, de modo que una respuesta tardia de refresh o login no restaura la sesion. La autorizacion se valida en la capa de aplicacion (authorization.ts e incidentTransitions.ts): reportante sin transiciones, tecnico solo resuelve incidencias asignadas a el y coordinacion asigna, cierra y reabre, sin depender de ocultar botones en la UI.",
+  "alternatives": [
+    "Un refresh por cada peticion que recibe 401: es la implementacion mas simple, pero con N peticiones simultaneas genera N renovaciones, y si el servidor rota el refresh token las siguientes usan un token ya invalidado y fallan.",
+    "Cola o bloqueo global que serializa las peticiones durante el refresh: tambien evita renovaciones duplicadas, pero retiene todas las peticiones, incluso las que no necesitan sesion renovada, y agrega mas estado y riesgo de bloqueo.",
+    "Renovacion proactiva por temporizador antes de expirar: reduce los 401, pero requiere esperas temporizadas dificiles de probar de forma determinista y no cubre un token invalidado por el servidor."
+  ],
+  "tradeoff": "Beneficios: una sola renovacion por oleada de 401, menos carga al backend, no se consumen refresh tokens rotados y el numero de renovaciones se puede comprobar con un contador. Costos: todas las peticiones concurrentes dependen del resultado de un unico refresh, de modo que si falla todas fallan y la sesion se limpia; la promesa compartida y la revision de logout agregan estado que hay que probar; y el reintento unico implica que una peticion que vuelve a recibir 401 tras renovar falla en lugar de renovar otra vez.",
+  "requirementIds": [
+    "AC-01",
+    "AC-02",
+    "AC-03",
+    "AC-04",
+    "AC-05"
+  ],
+  "verification": [
+    {
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/api/session-concurrency.test.ts",
+      "result": "pass",
+      "evidence": "Caso exitoso: 3 peticiones concurrentes reciben 3 respuestas 401, hay 1 sola renovacion, 6 llamadas fetch (3 iniciales y 3 reintentos con token nuevo) y 0 limpiezas de sesion. Caso fallido con FALLA_REFRESH=1: 1 renovacion compartida, 3 fetch sin reintentos, 0 con token nuevo, 1 limpieza de sesion y sesion nula. Resultados indexados en reports/week-06/concurrency.json."
+    },
+    {
+      "command": "node tools/week06-auth-report.mjs",
+      "result": "pass",
+      "evidence": "2 suites y 23 pruebas pasaron, 0 fallaron: 14 de autorizacion por rol (tecnico asignado resuelve, tecnico no asignado rechazado, coordinador cierra y reabre, reportante y actor desconocido rechazados sin modificar la incidencia) y 9 de fallas de sesion (refresh rechazado, contrato de refresh invalido, refresh obsoleto sin bucle, respuesta tardia tras logout descartada, logout sin tokens, sin tokens en consola ni en el estado de UI). Resultados en reports/week-06/auth-tests.json."
+    },
+    {
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/api src/auth course-tests/public/week-06.test.ts src/campusops/security",
+      "result": "pass",
+      "evidence": "13 suites y 82 pruebas pasaron, 0 fallaron, incluidas sessionManager.test.ts, campusOpsClient.test.ts, session-concurrency.test.ts y las pruebas de seguridad t01 a t06."
+    },
+    {
+      "command": "npm test -- --ci --runInBand course-tests/public/week-06.test.ts",
+      "result": "pass",
+      "evidence": "Las 2 pruebas publicas pasaron: varias 401 se agrupan en una renovacion con reintento de a, b y c, y logout deja persistedToken en null."
+    },
+    {
+      "command": "npm run typecheck; npm run lint",
+      "result": "pass",
+      "evidence": "tsc --noEmit sin errores. eslint con 0 errores; las 3 advertencias vienen de la carpeta local sin rastrear evidencias/, que no se sube."
+    },
+    {
+      "command": "npm run audit:ci",
+      "result": "pass",
+      "evidence": "El reporte ya no contiene vulnerabilidades critical: quedan 29 (5 moderate y 24 high), por debajo del umbral critical configurado."
+    }
+  ]
+}
