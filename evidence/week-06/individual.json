@@ -66,6 +66,36 @@
       "command": "node tools/week06-auth-report.mjs",
       "observedResult": "Se ejecutaron 2 suites y 23 pruebas: 23 pasaron y 0 fallaron (14 de autorizacion por rol y 9 de fallas de sesion). typecheck sin errores y lint con 0 errores. El reporte reports/week-06/auth-tests.json se genera desde la salida JSON de jest, con un check por prueba.",
       "explanation": "Cree authorization.ts con una politica central de permisos por rol (reportante ninguno, tecnico resolve, coordinador assign/close/reopen) y una verificacion adicional de que el tecnico solo opere incidencias asignadas a el. En incidentTransitions.ts implemente ResolveIncident, CloseIncident y ReopenIncident, que validan rol, existencia, asignacion, version base y estado de origen antes de guardar, de modo que un rechazo no modifica la incidencia aunque se ejecute la operacion directamente sin pasar por la UI. En session-auth-failures.test.ts probe contra el SessionManager real, con reloj, storage y fetcher inyectados y sin esperas, el refresh rechazado, el contrato de refresh invalido, que un refresh obsoleto comparte un unico intento y no entra en bucle, que una respuesta tardia tras logout se descarta, que el logout limpia el almacenamiento y que ni la consola ni el estado de UI contienen tokens. El script week06-auth-report.mjs ejecuta jest en JSON y genera auth-tests.json con resultados reales. Las pruebas verifican la logica y los fixtures locales, no una autenticacion de produccion."
-    }
+    },
+    {
+      "studentId": "3523110235",
+      "commitShas": [
+      "7687c944c488b35fc520e98b9ddf2e4a3fa4a79d"
+      ],
+      "files": [
+      "src/api/campusOpsClient.ts",
+      "src/api/campusOpsClient.test.ts",
+      "src/api/session-concurrency.test.ts",
+      "src/course-evaluation/index.ts"
+      ],
+      "tests": [
+      "npm test -- --runInBand src/api/session-concurrency.test.ts",
+      "FALLA_REFRESH=1 npm test -- --runInBand src/api/session-concurrency.test.ts",
+      "npm run typecheck",
+      "npm run lint",
+      "npm run test:smoke",
+      "make public-test-week-06"
+      ],
+      "reviews": [
+      "Revisión de la coordinación de renovaciones concurrentes ante respuestas HTTP 401 para evitar múltiples llamadas de refresh.",
+      "Verificación del comportamiento cuando la renovación tiene éxito o falla, incluyendo el reintento de solicitudes y la limpieza de sesión.",
+      "Revisión de la función coordinateRefresh para cumplir los casos de las pruebas públicas de Semana 6."
+      ],
+      "prediction": "Esperaba que varias solicitudes que recibieran HTTP 401 mientras compartían un token expirado utilizaran una única operación de renovación; que, tras una renovación exitosa, cada solicitud pudiera reintentarse con el nuevo token una sola vez; y que, si la renovación fallaba, la sesión se limpiara y no se iniciara un ciclo infinito de reintentos.",
+      "command": "npm test -- --runInBand src/api/session-concurrency.test.ts",
+      "observedResult": "Las pruebas de concurrencia pasaron tanto en el escenario de renovación exitosa como en el escenario de fallo forzado mediante FALLA_REFRESH=1. También pasaron npm run typecheck, npm run lint y npm run test:smoke. Las pruebas públicas de Semana 6 pasaron sus 2 casos. La verificación global todavía reportó bloqueos relacionados con vulnerabilidades de dependencias detectadas por npm audit y archivos de evidencia requeridos que no estaban presentes o completos.",
+      "explanation": "Implementé la coordinación Single-flight en src/api/campusOpsClient.ts para que las solicitudes concurrentes compartan la misma promesa de renovación de sesión. Añadí src/api/session-concurrency.test.ts para probar solicitudes simultáneas y validar los escenarios de éxito y fallo sin depender de esperas arbitrarias. También actualicé src/api/campusOpsClient.test.ts con cobertura de errores relacionados con la renovación y modifiqué src/course-evaluation/index.ts para implementar coordinateRefresh, que resume los eventos de autenticación, las generaciones de token, las solicitudes reintentadas y el estado de la sesión. Los cambios quedaron registrados en el commit 7687c94 de la rama feature/week-06-coordinate-refresh. La contribución cubre la lógica de renovación concurrente y sus pruebas; no implica que la verificación completa de la Semana 6 esté aprobada."
+   }
+
   ]
 }
