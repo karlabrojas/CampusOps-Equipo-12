@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "week": 6,
-  "commitSha": "7101d7bb89549766656e53f118877b293cc8dcf7",
-  "generatedAt": "2026-10-13T04:02:31.800Z",
+  "commitSha": "8de1d5f58858fbedbc03be85ce068cc9e32126e4",
+  "generatedAt": "2026-10-13T04:42:52.554Z",
   "summary": {
     "cases": 2,
     "tests": 2,
@@ -14,14 +14,14 @@
       "status": "pass",
       "scenarioType": "nominal",
       "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/api/session-concurrency.test.ts",
-      "evidence": "jest \"comparte una sola renovación entre tres peticiones\" passed in 4 ms; aserciones verificadas: 3 solicitudes concurrentes, 3 respuestas 401, 1 renovacion, 6 llamadas fetch (3 iniciales + 3 reintentos), 3 reintentos con token nuevo, 0 limpiezas de sesion"
+      "evidence": "jest \"comparte una sola renovación entre tres peticiones\" passed in 32 ms; aserciones verificadas: 3 solicitudes concurrentes, 3 respuestas 401, 1 renovacion, 6 llamadas fetch (3 iniciales + 3 reintentos), 3 reintentos con token nuevo, 0 limpiezas de sesion"
     },
     {
       "id": "concurrency:refresh-failed::Semana 6: renovación de sesión concurrente comparte una sola renovación entre tres peticiones",
       "status": "pass",
       "scenarioType": "failure",
       "command": "$env:FALLA_REFRESH=\"1\"; npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/api/session-concurrency.test.ts",
-      "evidence": "jest \"comparte una sola renovación entre tres peticiones\" passed in 3 ms; aserciones verificadas: 3 solicitudes concurrentes, 3 respuestas 401, 1 renovacion fallida compartida, 3 llamadas fetch (sin reintentos), 0 con token nuevo, 1 limpieza de sesion, sesion nula"
+      "evidence": "jest \"comparte una sola renovación entre tres peticiones\" passed in 8 ms; aserciones verificadas: 3 solicitudes concurrentes, 3 respuestas 401, 1 renovacion fallida compartida, 3 llamadas fetch (sin reintentos), 0 con token nuevo, 1 limpieza de sesion, sesion nula"
     }
   ]
 }

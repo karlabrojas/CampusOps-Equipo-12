@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 6,
-  "commitSha": "7101d7bb89549766656e53f118877b293cc8dcf7",
+  "commitSha": "8de1d5f58858fbedbc03be85ce068cc9e32126e4",
   "decision": "La renovacion de sesion es compartida (single-flight): cuando varias peticiones reciben 401 al mismo tiempo, solo se ejecuta un refresh y todas esperan la misma promesa. En CampusOpsClient.coordinateRefresh la promesa compartida se crea antes de invocar el callback y se libera al terminar; si el refresh falla se llama a clearSession y la sesion queda no autenticada. Cada peticion se reintenta una sola vez tras una renovacion exitosa, por lo que no hay bucle de renovaciones. En SessionManager el refreshSession reutiliza refreshPromise y logout incrementa la revision, de modo que una respuesta tardia de refresh o login no restaura la sesion. La autorizacion se valida en la capa de aplicacion (authorization.ts e incidentTransitions.ts): reportante sin transiciones, tecnico solo resuelve incidencias asignadas a el y coordinacion asigna, cierra y reabre, sin depender de ocultar botones en la UI.",
   "alternatives": [
     "Un refresh por cada peticion que recibe 401: es la implementacion mas simple, pero con N peticiones simultaneas genera N renovaciones, y si el servidor rota el refresh token las siguientes usan un token ya invalidado y fallan.",
