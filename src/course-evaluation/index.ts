@@ -228,15 +228,118 @@ export function coordinateRefresh(events: readonly AuthEvent[]): Readonly<{
   };
 }
 
+const MISSING_FIELD = Symbol("missing-field");
+
+function hasOwnField(record: JsonObject, field: string): boolean {
+  return Object.prototype.hasOwnProperty.call(record, field);
+}
+
+function getField(record: JsonObject, field: string): unknown {
+  return hasOwnField(record, field) ? record[field] : MISSING_FIELD;
+}
+
+function equalJson(a: unknown, b: unknown): boolean {
+  if (Object.is(a, b)) return true;
+
+  if (
+    a === null ||
+    b === null ||
+    typeof a !== "object" ||
+    typeof b !== "object"
+  ) {
+    return false;
+  }
+
+  if (Array.isArray(a) || Array.isArray(b)) {
+    if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) {
+      return false;
+    }
+
+    return a.every((value, index) => equalJson(value, b[index]));
+  }
+
+  const aObject = a as Record<string, unknown>;
+  const bObject = b as Record<string, unknown>;
+  const aKeys = Object.keys(aObject).sort();
+  const bKeys = Object.keys(bObject).sort();
+
+  if (aKeys.length !== bKeys.length) return false;
+
+  return aKeys.every(
+    (key, index) =>
+      key === bKeys[index] && equalJson(aObject[key], bObject[key]),
+  );
+}
+
+function equalField(a: unknown, b: unknown): boolean {
+  if (a === MISSING_FIELD || b === MISSING_FIELD) {
+    return a === b;
+  }
+
+  return equalJson(a, b);
+}
+
 export function resolveSync(
-  _base: SyncRecord,
-  _local: SyncRecord,
-  _remote: SyncRecord,
+  base: SyncRecord,
+  local: SyncRecord,
+  remote: SyncRecord,
 ): Readonly<
   | { kind: "merged"; fields: JsonObject }
   | { kind: "conflict"; fields: readonly string[] }
 > {
-  return pending("resolveSync");
+  const keys = new Set([
+    ...Object.keys(base.fields),
+    ...Object.keys(local.fields),
+    ...Object.keys(remote.fields),
+  ]);
+
+  const conflicts: string[] = [];
+
+  for (const key of keys) {
+    const baseValue = getField(base.fields, key);
+    const localValue = getField(local.fields, key);
+    const remoteValue = getField(remote.fields, key);
+
+    const localChanged = !equalField(localValue, baseValue);
+    const remoteChanged = !equalField(remoteValue, baseValue);
+
+    if (localChanged && remoteChanged && !equalField(localValue, remoteValue)) {
+      conflicts.push(key);
+    }
+  }
+
+  if (conflicts.length > 0) {
+    return {
+      kind: "conflict",
+      fields: conflicts.sort(),
+    };
+  }
+
+  const merged: Record<string, unknown> = {};
+
+  for (const key of keys) {
+    const baseValue = getField(base.fields, key);
+    const localValue = getField(local.fields, key);
+    const remoteValue = getField(remote.fields, key);
+
+    const localChanged = !equalField(localValue, baseValue);
+    const remoteChanged = !equalField(remoteValue, baseValue);
+
+    const selectedValue = localChanged ? localValue : remoteValue;
+
+    // Si ambas versiones mantienen el valor original, conserva el original.
+    const value = !localChanged && !remoteChanged ? baseValue : selectedValue;
+
+    // La ausencia de una propiedad representa su eliminación.
+    if (value !== MISSING_FIELD) {
+      merged[key] = value;
+    }
+  }
+
+  return {
+    kind: "merged",
+    fields: merged,
+  };
 }
 
 export function deduplicateOperations<
