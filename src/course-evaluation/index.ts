@@ -229,20 +229,76 @@ export function coordinateRefresh(events: readonly AuthEvent[]): Readonly<{
 }
 
 export function resolveSync(
-  _base: SyncRecord,
-  _local: SyncRecord,
-  _remote: SyncRecord,
+  base: SyncRecord,
+  local: SyncRecord,
+  remote: SyncRecord,
 ): Readonly<
   | { kind: "merged"; fields: JsonObject }
   | { kind: "conflict"; fields: readonly string[] }
 > {
-  return pending("resolveSync");
+  if (base.id !== local.id || base.id !== remote.id) {
+    throw new Error("Cannot reconcile records with different IDs");
+  }
+
+  const fields = [...new Set([
+    ...Object.keys(base.fields),
+    ...Object.keys(local.fields),
+    ...Object.keys(remote.fields),
+  ])].sort();
+  const conflicts: string[] = [];
+  const merged: Record<string, unknown> = { ...remote.fields };
+
+  for (const field of fields) {
+    const baseValue = base.fields[field];
+    const localValue = local.fields[field];
+    const remoteValue = remote.fields[field];
+    const localChanged = !jsonEqual(localValue, baseValue);
+    const remoteChanged = !jsonEqual(remoteValue, baseValue);
+
+    if (localChanged && remoteChanged && !jsonEqual(localValue, remoteValue)) {
+      conflicts.push(field);
+    } else if (localChanged) {
+      if (localValue === undefined) {
+        delete merged[field];
+      } else {
+        merged[field] = localValue;
+      }
+    }
+  }
+
+  return conflicts.length > 0
+    ? { kind: "conflict", fields: conflicts }
+    : { kind: "merged", fields: merged };
 }
 
 export function deduplicateOperations<
   T extends Readonly<{ operationId: string }>,
->(_operations: readonly T[]): readonly T[] {
-  return pending("deduplicateOperations");
+>(operations: readonly T[]): readonly T[] {
+  const seen = new Set<string>();
+  return operations.filter((operation) => {
+    if (seen.has(operation.operationId)) return false;
+    seen.add(operation.operationId);
+    return true;
+  });
+}
+
+function stableJsonValue(value: unknown): string {
+  if (Array.isArray(value)) {
+    return `[${value.map(stableJsonValue).join(",")}]`;
+  }
+  if (value !== null && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    return `{${Object.keys(record)
+      .sort()
+      .map((key) => `${JSON.stringify(key)}:${stableJsonValue(record[key])}`)
+      .join(",")}}`;
+  }
+  const serialized = JSON.stringify(value);
+  return serialized === undefined ? "undefined" : serialized;
+}
+
+function jsonEqual(left: unknown, right: unknown): boolean {
+  return stableJsonValue(left) === stableJsonValue(right);
 }
 
 export function planRetry(
