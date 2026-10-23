@@ -344,8 +344,17 @@ export function resolveSync(
 
 export function deduplicateOperations<
   T extends Readonly<{ operationId: string }>,
->(_operations: readonly T[]): readonly T[] {
-  return pending("deduplicateOperations");
+>(operations: readonly T[]): readonly T[] {
+  const seen = new Set<string>();
+  const unique: T[] = [];
+
+  for (const operation of operations) {
+    if (seen.has(operation.operationId)) continue;
+    seen.add(operation.operationId);
+    unique.push(operation);
+  }
+
+  return unique;
 }
 
 export function planRetry(
