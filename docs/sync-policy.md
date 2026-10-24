@@ -53,11 +53,11 @@ La función de resolución no persiste la cola, no realiza llamadas al servidor 
 
 `PendingIncidentOperation` en `src/campusops/contracts.ts` define la identidad (`operationId`), incidencia, `baseVersion`, autor, acción y payload de cada cambio pendiente. El backend de `course-backend/campusops.mjs` compara `baseVersion` con la versión actual y responde `409 version_conflict` si no coincide. También deduplica el replay mediante `Idempotency-Key`, siempre que se reutilicen la misma clave y el mismo contenido.
 
-La aplicación todavía no cuenta con una cola local durable ni un coordinador de sync integrado. Este documento define el comportamiento objetivo; no afirma que la resolución de conflictos o los reintentos ya estén implementados.
+`resolveSync` y `deduplicateOperations` están implementados en `src/course-evaluation/index.ts`. `LocalSyncStore` conserva operaciones, registra intentos y persiste conjuntamente el snapshot remoto y el estado `conflicted`. Todavía no existe un coordinador que procese automáticamente la cola y llame al backend; la planificación de reintentos y resolución humana siguen siendo responsabilidades del flujo consumidor.
 
 ## Principios
 
-1. **Persistir antes de enviar:** una acción offline se guarda localmente junto con su `operationId`, versión base, actor, payload y adjuntos necesarios antes de intentar la red.
+1. **Persistir antes de enviar:** una acción offline se guarda en SQLite junto con su `operationId`, versión base, actor, payload y adjuntos necesarios antes de intentar la red.
 2. **Identidad y contenido estables:** todos los reintentos de una misma operación envían el mismo `operationId` y exactamente el mismo payload. No se genera otra clave al reintentar.
 3. **No asumir éxito ante timeout:** la conexión puede perder la respuesta después de que el servidor haya aplicado el cambio. El cliente reenvía la misma operación; el backend debe reconocer el replay.
 4. **No descartar ante conflicto:** conservar el cambio local pendiente y guardar/mostrar la última asignación y versión remotas.
@@ -69,26 +69,26 @@ La aplicación todavía no cuenta con una cola local durable ni un coordinador d
 1. Capturar la versión de la incidencia mostrada al usuario (`baseVersion`), `actorId`, acción y payload.
 2. Generar una sola clave `operationId`; escribir la operación y sus referencias de foto durablemente.
 3. Al sincronizar, comprobar que los adjuntos referenciados están disponibles. Enviar la operación con `Idempotency-Key: operationId` y la versión base requerida por el contrato de acciones.
-4. En respuesta exitosa, actualizar la caché con la incidencia y la versión devueltas por el servidor; marcar la operación `synced` en una transacción local y sólo entonces permitir la limpieza de archivos ya confirmados.
+4. En respuesta exitosa, actualizar la caché con la incidencia y la versión devueltas por el servidor; invocar `markOperationSynced` para marcar la operación y eliminar referencias de adjuntos en una transacción local, y sólo después limpiar los archivos.
 5. Ante timeout, pérdida de conexión o respuesta incierta, conservar payload, adjuntos y clave; programar reintento.
 6. Ante `409 version_conflict`, descargar la versión remota y aplicar las reglas de conflicto que siguen. No repetir automáticamente el mismo payload/baseVersion como si fuera a resolver el conflicto.
 
 ## Reconciliación y conflictos
 
-Comparar `base`, `local` y `remote` por contenido, usando la representación de dominio y no la identidad de objetos:
+`resolveSync(base, local, remote)` compara los campos por contenido JSON y no por identidad de objetos:
 
 - Sólo cambió remoto: aceptar su valor en la caché.
 - Sólo cambió local: conservar la intención local y preparar el envío con la política de versión vigente.
 - Cambios independientes: combinar sólo si pertenecen a campos distintos y la combinación no viola reglas del dominio.
 - Cambió el mismo campo de manera distinta en local y remoto: declarar conflicto; conservar ambos valores y no elegir uno silenciosamente.
 
-En CampusOps, `work` agrupa `assignedTechnicianId` y `status`; por lo tanto, se trata como una unidad de conflicto. No se combinan automáticamente un cambio local de estado con una reasignación remota.
+La comparación se realiza por campo de primer nivel; los valores anidados, como `work`, se comparan como una unidad. En CampusOps `work` agrupa `assignedTechnicianId` y `status`; no se combinan automáticamente un cambio local de estado con una reasignación remota. La función devuelve campos conflictivos en orden alfabético o los campos fusionados sin mutar las entradas.
 
 ### Caso obligatorio: inicio local y reasignación remota
 
 Estado base: incidencia versión `v` asignada al técnico A. Mientras el dispositivo está offline, A crea `start` con `baseVersion = v`. En el servidor, coordinación reasigna a técnico B, produciendo una versión más reciente.
 
-Cuando el dispositivo recupera conexión:
+La prueba pública de semana 8 valida el conflicto entre snapshots base/local/remoto. `LocalSyncStore.markOperationConflicted` persiste el snapshot remoto junto con el estado de conflicto, manteniendo la operación pendiente. El flujo consumidor debe:
 
 1. El backend rechaza el inicio basado en `v` si la versión actual ya avanzó; registrar el conflicto y obtener el snapshot remoto actual.
 2. Guardar y presentar la asignación remota vigente a B y su versión. No mostrar la caché anterior como si A siguiera asignado.
@@ -101,7 +101,7 @@ Este flujo preserva simultáneamente la intención pendiente y la asignación m�
 
 ## Reintentos y errores
 
-Los reintentos son acotados, persistidos y sin `sleep` de larga duración en el proceso de UI: almacenar `attempt_count` y `next_attempt_at`, reanudar el plan al iniciar y usar backoff exponencial con límite y jitter. Respetar `Retry-After` válido en respuestas `429`. El cálculo debe ser inyectable/determinista en pruebas.
+`LocalSyncStore.markOperationInFlight` persiste el estado de envío; `recordAttempt` incrementa `attempt_count` y persiste `next_attempt_at` y un código de error validado. El coordinador que consuma la cola debe implementar reintentos acotados y reanudables, sin `sleep` de larga duración en UI; su cálculo debe ser inyectable/determinista y respetar `Retry-After` válido en `429`. La planificación automática y el envío de red no están implementados en este cambio.
 
 | Resultado | Tratamiento |
 |---|---|
@@ -125,13 +125,8 @@ Si un archivo falta o no coincide con su hash, bloquear esa operación y pedir r
 
 ## Evidencia y pruebas requeridas
 
-La implementación debe comprobar, con almacenamiento y transporte controlables y sin pausas artificiales:
+Las pruebas de `src/campusops/infrastructure/localSyncStore.test.ts` comprueban persistencia tras reabrir la base serializada, notas y referencias a fotografías, detección de adjunto alterado, persistencia del conflicto con reasignación remota, conservación de filas v1 y rollback de migración. `course-tests/public/week-08.test.ts` verifica la mezcla de campos independientes, conflicto de `work` y deduplicación por `operationId`. Todavía no se afirma sincronización automática end-to-end.
 
-- misma clave/cuerpo en replay después de un timeout;
-- operación, nota y referencias a fotografías preservadas tras reinicializar el repositorio;
-- escenario `start` local contra `assign` remoto, con la operación pendiente conservada y la asignación remota actualizada;
-- conflicto que no reintenta automáticamente el cambio de `work`;
-- respuestas `401`, `403`, `409`, `422`, `429`, `5xx` y timeout con la política correspondiente;
-- no eliminar adjuntos antes de confirmar el cambio local de estado `synced`.
+Los comandos de test/typecheck se ejecutaron sin red ni esperas artificiales. El reporte de semana 8 debe registrarse contra el SHA del commit que contiene estos cambios; no se debe inventar ese SHA mientras las modificaciones sigan sin commit.
 
 Los comandos y resultados deben ser los realmente ejecutados y registrados en la evidencia de semana 8. Esta política no sustituye la implementación ni la evidencia de pruebas.

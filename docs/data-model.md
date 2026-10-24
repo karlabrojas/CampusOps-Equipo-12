@@ -2,9 +2,9 @@
 
 ## Alcance y estado actual
 
-El dominio ya declara `PendingIncidentOperation` en `src/campusops/contracts.ts`, con `operationId`, `incidentId`, `baseVersion`, `actorId`, `action` y `payload`. El contrato del backend en `course-backend/campusops.mjs` usa la versión base para rechazar escrituras obsoletas y la clave `Idempotency-Key` para reconocer replays. El modelo `Incident` está en `src/campusops/domain/Incident.ts`.
+El dominio declara `PendingIncidentOperation` en `src/campusops/contracts.ts`, con `operationId`, `incidentId`, `baseVersion`, `actorId`, `action` y `payload`. La persistencia se implementa en `src/campusops/infrastructure/localSyncStore.ts`; el esquema versionado y sus migraciones están en `sqliteMigrations.ts`. El adaptador usa Expo SQLite y la base local `campusops-local.db`. El backend en `course-backend/campusops.mjs` rechaza versiones obsoletas y deduplica replays mediante `Idempotency-Key`.
 
-Actualmente no hay en el proyecto una cola duradera de operaciones ni un repositorio local SQLite. Este documento define el modelo objetivo para esa implementación; no afirma que la persistencia offline, las migraciones o su rollback ya estén implementados.
+Las fotografías se copian a almacenamiento privado persistente mediante `ExpoAttachmentFileStore` en `attachmentFiles.ts`. El contenido de notas permanece en el payload de la operación. La implementación y las pruebas no sustituyen una política de backup del sistema operativo; la garantía se refiere a persistencia dentro del almacenamiento privado de la app, sujeto a que Android/iOS no elimine los datos de la app.
 
 ## Requisitos e invariantes
 
@@ -16,9 +16,9 @@ Actualmente no hay en el proyecto una cola duradera de operaciones ni un reposit
 6. Una escritura local de operación y sus referencias a adjuntos es una unidad lógica: no debe quedar una operación con adjunto perdido ni un archivo temporal presentado como evidencia sincronizable.
 7. Una actualización de esquema es todo-o-nada. Si falla, la app vuelve a abrir con el esquema y los datos previos intactos.
 
-## Esquema objetivo
+## Esquema implementado
 
-Se propone SQLite mediante el adaptador Expo adecuado para la plataforma. Los nombres son conceptuales y pueden adaptarse a las convenciones del repositorio al implementar el adaptador.
+La versión actual es **2**, almacenada en `PRAGMA user_version`. La migración inicial crea snapshots y operaciones; la migración 2 añade estados/reintentos y la tabla de referencias a adjuntos.
 
 ### `incidents`
 
@@ -38,7 +38,7 @@ Es la caché local de la última representación conocida de cada incidencia:
 | Columna | Tipo | Regla |
 |---|---|---|
 | `operation_id` | `TEXT` | Clave primaria y clave estable de idempotencia remota. No se regenera en reintentos. |
-| `incident_id` | `TEXT` | Referencia a `incidents.id`; conserva el objetivo de la operación. |
+| `incident_id` | `TEXT` | ID de la incidencia objetivo. Se valida al crear la operación; no es una FK porque una operación offline puede crearse antes de cachear el snapshot. |
 | `base_version` | `INTEGER` | Versión del servidor sobre la que se creó el cambio. |
 | `actor_id` | `TEXT` | Identidad sintética/estable del autor que el backend debe autorizar. No confiar en el rol recibido desde el cliente. |
 | `action` | `TEXT` | Acción del contrato: por ejemplo `start`, `resolve`, `comment` o `add_evidence`. |
@@ -50,7 +50,7 @@ Es la caché local de la última representación conocida de cada incidencia:
 | `created_at` | `INTEGER` | Momento UTC de creación local. |
 | `updated_at` | `INTEGER` | Momento UTC del último cambio de estado. |
 
-Índices recomendados: `(status, next_attempt_at, created_at)` para seleccionar trabajo listo y `(incident_id, created_at)` para presentar la cola por incidencia. `operation_id` es único globalmente en el dispositivo.
+Índices implementados: `(status, next_attempt_at, created_at)` para seleccionar trabajo y `(incident_id, created_at)` para presentar la cola por incidencia. `operation_id` es clave primaria y único en la base.
 
 La fila se inserta con el `base_version` que estaba visible al editar. `payload_json` se considera inmutable después del primer intento; una edición del contenido crea una operación lógica nueva y, por tanto, una nueva clave.
 
@@ -72,34 +72,34 @@ Las referencias se ordenan por `attachment_id` o posición explícita para recon
 
 ## Escritura local y recuperación de adjuntos
 
-1. Copiar primero cada fotografía a un archivo temporal dentro del directorio privado persistente de la app; comprobar existencia, tamaño y hash.
-2. En una transacción SQLite, insertar la operación pendiente y sus referencias de adjunto en estado `staged`.
-3. Finalizar los archivos staged con un rename atómico en el mismo volumen y marcar referencias como `ready` en una transacción corta.
-4. Si hay un fallo antes de confirmar el paso 2, limpiar sólo los temporales creados por esa operación. Si el proceso se interrumpe entre pasos, la rutina de recuperación al iniciar compara temporales y referencias: completa la promoción si los archivos están íntegros; si no, marca la operación `blocked` y conserva el registro para recuperación explícita.
-5. No borrar el archivo hasta que el servidor confirme la operación y la transacción local que marca `synced` se confirme. Un archivo ausente no se reemplaza con una referencia inventada: se informa como `missing`.
+1. Copiar cada fotografía a un nombre estable bajo `documentDirectory/campusops/evidence/<operationId>/<attachmentId>` usando un archivo `.staged`; comprobar tamaño e integridad antes de promoverlo mediante rename.
+2. Insertar la operación y todas sus referencias listas en una única transacción SQLite. Si la transacción falla, eliminar los archivos preparados y propagar el error.
+3. Al abrir el almacén, verificar existencia, tamaño y hash de cada adjunto no sincronizado. Un archivo desaparecido o alterado cambia la referencia a `missing` y bloquea la operación (`attachment_missing`) sin borrarla.
+4. La recuperación elimina archivos sin referencia a filas SQLite, incluidos temporales huérfanos de una interrupción antes del commit. Las referencias registradas pero no íntegras se conservan para resolución explícita.
+5. Después de que el servidor confirme, `markOperationSynced` marca la operación y elimina las referencias en una transacción; luego borra los archivos. Si el borrado del archivo falla, queda huérfano para la limpieza del próximo inicio.
 
-Las notas y diagnósticos son parte de `payload_json` y no se separan de la operación. El almacenamiento y la retención de texto siguen las reglas de privacidad del proyecto.
+Las notas y diagnósticos son parte de `payload_json`. El código rechaza reutilizar un `operationId` con contenido distinto; reintentos exactos conservan la identidad. El hash implementado se calcula sobre la representación Base64 del archivo y sirve como verificación de integridad al volver a leerlo.
 
 ## Migraciones atómicas
 
 Mantener un entero `user_version` de SQLite como versión del esquema. Cada migración `N -> N+1` debe:
 
-1. Abrir la base y leer `user_version`; bloquear las escrituras de la cola hasta terminar la migración.
-2. Iniciar una transacción SQLite (`BEGIN IMMEDIATE` o la transacción equivalente del adaptador).
+1. Abrir la base y leer `user_version`; el almacén no se entrega al resto de la aplicación hasta terminar las migraciones.
+2. Ejecutar cada paso con `withExclusiveTransactionAsync`; el motor gestiona `BEGIN`/`COMMIT`/`ROLLBACK`.
 3. Crear o modificar tablas/índices, copiando datos de tablas antiguas antes de retirar columnas o tablas obsoletas. No borrar la cola existente como estrategia de migración.
-4. Validar dentro de la transacción las claves, recuentos, JSON requeridos y referencias a adjuntos.
-5. Actualizar `user_version` sólo después de validar todos los datos y confirmar con `COMMIT`.
-6. Si cualquier paso falla, ejecutar `ROLLBACK`, cerrar la conexión y dejar visible el error. Al siguiente inicio, reintentar desde la versión antigua; no iniciar sincronización con una migración incompleta.
+4. Dejar que las restricciones declaradas por el esquema validen cada escritura de migración; agregar validaciones de aplicación cuando una migración transforme datos.
+5. Actualizar `user_version` después de que todos los pasos de la versión hayan terminado correctamente, dentro de la misma transacción exclusiva.
+6. Si cualquier paso falla, la transacción exclusiva hace rollback; `openMigratedLocalDatabase` cierra la conexión y propaga el error. Al siguiente inicio se vuelve a intentar desde la versión antigua; no se abre el almacén para sincronización parcial.
 
-SQLite revierte las operaciones transaccionales de esquema y datos al fallar la transacción. Para migraciones que involucren archivos, no mover ni borrar archivos fuente antes del commit; usar archivos staged y una rutina de recuperación idempotente como la descrita arriba. Antes de cambios destructivos de formato se recomienda conservar una copia de seguridad consistente con la base cerrada o mediante la API de backup del motor.
+SQLite revierte cambios de esquema y datos al fallar la transacción. La suite `src/campusops/infrastructure/localSyncStore.test.ts` crea un esquema v1 con operación existente, inyecta un fallo después de añadir columnas en v2, verifica que `user_version` y la fila antigua quedan intactos y luego repite la migración correctamente.
 
 ## Recuperación operativa
 
-- La app no elimina la única copia de una operación pendiente frente a un error de migración. Debe bloquear escrituras/sincronización con un error visible y preservar la base previa.
-- Si la restauración encuentra una fila inválida, ponerla en cuarentena o marcarla `blocked` sin descartar otros registros válidos.
-- Un conflicto conserva tanto la operación local como la última representación remota; el tratamiento se rige por `docs/sync-policy.md`.
+- Un error de migración se propaga y la base no se expone al repositorio; las operaciones previas permanecen intactas.
+- Si una fotografía no existe o no coincide con el tamaño/hash guardado, su operación queda `blocked` sin descartar el payload.
+- `markOperationConflicted` actualiza el snapshot remoto y marca la operación como `conflicted` dentro de una transacción, manteniendo su identidad y payload.
 - Los logs pueden incluir `operation_id` sólo si es un identificador no sensible, estado e instancia del error. Nunca registrar tokens, contenido de notas, URI privada o datos de fotografía.
 
-## Verificación prevista para la implementación
+## Verificación
 
-La implementación deberá tener pruebas automatizadas sin dependencias de red ni esperas artificiales que comprueben: persistencia y lectura tras reconstruir el repositorio (simulación de reinicio), notas y referencias a fotografías, migración que conserva filas de cola, fallo inducido a mitad de migración con restauración exacta de versión/datos previos y recuperación de adjuntos staged. Registrar los comandos realmente ejecutados y su salida en la evidencia de semana 8; este documento por sí solo no acredita esos tests.
+Las pruebas usan SQLite real compilado a WebAssembly (`sql.js`) con transacciones, y filesystem controlable en memoria; no dependen de red ni usan `sleep`. Cubren persistencia mediante exportar/reabrir la base (simulación de reinicio), notas, adjuntos, checksum, conflictos, conservación de filas v1, fallo de migración con rollback y repetición exitosa. Ejecución verificada: `npm test -- --runInBand src/campusops/infrastructure/localSyncStore.test.ts course-tests/public/week-08.test.ts` (2 suites, 14 pruebas aprobadas); `npm run typecheck` (sin errores); y ESLint focalizado sobre los archivos TypeScript de la implementación (sin errores ni advertencias).
