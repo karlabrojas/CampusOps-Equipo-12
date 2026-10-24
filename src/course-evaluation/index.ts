@@ -287,6 +287,10 @@ export function resolveSync(
   | { kind: "merged"; fields: JsonObject }
   | { kind: "conflict"; fields: readonly string[] }
 > {
+  if (base.id !== local.id || base.id !== remote.id) {
+    throw new Error("Cannot reconcile records with different IDs");
+  }
+
   const keys = new Set([
     ...Object.keys(base.fields),
     ...Object.keys(local.fields),
