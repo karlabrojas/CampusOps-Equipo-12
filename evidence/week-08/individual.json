@@ -4,6 +4,27 @@
   "teamId": "12",
   "members": [
     {
+      "studentId": "3523110374",
+      "commitShas": [
+        "5d512dfd2756c9d56623a24cad1fbba6e3ae0e63",
+        "758273be884cb0a0ce1dccb087c1e23ad24ed5af"
+      ],
+      "files": [
+        "src/campusops/sync/syncCoordinator.ts",
+        "src/campusops/sync/syncCoordinator.test.ts",
+        "tools/week08-report.mjs",
+        "reports/week-08/migration-tests.json"
+      ],
+      "tests": [
+        "node tools/week08-report.mjs",
+        "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand src/campusops/sync/syncCoordinator.test.ts",
+        "npm run typecheck",
+        "npx eslint src tools/week08-report.mjs"
+      ],
+      "prediction": "Esperaba que repetir una operacion con el mismo operationId no duplicara su efecto, que una respuesta perdida dejara la operacion en la cola y su reintento fuera reconocido como duplicado, que los cambios independientes se combinaran, que un conflicto incompatible conservara la operacion local sin reenviarla y que solo se retirara de la cola una operacion con confirmacion verificada.",
+      "command": "node tools/week08-report.mjs",
+      "observedResult": "El reporte reports/week-08/migration-tests.json indexa 39 comprobaciones: 39 pass y 0 fail, con 6 de tipo boundary o failure. Se generaron ejecutando Jest sobre syncCoordinator.test.ts, resolveSync.test.ts, week-08.test.ts, localSyncStore.test.ts e index.test.ts (5 suites, 39 pruebas).",
+      "explanation": "Implemente deduplicateOperations en src/course-evaluation/index.ts (conserva la primera operacion por operationId sin mutar la entrada; ya esta en dev). Cree src/campusops/sync/syncCoordinator.ts, que usa deduplicateOperations al cargar y encolar y resolveSync ante un version_conflict. Una respuesta perdida o un error de red deja la operacion en la cola con su intento contado; una confirmacion con otro operationId no la retira; un conflicto incompatible la marca conflicted sin reenviarla; un cambio independiente genera una operacion nueva sobre la version remota. Escribi syncCoordinator.test.ts con un servidor falso con estado que cubre respuesta perdida, operacion repetida, conflicto, merge, error 403, confirmacion no verificada y casos limite. Cree tools/week08-report.mjs, que genera el reporte desde la salida JSON de Jest. El coordinador usa una cola inyectable: todavia no esta conectado al LocalSyncStore de SQLite ni a la interfaz de la app."
       "studentId": "3523110195",
       "commitShas": [
         "c0c9e1171fcdd4e62a2b9b781dfc98e38a5687e9",
