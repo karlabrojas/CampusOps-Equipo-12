@@ -7,6 +7,8 @@ const files = [
   "src/campusops/sync/syncCoordinator.test.ts",
   "src/course-evaluation/resolveSync.test.ts",
   "course-tests/public/week-08.test.ts",
+  "src/campusops/infrastructure/localSyncStore.test.ts",
+  "src/course-evaluation/index.test.ts",
 ];
 const raw = join(tmpdir(), "week08-jest.json");
 const command = `npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile="${raw}" ${files.join(" ")}`;
