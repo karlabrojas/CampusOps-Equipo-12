@@ -291,74 +291,65 @@ export function resolveSync(
     throw new Error("Cannot reconcile records with different IDs");
   }
 
-  const keys = new Set([
+  const fields = [...new Set([
     ...Object.keys(base.fields),
     ...Object.keys(local.fields),
     ...Object.keys(remote.fields),
-  ]);
-
+  ])].sort();
   const conflicts: string[] = [];
+  const merged: Record<string, unknown> = { ...remote.fields };
 
-  for (const key of keys) {
-    const baseValue = getField(base.fields, key);
-    const localValue = getField(local.fields, key);
-    const remoteValue = getField(remote.fields, key);
+  for (const field of fields) {
+    const baseValue = base.fields[field];
+    const localValue = local.fields[field];
+    const remoteValue = remote.fields[field];
+    const localChanged = !jsonEqual(localValue, baseValue);
+    const remoteChanged = !jsonEqual(remoteValue, baseValue);
 
-    const localChanged = !equalField(localValue, baseValue);
-    const remoteChanged = !equalField(remoteValue, baseValue);
-
-    if (localChanged && remoteChanged && !equalField(localValue, remoteValue)) {
-      conflicts.push(key);
+    if (localChanged && remoteChanged && !jsonEqual(localValue, remoteValue)) {
+      conflicts.push(field);
+    } else if (localChanged) {
+      if (localValue === undefined) {
+        delete merged[field];
+      } else {
+        merged[field] = localValue;
+      }
     }
   }
 
-  if (conflicts.length > 0) {
-    return {
-      kind: "conflict",
-      fields: conflicts.sort(),
-    };
-  }
-
-  const merged: Record<string, unknown> = {};
-
-  for (const key of keys) {
-    const baseValue = getField(base.fields, key);
-    const localValue = getField(local.fields, key);
-    const remoteValue = getField(remote.fields, key);
-
-    const localChanged = !equalField(localValue, baseValue);
-    const remoteChanged = !equalField(remoteValue, baseValue);
-
-    const selectedValue = localChanged ? localValue : remoteValue;
-
-    // Si ambas versiones mantienen el valor original, conserva el original.
-    const value = !localChanged && !remoteChanged ? baseValue : selectedValue;
-
-    // La ausencia de una propiedad representa su eliminación.
-    if (value !== MISSING_FIELD) {
-      merged[key] = value;
-    }
-  }
-
-  return {
-    kind: "merged",
-    fields: merged,
-  };
+  return conflicts.length > 0
+    ? { kind: "conflict", fields: conflicts }
+    : { kind: "merged", fields: merged };
 }
 
 export function deduplicateOperations<
   T extends Readonly<{ operationId: string }>,
 >(operations: readonly T[]): readonly T[] {
   const seen = new Set<string>();
-  const unique: T[] = [];
-
-  for (const operation of operations) {
-    if (seen.has(operation.operationId)) continue;
+  return operations.filter((operation) => {
+    if (seen.has(operation.operationId)) return false;
     seen.add(operation.operationId);
-    unique.push(operation);
-  }
+    return true;
+  });
+}
 
-  return unique;
+function stableJsonValue(value: unknown): string {
+  if (Array.isArray(value)) {
+    return `[${value.map(stableJsonValue).join(",")}]`;
+  }
+  if (value !== null && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    return `{${Object.keys(record)
+      .sort()
+      .map((key) => `${JSON.stringify(key)}:${stableJsonValue(record[key])}`)
+      .join(",")}}`;
+  }
+  const serialized = JSON.stringify(value);
+  return serialized === undefined ? "undefined" : serialized;
+}
+
+function jsonEqual(left: unknown, right: unknown): boolean {
+  return stableJsonValue(left) === stableJsonValue(right);
 }
 
 export function planRetry(
