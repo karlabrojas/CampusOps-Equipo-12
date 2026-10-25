@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "week": 8,
+  "teamId": "12",
+  "members": [
+    {
+      "studentId": "3523110195",
+      "commitShas": [
+        "c0c9e1171fcdd4e62a2b9b781dfc98e38a5687e9",
+        "88aaad48829c569083644eda806f163b384d627d",
+        "727e3924d4a88d86e17fc500a2996de1ca396d0a"
+      ],
+      "files": [
+        "docs/data-model.md",
+        "docs/sync-policy.md",
+        "package.json",
+        "package-lock.json",
+        "src/campusops/infrastructure/attachmentFiles.ts",
+        "src/campusops/infrastructure/localSyncStore.ts",
+        "src/campusops/infrastructure/localSyncStore.test.ts",
+        "src/campusops/infrastructure/sqliteMigrations.ts",
+        "src/course-evaluation/index.ts",
+        "src/course-evaluation/index.test.ts"
+      ],
+      "tests": [
+        "npm test -- --runInBand src/course-evaluation/index.test.ts src/campusops/infrastructure/localSyncStore.test.ts course-tests/public/week-08.test.ts",
+        "npm run typecheck",
+        "npx eslint src/course-evaluation/index.test.ts src/course-evaluation/index.ts src/campusops/infrastructure/localSyncStore.test.ts src/campusops/infrastructure/localSyncStore.ts src/campusops/infrastructure/sqliteMigrations.ts src/campusops/infrastructure/attachmentFiles.ts",
+        "git diff --check"
+      ],
+      "reviews": [
+        "Revisión del contrato PendingIncidentOperation, la version base, la clave de idempotencia y la respuesta de conflicto del backend antes de implementar persistencia y reconciliación.",
+        "Verificación del comportamiento ante reinicio, adjuntos faltantes o alterados, conflictos de reasignación remota y fallas de migración."
+      ],
+      "prediction": "Esperaba que una operación pendiente mantuviera una identidad y un payload estables tras cerrar y reabrir el almacén; que las notas y referencias a fotos siguieran disponibles; que las migraciones conservaran la cola y revirtieran por completo ante un fallo; y que la reconciliación detectara conflictos sin sobrescribir la asignación remota.",
+      "command": "npm test -- --runInBand src/course-evaluation/index.test.ts src/campusops/infrastructure/localSyncStore.test.ts course-tests/public/week-08.test.ts",
+      "observedResult": "Pasaron 3 suites y 20 pruebas, con 0 fallidas. Las pruebas cubren persistencia de operación, nota y adjunto tras reabrir la base; detección de adjuntos ausentes o alterados; conservación de la operación local junto con la reasignación remota; identidad/payload estables y metadatos de reintento; limpieza de referencias y archivos al confirmar sincronización; migración v1 a v2 sin pérdida de filas; y rollback inducido seguido de una migración exitosa. También verifican combinación de campos independientes, conflictos de campo y deduplicación. Pasaron npm run typecheck, ESLint focalizado y git diff --check.",
+      "explanation": "Implementé el almacenamiento local duradero de operaciones en SQLite, con estados, identidad idempotente, payload inmutable, metadatos de reintento y persistencia del snapshot remoto al marcar conflictos. Añadí migraciones versionadas v1 a v2 dentro de transacciones exclusivas y pruebas que inducen fallos para comprobar rollback y conservación de datos. Las fotos se copian al almacenamiento privado persistente, se verifican por tamaño/hash y se limpian después de confirmar la operación; las notas permanecen en el payload. Implementé y probé la reconciliación por campos y la deduplicación por operationId. La validación es local y determinista, sin red ni esperas artificiales; el coordinador automático que envía la cola al backend todavía no está incluido."
+    }
+  ]
+}
