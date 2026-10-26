@@ -1,281 +1,281 @@
 {
   "schemaVersion": 1,
   "week": 8,
-  "commitSha": "5d512dfd2756c9d56623a24cad1fbba6e3ae0e63",
-  "generatedAt": "2026-10-25T02:41:47.487Z",
+  "commitSha": "fea0373d2f909b2349c4ff3a02f5e90218a32ab7",
+  "generatedAt": "2026-10-26T20:45:35.862Z",
   "checks": [
     {
       "id": "localSyncStore.test.ts::recovers the pending note, stable operation identity and private photo reference after repository restart",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 34 ms: LocalSyncStore durable persistence recovers the pending note, stable operation identity and private photo reference after repository restart"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 61 ms: LocalSyncStore durable persistence recovers the pending note, stable operation identity and private photo reference after repository restart"
     },
     {
       "id": "localSyncStore.test.ts::blocks an operation if its persisted attachment is missing or changed after restart",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 5 ms: LocalSyncStore durable persistence blocks an operation if its persisted attachment is missing or changed after restart"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 7 ms: LocalSyncStore durable persistence blocks an operation if its persisted attachment is missing or changed after restart"
     },
     {
       "id": "localSyncStore.test.ts::preserves the operation while storing the latest remote reassignment as a conflict",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 6 ms: LocalSyncStore durable persistence preserves the operation while storing the latest remote reassignment as a conflict"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 7 ms: LocalSyncStore durable persistence preserves the operation while storing the latest remote reassignment as a conflict"
     },
     {
       "id": "localSyncStore.test.ts::increments retry metadata without changing stable identity or payload",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 5 ms: LocalSyncStore durable persistence increments retry metadata without changing stable identity or payload"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 6 ms: LocalSyncStore durable persistence increments retry metadata without changing stable identity or payload"
     },
     {
       "id": "localSyncStore.test.ts::transitions an operation in and out of the in-flight state",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 4 ms: LocalSyncStore durable persistence transitions an operation in and out of the in-flight state"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 8 ms: LocalSyncStore durable persistence transitions an operation in and out of the in-flight state"
     },
     {
       "id": "localSyncStore.test.ts::rejects unsafe retry metadata without changing the pending operation",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 4 ms: LocalSyncStore durable persistence rejects unsafe retry metadata without changing the pending operation"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 24 ms: LocalSyncStore durable persistence rejects unsafe retry metadata without changing the pending operation"
     },
     {
       "id": "localSyncStore.test.ts::rolls back an operation when its attachment insert fails and removes its copied file",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 6 ms: LocalSyncStore durable persistence rolls back an operation when its attachment insert fails and removes its copied file"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 25 ms: LocalSyncStore durable persistence rolls back an operation when its attachment insert fails and removes its copied file"
     },
     {
       "id": "localSyncStore.test.ts::rejects reusing an operation identity with changed content",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
       "evidence": "Jest passed en 4 ms: LocalSyncStore durable persistence rejects reusing an operation identity with changed content"
     },
     {
       "id": "localSyncStore.test.ts::removes attachment references and durable files only after marking an operation synced",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 7 ms: LocalSyncStore durable persistence removes attachment references and durable files only after marking an operation synced"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 5 ms: LocalSyncStore durable persistence removes attachment references and durable files only after marking an operation synced"
     },
     {
       "id": "localSyncStore.test.ts::migrates version 1 to the current schema without losing pending rows",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 3 ms: local schema migrations migrates version 1 to the current schema without losing pending rows"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 4 ms: local schema migrations migrates version 1 to the current schema without losing pending rows"
     },
     {
       "id": "localSyncStore.test.ts::rolls back the entire migration on injected failure and can retry without data loss",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 5 ms: local schema migrations rolls back the entire migration on injected failure and can retry without data loss"
-    },
-    {
-      "id": "syncCoordinator.test.ts::[nominal] confirma operaciones y vacia la cola solo tras la confirmacion",
-      "status": "pass",
-      "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 1 ms: syncPendingOperations [nominal] confirma operaciones y vacia la cola solo tras la confirmacion"
-    },
-    {
-      "id": "syncCoordinator.test.ts::[failure] respuesta perdida: la operacion queda en cola y el reintento no duplica el efecto",
-      "status": "pass",
-      "scenarioType": "failure",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 1 ms: syncPendingOperations [failure] respuesta perdida: la operacion queda en cola y el reintento no duplica el efecto"
-    },
-    {
-      "id": "syncCoordinator.test.ts::[nominal] operacion repetida con la misma identidad no se duplica ni se reenvia",
-      "status": "pass",
-      "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 2 ms: syncPendingOperations [nominal] operacion repetida con la misma identidad no se duplica ni se reenvia"
-    },
-    {
-      "id": "syncCoordinator.test.ts::[failure] inicio local contra reasignacion remota: conserva ambas intenciones y no reintenta",
-      "status": "pass",
-      "scenarioType": "failure",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 1 ms: syncPendingOperations [failure] inicio local contra reasignacion remota: conserva ambas intenciones y no reintenta"
-    },
-    {
-      "id": "syncCoordinator.test.ts::[nominal] cambios independientes se combinan sin perder informacion",
-      "status": "pass",
-      "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 1 ms: syncPendingOperations [nominal] cambios independientes se combinan sin perder informacion"
-    },
-    {
-      "id": "syncCoordinator.test.ts::[failure] error de sincronizacion 403 bloquea y conserva la operacion",
-      "status": "pass",
-      "scenarioType": "failure",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 0 ms: syncPendingOperations [failure] error de sincronizacion 403 bloquea y conserva la operacion"
-    },
-    {
-      "id": "syncCoordinator.test.ts::[failure] confirmacion no verificada no retira la operacion de la cola",
-      "status": "pass",
-      "scenarioType": "failure",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 1 ms: syncPendingOperations [failure] confirmacion no verificada no retira la operacion de la cola"
-    },
-    {
-      "id": "syncCoordinator.test.ts::[boundary] cola vacia no llama al transporte",
-      "status": "pass",
-      "scenarioType": "boundary",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 0 ms: syncPendingOperations [boundary] cola vacia no llama al transporte"
-    },
-    {
-      "id": "syncCoordinator.test.ts::[boundary] si falla una operacion, la siguiente de la misma incidencia no se envia",
-      "status": "pass",
-      "scenarioType": "boundary",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 1 ms: syncPendingOperations [boundary] si falla una operacion, la siguiente de la misma incidencia no se envia"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 7 ms: local schema migrations rolls back the entire migration on injected failure and can retry without data loss"
     },
     {
       "id": "index.test.ts::merges structurally equal nested values and independent changes without mutating inputs",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
       "evidence": "Jest passed en 1 ms: resolveSync merges structurally equal nested values and independent changes without mutating inputs"
     },
     {
       "id": "index.test.ts::preserves additions and deletions when the other side did not change that field",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 0 ms: resolveSync preserves additions and deletions when the other side did not change that field"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 1 ms: resolveSync preserves additions and deletions when the other side did not change that field"
     },
     {
       "id": "index.test.ts::reports all same-field conflicts in stable alphabetical order",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
       "evidence": "Jest passed en 0 ms: resolveSync reports all same-field conflicts in stable alphabetical order"
     },
     {
       "id": "index.test.ts::rejects records for different incidents",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 7 ms: resolveSync rejects records for different incidents"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 51 ms: resolveSync rejects records for different incidents"
     },
     {
       "id": "index.test.ts::keeps the first operation for each ID and retains the original order",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 1 ms: deduplicateOperations keeps the first operation for each ID and retains the original order"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 0 ms: deduplicateOperations keeps the first operation for each ID and retains the original order"
     },
     {
       "id": "index.test.ts::returns an empty list for an empty queue",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
       "evidence": "Jest passed en 0 ms: deduplicateOperations returns an empty list for an empty queue"
+    },
+    {
+      "id": "syncCoordinator.test.ts::[nominal] confirma operaciones y vacia la cola solo tras la confirmacion",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 1 ms: syncPendingOperations [nominal] confirma operaciones y vacia la cola solo tras la confirmacion"
+    },
+    {
+      "id": "syncCoordinator.test.ts::[failure] respuesta perdida: la operacion queda en cola y el reintento no duplica el efecto",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 0 ms: syncPendingOperations [failure] respuesta perdida: la operacion queda en cola y el reintento no duplica el efecto"
+    },
+    {
+      "id": "syncCoordinator.test.ts::[nominal] operacion repetida con la misma identidad no se duplica ni se reenvia",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 0 ms: syncPendingOperations [nominal] operacion repetida con la misma identidad no se duplica ni se reenvia"
+    },
+    {
+      "id": "syncCoordinator.test.ts::[failure] inicio local contra reasignacion remota: conserva ambas intenciones y no reintenta",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 1 ms: syncPendingOperations [failure] inicio local contra reasignacion remota: conserva ambas intenciones y no reintenta"
+    },
+    {
+      "id": "syncCoordinator.test.ts::[nominal] cambios independientes se combinan sin perder informacion",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 1 ms: syncPendingOperations [nominal] cambios independientes se combinan sin perder informacion"
+    },
+    {
+      "id": "syncCoordinator.test.ts::[failure] error de sincronizacion 403 bloquea y conserva la operacion",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 0 ms: syncPendingOperations [failure] error de sincronizacion 403 bloquea y conserva la operacion"
+    },
+    {
+      "id": "syncCoordinator.test.ts::[failure] confirmacion no verificada no retira la operacion de la cola",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 1 ms: syncPendingOperations [failure] confirmacion no verificada no retira la operacion de la cola"
+    },
+    {
+      "id": "syncCoordinator.test.ts::[boundary] cola vacia no llama al transporte",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 0 ms: syncPendingOperations [boundary] cola vacia no llama al transporte"
+    },
+    {
+      "id": "syncCoordinator.test.ts::[boundary] si falla una operacion, la siguiente de la misma incidencia no se envia",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 1 ms: syncPendingOperations [boundary] si falla una operacion, la siguiente de la misma incidencia no se envia"
     },
     {
       "id": "resolveSync.test.ts::combines independent local and remote changes",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
       "evidence": "Jest passed en 1 ms: resolveSync combines independent local and remote changes"
     },
     {
       "id": "resolveSync.test.ts::reports a conflict when both sides change the same field differently",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
       "evidence": "Jest passed en 0 ms: resolveSync reports a conflict when both sides change the same field differently"
     },
     {
       "id": "resolveSync.test.ts::does not report a conflict when both sides choose the same value",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
       "evidence": "Jest passed en 0 ms: resolveSync does not report a conflict when both sides choose the same value"
     },
     {
       "id": "resolveSync.test.ts::compares nested JSON objects by content, not identity",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 1 ms: resolveSync compares nested JSON objects by content, not identity"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 0 ms: resolveSync compares nested JSON objects by content, not identity"
     },
     {
       "id": "resolveSync.test.ts::returns multiple conflicting fields in alphabetical order",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 0 ms: resolveSync returns multiple conflicting fields in alphabetical order"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 1 ms: resolveSync returns multiple conflicting fields in alphabetical order"
     },
     {
       "id": "resolveSync.test.ts::preserves a local deletion when the remote field is unchanged",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
       "evidence": "Jest passed en 0 ms: resolveSync preserves a local deletion when the remote field is unchanged"
     },
     {
       "id": "resolveSync.test.ts::reports a conflict when one side deletes a field and the other changes it",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 1 ms: resolveSync reports a conflict when one side deletes a field and the other changes it"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 0 ms: resolveSync reports a conflict when one side deletes a field and the other changes it"
     },
     {
       "id": "resolveSync.test.ts::does not mutate the input records",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 1 ms: resolveSync does not mutate the input records"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 23 ms: resolveSync does not mutate the input records"
     },
     {
       "id": "resolveSync.test.ts::detects a conflict when coordination reassigns an incident while a technician starts offline",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 1 ms: resolveSync detects a conflict when coordination reassigns an incident while a technician starts offline"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 0 ms: resolveSync detects a conflict when coordination reassigns an incident while a technician starts offline"
     },
     {
       "id": "resolveSync.test.ts::merges independent changes while preserving the remote reassignment",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 0 ms: resolveSync merges independent changes while preserving the remote reassignment"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 1 ms: resolveSync merges independent changes while preserving the remote reassignment"
     },
     {
       "id": "week-08.test.ts::CampusOps detects offline start versus remote reassignment without mutating either record",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
       "evidence": "Jest passed en 1 ms: CampusOps detects offline start versus remote reassignment without mutating either record"
     },
     {
       "id": "week-08.test.ts::merges independent field changes and reports same-field conflict",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 0 ms: merges independent field changes and reports same-field conflict"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 1 ms: merges independent field changes and reports same-field conflict"
     },
     {
       "id": "week-08.test.ts::deduplicates a replayed operation by stable identity",
       "status": "pass",
       "scenarioType": "nominal",
-      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"C:\\Users\\alfar\\AppData\\Local\\Temp\\week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
-      "evidence": "Jest passed en 1 ms: deduplicates a replayed operation by stable identity"
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=\"/tmp/week08-jest.json\" src/campusops/sync/syncCoordinator.test.ts src/course-evaluation/resolveSync.test.ts course-tests/public/week-08.test.ts src/campusops/infrastructure/localSyncStore.test.ts src/course-evaluation/index.test.ts",
+      "evidence": "Jest passed en 0 ms: deduplicates a replayed operation by stable identity"
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 8,
-  "commitSha": "5d512dfd2756c9d56623a24cad1fbba6e3ae0e63",
+  "commitSha": "fea0373d2f909b2349c4ff3a02f5e90218a32ab7",
   "decision": "Sincronizar la cola offline con un coordinador que conserva cada operacion con su operationId estable: deduplica con deduplicateOperations al cargar y encolar, usa resolveSync ante un version_conflict para combinar cambios independientes y marcar como conflicted los incompatibles (inicio local contra reasignacion remota), y retira una operacion de la cola solo cuando el servidor confirma ese mismo operationId. Una respuesta perdida o un error deja la operacion en la cola y el reintento se reconoce como duplicado.",
   "alternatives": [
     "Priorizar siempre el estado local y reenviar la operacion: descartada porque puede sobrescribir una reasignacion mas reciente de coordinacion.",
