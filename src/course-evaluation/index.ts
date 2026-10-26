@@ -228,21 +228,128 @@ export function coordinateRefresh(events: readonly AuthEvent[]): Readonly<{
   };
 }
 
+const MISSING_FIELD = Symbol("missing-field");
+
+function hasOwnField(record: JsonObject, field: string): boolean {
+  return Object.prototype.hasOwnProperty.call(record, field);
+}
+
+function getField(record: JsonObject, field: string): unknown {
+  return hasOwnField(record, field) ? record[field] : MISSING_FIELD;
+}
+
+function equalJson(a: unknown, b: unknown): boolean {
+  if (Object.is(a, b)) return true;
+
+  if (
+    a === null ||
+    b === null ||
+    typeof a !== "object" ||
+    typeof b !== "object"
+  ) {
+    return false;
+  }
+
+  if (Array.isArray(a) || Array.isArray(b)) {
+    if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) {
+      return false;
+    }
+
+    return a.every((value, index) => equalJson(value, b[index]));
+  }
+
+  const aObject = a as Record<string, unknown>;
+  const bObject = b as Record<string, unknown>;
+  const aKeys = Object.keys(aObject).sort();
+  const bKeys = Object.keys(bObject).sort();
+
+  if (aKeys.length !== bKeys.length) return false;
+
+  return aKeys.every(
+    (key, index) =>
+      key === bKeys[index] && equalJson(aObject[key], bObject[key]),
+  );
+}
+
+function equalField(a: unknown, b: unknown): boolean {
+  if (a === MISSING_FIELD || b === MISSING_FIELD) {
+    return a === b;
+  }
+
+  return equalJson(a, b);
+}
+
 export function resolveSync(
-  _base: SyncRecord,
-  _local: SyncRecord,
-  _remote: SyncRecord,
+  base: SyncRecord,
+  local: SyncRecord,
+  remote: SyncRecord,
 ): Readonly<
   | { kind: "merged"; fields: JsonObject }
   | { kind: "conflict"; fields: readonly string[] }
 > {
-  return pending("resolveSync");
+  if (base.id !== local.id || base.id !== remote.id) {
+    throw new Error("Cannot reconcile records with different IDs");
+  }
+
+  const fields = [...new Set([
+    ...Object.keys(base.fields),
+    ...Object.keys(local.fields),
+    ...Object.keys(remote.fields),
+  ])].sort();
+  const conflicts: string[] = [];
+  const merged: Record<string, unknown> = { ...remote.fields };
+
+  for (const field of fields) {
+    const baseValue = base.fields[field];
+    const localValue = local.fields[field];
+    const remoteValue = remote.fields[field];
+    const localChanged = !jsonEqual(localValue, baseValue);
+    const remoteChanged = !jsonEqual(remoteValue, baseValue);
+
+    if (localChanged && remoteChanged && !jsonEqual(localValue, remoteValue)) {
+      conflicts.push(field);
+    } else if (localChanged) {
+      if (localValue === undefined) {
+        delete merged[field];
+      } else {
+        merged[field] = localValue;
+      }
+    }
+  }
+
+  return conflicts.length > 0
+    ? { kind: "conflict", fields: conflicts }
+    : { kind: "merged", fields: merged };
 }
 
 export function deduplicateOperations<
   T extends Readonly<{ operationId: string }>,
->(_operations: readonly T[]): readonly T[] {
-  return pending("deduplicateOperations");
+>(operations: readonly T[]): readonly T[] {
+  const seen = new Set<string>();
+  return operations.filter((operation) => {
+    if (seen.has(operation.operationId)) return false;
+    seen.add(operation.operationId);
+    return true;
+  });
+}
+
+function stableJsonValue(value: unknown): string {
+  if (Array.isArray(value)) {
+    return `[${value.map(stableJsonValue).join(",")}]`;
+  }
+  if (value !== null && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    return `{${Object.keys(record)
+      .sort()
+      .map((key) => `${JSON.stringify(key)}:${stableJsonValue(record[key])}`)
+      .join(",")}}`;
+  }
+  const serialized = JSON.stringify(value);
+  return serialized === undefined ? "undefined" : serialized;
+}
+
+function jsonEqual(left: unknown, right: unknown): boolean {
+  return stableJsonValue(left) === stableJsonValue(right);
 }
 
 export function planRetry(
