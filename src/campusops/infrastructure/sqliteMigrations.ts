@@ -21,7 +21,7 @@ export type TransactionalSqlDatabase = SqlExecutor & {
   ): Promise<void>;
 };
 
-export const CURRENT_SCHEMA_VERSION = 2;
+export const CURRENT_SCHEMA_VERSION = 3;
 export const LOCAL_DATABASE_NAME = "campusops-local.db";
 
 type Migration = Readonly<{
@@ -75,6 +75,20 @@ const migrations: readonly Migration[] = [
       )`,
       "CREATE INDEX pending_operations_ready ON pending_operations(status, next_attempt_at, created_at)",
       "CREATE INDEX operation_attachments_operation ON operation_attachments(operation_id, created_at)",
+    ],
+  },
+  {
+    version: 3,
+    statements: [
+      `CREATE TABLE geocoding_cache (
+        cache_key TEXT PRIMARY KEY NOT NULL,
+        provider_id TEXT NOT NULL,
+        label TEXT NOT NULL CHECK(length(trim(label)) > 0),
+        latitude REAL NOT NULL CHECK(latitude >= -90 AND latitude <= 90),
+        longitude REAL NOT NULL CHECK(longitude >= -180 AND longitude <= 180),
+        fetched_at INTEGER NOT NULL CHECK(fetched_at >= 0)
+      )`,
+      "CREATE INDEX geocoding_cache_fetched_at ON geocoding_cache(fetched_at)",
     ],
   },
 ];

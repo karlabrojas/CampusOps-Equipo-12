@@ -18,7 +18,7 @@ Las fotografías se copian a almacenamiento privado persistente mediante `ExpoAt
 
 ## Esquema implementado
 
-La versión actual es **2**, almacenada en `PRAGMA user_version`. La migración inicial crea snapshots y operaciones; la migración 2 añade estados/reintentos y la tabla de referencias a adjuntos.
+La versión actual es **3**, almacenada en `PRAGMA user_version`. La migración inicial crea snapshots y operaciones; la migración 2 añade estados/reintentos y referencias a adjuntos; la migración 3 crea la caché validada de geocodificación.
 
 ### `incidents`
 
@@ -70,6 +70,21 @@ La fila se inserta con el `base_version` que estaba visible al editar. `payload_
 
 Las referencias se ordenan por `attachment_id` o posición explícita para reconstruir la petición. Una operación `add_evidence` sólo se puede enviar cuando su archivo esté disponible y la referencia/ID que exige el contrato esté resuelta.
 
+### `geocoding_cache`
+
+La tabla contiene únicamente respuestas completas de proveedor que pasaron la validación del dominio. La clave es un SHA-256 de la consulta normalizada, locale y proveedor/versión; no se almacena el texto de consulta.
+
+| Columna | Tipo | Regla |
+|---|---|---|
+| `cache_key` | `TEXT` | Clave primaria derivada, no reversible por la aplicación. |
+| `provider_id` | `TEXT` | Identidad/versión del proveedor y endpoint utilizado. |
+| `label` | `TEXT` | Etiqueta no vacía validada. |
+| `latitude` | `REAL` | Coordenada dentro de `[-90, 90]`. |
+| `longitude` | `REAL` | Coordenada dentro de `[-180, 180]`. |
+| `fetched_at` | `INTEGER` | Instante UTC en milisegundos de respuesta válida. |
+
+`SqliteLocationCache` vuelve a validar el registro y su vigencia en cada lectura. El TTL es de 30 días; una fila expirada, de otro proveedor o inválida se elimina y no se devuelve como resultado fresco. Las ubicaciones manuales y respuestas fallidas no se escriben en esta tabla.
+
 ## Escritura local y recuperación de adjuntos
 
 1. Copiar cada fotografía a un nombre estable bajo `documentDirectory/campusops/evidence/<operationId>/<attachmentId>` usando un archivo `.staged`; comprobar tamaño e integridad antes de promoverlo mediante rename.
@@ -91,7 +106,7 @@ Mantener un entero `user_version` de SQLite como versión del esquema. Cada migr
 5. Actualizar `user_version` después de que todos los pasos de la versión hayan terminado correctamente, dentro de la misma transacción exclusiva.
 6. Si cualquier paso falla, la transacción exclusiva hace rollback; `openMigratedLocalDatabase` cierra la conexión y propaga el error. Al siguiente inicio se vuelve a intentar desde la versión antigua; no se abre el almacén para sincronización parcial.
 
-SQLite revierte cambios de esquema y datos al fallar la transacción. La suite `src/campusops/infrastructure/localSyncStore.test.ts` crea un esquema v1 con operación existente, inyecta un fallo después de añadir columnas en v2, verifica que `user_version` y la fila antigua quedan intactos y luego repite la migración correctamente.
+SQLite revierte cambios de esquema y datos al fallar la transacción. La suite `src/campusops/infrastructure/localSyncStore.test.ts` crea un esquema v1 con operación existente e inyecta una falla en v2; además, falla la creación de la tabla de caché en v3. En ambos casos comprueba que `user_version` y los objetos previos quedan intactos y luego repite la migración correctamente.
 
 ## Recuperación operativa
 
@@ -102,4 +117,4 @@ SQLite revierte cambios de esquema y datos al fallar la transacción. La suite `
 
 ## Verificación
 
-Las pruebas usan SQLite real compilado a WebAssembly (`sql.js`) con transacciones, y filesystem controlable en memoria; no dependen de red ni usan `sleep`. Cubren persistencia mediante exportar/reabrir la base (simulación de reinicio), notas, adjuntos, checksum, conflictos, conservación de filas v1, fallo de migración con rollback y repetición exitosa. Ejecución verificada: `npm test -- --runInBand src/campusops/infrastructure/localSyncStore.test.ts course-tests/public/week-08.test.ts` (2 suites, 14 pruebas aprobadas); `npm run typecheck` (sin errores); y ESLint focalizado sobre los archivos TypeScript de la implementación (sin errores ni advertencias).
+Las pruebas usan SQLite real compilado a WebAssembly (`sql.js`) con transacciones, y filesystem controlable en memoria; no dependen de red ni usan `sleep`. Cubren persistencia mediante exportar/reabrir la base, notas, adjuntos, checksum, conflictos, filas v1, rollback v2/v3 y vigencia de la caché de geocodificación. La política y las pruebas específicas de resiliencia están en `docs/resilience-policy.md` y `src/campusops/infrastructure/locationService.test.ts`.
