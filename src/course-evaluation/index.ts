@@ -353,7 +353,7 @@ function jsonEqual(left: unknown, right: unknown): boolean {
 }
 
 export function planRetry(
-  _input: Readonly<{
+  input: Readonly<{
     method: "GET" | "POST";
     status: number | "timeout";
     attempt: number;
@@ -365,7 +365,61 @@ export function planRetry(
   delayMs: number;
   requiresStableIdempotencyKey: boolean;
 }> {
-  return pending("planRetry");
+  const isPost = input.method === "POST";
+  const hasStableKey =
+    typeof input.idempotencyKey === "string" &&
+    input.idempotencyKey.trim().length > 0;
+  const requiresStableIdempotencyKey = isPost && !hasStableKey;
+
+  if (
+    !Number.isSafeInteger(input.attempt) ||
+    input.attempt < 1 ||
+    input.attempt >= 4 ||
+    requiresStableIdempotencyKey
+  ) {
+    return {
+      retry: false,
+      delayMs: 0,
+      requiresStableIdempotencyKey,
+    };
+  }
+
+  const retryableStatus =
+    input.status === "timeout" ||
+    input.status === 408 ||
+    input.status === 425 ||
+    input.status === 429 ||
+    (input.status >= 500 && input.status <= 599);
+  if (!retryableStatus) {
+    return {
+      retry: false,
+      delayMs: 0,
+      requiresStableIdempotencyKey: false,
+    };
+  }
+
+  const maxDelayMs = 60_000;
+  const validRetryAfter =
+    typeof input.retryAfterMs === "number" &&
+    Number.isSafeInteger(input.retryAfterMs) &&
+    input.retryAfterMs >= 0;
+  if (validRetryAfter && input.retryAfterMs > maxDelayMs) {
+    return {
+      retry: false,
+      delayMs: 0,
+      requiresStableIdempotencyKey: false,
+    };
+  }
+  const delayMs =
+    validRetryAfter
+      ? input.retryAfterMs
+      : Math.min(500 * 2 ** (input.attempt - 1), maxDelayMs);
+
+  return {
+    retry: true,
+    delayMs,
+    requiresStableIdempotencyKey: false,
+  };
 }
 
 export function reduceRemoteResponses(
@@ -392,8 +446,48 @@ export function reducePermissionLifecycle(
 
 /** Week 09: see docs/CAMPUSOPS_API.md; this is not a completed solution. */
 export function selectIncidentLocation(
-  _provider: unknown,
-  _manualLabel: string,
+  provider: unknown,
+  manualLabel: string,
 ): IncidentLocation {
-  return pending("selectIncidentLocation");
+  if (typeof manualLabel !== "string" || manualLabel.trim().length === 0) {
+    throw new Error("A nonempty manual location label is required");
+  }
+
+  if (isValidProviderLocation(provider)) {
+    return {
+      source: "provider",
+      label: provider.label.trim(),
+      latitude: provider.latitude,
+      longitude: provider.longitude,
+    };
+  }
+
+  return { source: "manual", label: manualLabel.trim() };
+}
+
+export type ProviderLocation = Readonly<{
+  label: string;
+  latitude: number;
+  longitude: number;
+}>;
+
+export function isValidProviderLocation(
+  input: unknown,
+): input is ProviderLocation {
+  if (input === null || typeof input !== "object" || Array.isArray(input)) {
+    return false;
+  }
+  const value = input as Record<string, unknown>;
+  return (
+    typeof value.label === "string" &&
+    value.label.trim().length > 0 &&
+    typeof value.latitude === "number" &&
+    Number.isFinite(value.latitude) &&
+    value.latitude >= -90 &&
+    value.latitude <= 90 &&
+    typeof value.longitude === "number" &&
+    Number.isFinite(value.longitude) &&
+    value.longitude >= -180 &&
+    value.longitude <= 180
+  );
 }
