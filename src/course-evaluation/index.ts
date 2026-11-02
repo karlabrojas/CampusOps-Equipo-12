@@ -291,11 +291,13 @@ export function resolveSync(
     throw new Error("Cannot reconcile records with different IDs");
   }
 
-  const fields = [...new Set([
-    ...Object.keys(base.fields),
-    ...Object.keys(local.fields),
-    ...Object.keys(remote.fields),
-  ])].sort();
+  const fields = [
+    ...new Set([
+      ...Object.keys(base.fields),
+      ...Object.keys(local.fields),
+      ...Object.keys(remote.fields),
+    ]),
+  ].sort();
   const conflicts: string[] = [];
   const merged: Record<string, unknown> = { ...remote.fields };
 
@@ -353,7 +355,7 @@ function jsonEqual(left: unknown, right: unknown): boolean {
 }
 
 export function planRetry(
-  _input: Readonly<{
+  input: Readonly<{
     method: "GET" | "POST";
     status: number | "timeout";
     attempt: number;
@@ -365,7 +367,47 @@ export function planRetry(
   delayMs: number;
   requiresStableIdempotencyKey: boolean;
 }> {
-  return pending("planRetry");
+  const requiresStableIdempotencyKey = input.method === "POST";
+  const hasStableKey =
+    typeof input.idempotencyKey === "string" &&
+    input.idempotencyKey.trim().length > 0;
+
+  const validAttempt = Number.isInteger(input.attempt) && input.attempt >= 1;
+
+  const retryableStatus =
+    input.status === "timeout" ||
+    input.status === 408 ||
+    input.status === 429 ||
+    (typeof input.status === "number" &&
+      input.status >= 500 &&
+      input.status <= 599);
+
+  const canRetry =
+    validAttempt &&
+    input.attempt < 4 &&
+    retryableStatus &&
+    (!requiresStableIdempotencyKey || hasStableKey);
+
+  if (!canRetry) {
+    return {
+      retry: false,
+      delayMs: 0,
+      requiresStableIdempotencyKey,
+    };
+  }
+
+  const backoffMs = Math.min(500 * 2 ** (input.attempt - 1), 2000);
+
+  const validRetryAfter =
+    typeof input.retryAfterMs === "number" &&
+    Number.isFinite(input.retryAfterMs) &&
+    input.retryAfterMs >= 0;
+
+  return {
+    retry: true,
+    delayMs: validRetryAfter ? input.retryAfterMs : backoffMs,
+    requiresStableIdempotencyKey,
+  };
 }
 
 export function reduceRemoteResponses(
