@@ -291,11 +291,13 @@ export function resolveSync(
     throw new Error("Cannot reconcile records with different IDs");
   }
 
-  const fields = [...new Set([
-    ...Object.keys(base.fields),
-    ...Object.keys(local.fields),
-    ...Object.keys(remote.fields),
-  ])].sort();
+  const fields = [
+    ...new Set([
+      ...Object.keys(base.fields),
+      ...Object.keys(local.fields),
+      ...Object.keys(remote.fields),
+    ]),
+  ].sort();
   const conflicts: string[] = [];
   const merged: Record<string, unknown> = { ...remote.fields };
 
@@ -366,17 +368,32 @@ export function planRetry(
   requiresStableIdempotencyKey: boolean;
 }> {
   const isPost = input.method === "POST";
+
   const hasStableKey =
     typeof input.idempotencyKey === "string" &&
     input.idempotencyKey.trim().length > 0;
-  const requiresStableIdempotencyKey = isPost && !hasStableKey;
 
-  if (
-    !Number.isSafeInteger(input.attempt) ||
-    input.attempt < 1 ||
-    input.attempt >= 4 ||
-    requiresStableIdempotencyKey
-  ) {
+  const requiresStableIdempotencyKey = isPost;
+
+  const validAttempt =
+    Number.isSafeInteger(input.attempt) &&
+    input.attempt >= 1 &&
+    input.attempt < 4;
+
+  const retryableStatus =
+    input.status === "timeout" ||
+    input.status === 408 ||
+    input.status === 429 ||
+    (typeof input.status === "number" &&
+      input.status >= 500 &&
+      input.status <= 599);
+
+  const canRetry =
+    validAttempt &&
+    retryableStatus &&
+    (!requiresStableIdempotencyKey || hasStableKey);
+
+  if (!canRetry) {
     return {
       retry: false,
       delayMs: 0,
@@ -384,41 +401,22 @@ export function planRetry(
     };
   }
 
-  const retryableStatus =
-    input.status === "timeout" ||
-    input.status === 408 ||
-    input.status === 425 ||
-    input.status === 429 ||
-    (input.status >= 500 && input.status <= 599);
-  if (!retryableStatus) {
-    return {
-      retry: false,
-      delayMs: 0,
-      requiresStableIdempotencyKey: false,
-    };
-  }
+  const backoffMs = Math.min(
+    500 * 2 ** (input.attempt - 1),
+    2000,
+  );
 
-  const maxDelayMs = 60_000;
   const validRetryAfter =
     typeof input.retryAfterMs === "number" &&
-    Number.isSafeInteger(input.retryAfterMs) &&
+    Number.isFinite(input.retryAfterMs) &&
     input.retryAfterMs >= 0;
-  if (validRetryAfter && input.retryAfterMs > maxDelayMs) {
-    return {
-      retry: false,
-      delayMs: 0,
-      requiresStableIdempotencyKey: false,
-    };
-  }
-  const delayMs =
-    validRetryAfter
-      ? input.retryAfterMs
-      : Math.min(500 * 2 ** (input.attempt - 1), maxDelayMs);
 
   return {
     retry: true,
-    delayMs,
-    requiresStableIdempotencyKey: false,
+    delayMs: validRetryAfter
+      ? input.retryAfterMs
+      : backoffMs,
+    requiresStableIdempotencyKey,
   };
 }
 
