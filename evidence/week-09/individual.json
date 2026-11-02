@@ -36,7 +36,7 @@
       "prediction": "Esperaba que una respuesta completa y válida del proveedor se pudiera usar y almacenar de forma persistente; que resultados incompletos, fuera de rango o errores del servicio permitieran continuar con una etiqueta manual; que el TTL y la identidad del proveedor/locale impidieran reutilizar entradas vencidas o incompatibles; y que timeout, HTTP 429 y desconexión fueran reproducibles sin depender de cuotas externas.",
       "command": "npm test -- --runInBand src/course-evaluation/locationSelection.test.ts src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/campusops/infrastructure/localSyncStore.test.ts course-tests/public/week-09.test.ts",
       "observedResult": "Pasaron 5 suites y 50 pruebas, con 0 fallidas. Se cubrieron selección manual/proveedor, datos inválidos, caché persistente y expiración, aislamiento por proveedor/locale, timeout controlado, HTTP 429 y Retry-After, desconexión, límite local de frecuencia y rollback de la migración v3. También pasaron npm run typecheck, npm run backend:self-test y git diff --check; ESLint focalizado terminó sin errores.",
-      "explanation": "Implementé NominatimGeocodingProvider como adaptador HTTP configurable por endpoint HTTPS y User-Agent, con búsqueda explícita, timeout, normalización de coordenadas, clasificación de errores y límite local de una solicitud por segundo. Añadí IncidentLocationService para validar respuestas y recurrir a ubicación manual cuando el proveedor no está disponible, junto con SqliteLocationCache y una migración v3 que persiste sólo resultados completos validados con TTL de 30 días. Completé selectIncidentLocation y planRetry conforme al contrato público, y agregué pruebas con fetchers, reloj y caché controlables. Documenté la política y las restricciones del proveedor. Las pruebas utilizan dobles locales; no realicé una consulta externa real ni conecté el servicio a una pantalla de la aplicación."
+      "explanation": "Implementé NominatimGeocodingProvider como adaptador HTTP configurable por endpoint HTTPS y User-Agent, con búsqueda explícita, timeout, normalización de coordenadas, clasificación de errores y límite local de una solicitud por segundo. Añadí IncidentLocationService para validar respuestas y recurrir a ubicación manual cuando el proveedor no está disponible, junto con SqliteLocationCache y una migración v3 que persiste sólo resultados completos validados con TTL de 30 días. Completé selectIncidentLocation conforme al contrato público, y agregué pruebas con fetchers, reloj y caché controlables. Documenté la política y las restricciones del proveedor. Las pruebas utilizan dobles locales; no realicé una consulta externa real ni conecté el servicio a una pantalla de la aplicación."
     },
     {
       "studentId": "3523110374",
@@ -57,8 +57,36 @@
       "reviews": [],
       "prediction": "Esperaba que ubicación, caché, alternativa manual y reintentos funcionaran juntos; que timeout, HTTP 429 y desconexión dejaran siempre continuar con ubicación manual sin coordenadas inventadas ni caché envenenada; y que ante una respuesta perdida el reintento conservara la misma clave y contenido sin duplicar efectos.",
       "command": "npm test -- --runInBand src/campusops/integration",
-      "observedResult": "Pasaron 3 suites y 20 pruebas, 0 fallidas (9 de integración, 7 de fallos del proveedor y 4 de métricas de reintentos). npm run typecheck y eslint terminaron sin errores. Las pruebas públicas de la semana 9 mostraron 3 fallos en planRetry (requiresStableIdempotencyKey en true con clave presente y falta de tope a Retry-After mayor de 60000 ms), ajenos a estas pruebas.",
+      "observedResult": "Las pruebas de integración pasaron 3 suites y 20 pruebas, sin fallos. La verificación de tipos y ESLint terminaron sin errores. La evaluación pública de Semana 9 pasó sus 4 pruebas, y make verify-week-09 terminó en PASS. Los reportes de inyección de fallos y métricas se generaron con 56 pruebas aprobadas y 0 fallidas.",
       "explanation": "Escribí pruebas de integración con dobles controlados que combinan ubicación, caché, alternativa manual y reintentos; pruebas de fallos del proveedor (timeout, red, 429 con Retry-After, HTTP 503, caché vencida y errores de programación que no se tragan); y pruebas de métricas con un reloj virtual que registran intentos, esperas planificadas, claves y cuerpos enviados y efectos en el servidor doble. También escribí tools/week09-report.mjs, que ejecuta Jest y genera los reportes a partir de los resultados reales y del SHA de HEAD. Las esperas son valores planificados sobre un reloj virtual y no tiempo real, y no hubo consulta a un proveedor externo real."
+    },
+    {
+      "studentId": "3523110235",
+      "commitShas": [
+        "bbaa9640309715a9d8b79edc2570b98242813500",
+        "13f1eda9b993aca1c57b1686294c5f76d8c0a5d7"
+      ],
+      "files": [
+        "src/course-evaluation/index.ts",
+        "src/course-evaluation/index.test.ts",
+        "docs/resilience-policy.md"
+      ],
+      "tests": [
+        "npx jest src/course-evaluation/index.test.ts --runInBand",
+        "npx jest src/campusops/sync/syncCoordinator.test.ts src/campusops/infrastructure/localSyncStore.test.ts --runInBand",
+        "npx jest src/api/campusOpsClient.test.ts --runInBand",
+        "npx jest course-tests/public/week-09.test.ts --runInBand",
+        "npx tsc --noEmit"
+      ],
+      "reviews": [
+        "Revisión de la política de reintentos acotados y backoff progresivo.",
+        "Verificación de Retry-After y límites de reintentos.",
+        "Revisión de la conservación de Idempotency-Key ante respuestas perdidas y reintentos explícitos."
+      ],
+      "prediction": "Esperaba que los errores transitorios permitieran reintentos acotados, que Retry-After determinara la espera cuando fuera válido y que las operaciones POST sólo pudieran repetirse conservando una clave de idempotencia estable, evitando efectos duplicados.",
+      "command": "npx jest src/course-evaluation/index.test.ts --runInBand && npx jest course-tests/public/week-09.test.ts --runInBand && npx tsc --noEmit",
+      "observedResult": "Las pruebas unitarias de planRetry pasaron 14 de 14; las pruebas públicas de Semana 9 pasaron 4 de 4 y TypeScript terminó sin errores. También se ejecutaron pruebas de regresión de sincronización y del cliente API. La verificación oficial make verify-week-09 terminó en PASS. La evaluación pública inicialmente detectó archivos de evidencia faltantes y registros incompletos; después de corregirlos, make public-test-week-09 terminó en PASS.",
+      "explanation": "Implementé planRetry con reintentos acotados, backoff progresivo y soporte para Retry-After. Incorporé validaciones para evitar reintentos de operaciones POST sin una clave de idempotencia estable y agregué pruebas unitarias para los límites, errores transitorios y casos no reintentables. También documenté las decisiones y restricciones de resiliencia en docs/resilience-policy.md. Verifiqué la conservación de la identidad de operación en el cliente API ante respuestas inciertas, para permitir un reintento explícito sin duplicar efectos. La política planifica los reintentos, pero no ejecuta automáticamente las solicitudes."
     }
   ]
 }

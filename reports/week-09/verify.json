@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "week": 9,
+  "mode": "verify",
+  "commitSha": "ec007ed9216805c419c00ef4fa48e681e69a383f",
+  "evaluatedAt": "2026-11-02T23:07:37.938432+00:00",
+  "status": "pass",
+  "checks": [
+    {
+      "id": "base_files",
+      "status": "pass",
+      "detail": "missing=[]"
+    },
+    {
+      "id": "react_native_profile",
+      "status": "pass",
+      "detail": "missing packages=[]"
+    },
+    {
+      "id": "toolchain_scripts",
+      "status": "pass",
+      "detail": "missing scripts=[]"
+    },
+    {
+      "id": "workflow_integrity",
+      "status": "pass",
+      "detail": "bypass markers=[]"
+    },
+    {
+      "id": "secret_scan",
+      "status": "pass",
+      "detail": "hits=[]"
+    },
+    {
+      "id": "toolchain_1",
+      "status": "pass",
+      "detail": "npm run typecheck\n> dmi-react-native-starter@1.0.0 typecheck\n> tsc --noEmit"
+    },
+    {
+      "id": "toolchain_2",
+      "status": "pass",
+      "detail": "npm run lint\n> dmi-react-native-starter@1.0.0 lint\n> eslint .\n\n\n/mnt/c/Users/karla/Downloads/student-starter/src/course-evaluation/index.ts\n  237:10  warning  'getField' is defined but never used    @typescript-eslint/no-unused-vars\n  274:10  warning  'equalField' is defined but never used  @typescript-eslint/no-unused-vars\n\n✖ 2 problems (0 errors, 2 warnings)"
+    },
+    {
+      "id": "toolchain_3",
+      "status": "pass",
+      "detail": "npm run audit:ci\n260108-1236b6be4 - 0.87.0-rc.4\n            Depends on vulnerable versions of @react-native/jest-preset\n            Depends on vulnerable versions of @react-native/virtualized-lists\n            node_modules/react-native\n              @react-native/virtualized-lists  0.85.0-nightly-20260108-1236b6be4 - 0.87.0-rc.4\n              Depends on vulnerable versions of react-native\n              node_modules/@react-native/virtualized-lists\n\nminimatch  <11.0.1\nSeverity: moderate\nminimatch has potential denial of service via globparts amplification - https://github.com/advisories/GHSA-g3hv-75wg-m249\nfix available via `npm audit fix --force`\nWill install expo@51.0.39, which is a breaking change\nnode_modules/@expo/fingerprint/node_modules/minimatch\nnode_modules/glob/node_modules/minimatch\nnode_modules/minimatch\n\nnode-forge  <=1.4.0\nSeverity: high\nnode-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements - https://github.com/advisories/GHSA-86w9-cpqp-85rv\nForge: ASN.1 OID first arc truncation in asn1.oidToDer - https://github.com/advisories/GHSA-4642-5mcj-2rqw\nForge: Prototype Pollution in forge.http cookie handling via a malicious Set-Cookie - https://github.com/advisories/GHSA-6wvx-3r32-xmcg\nForge: TLS client crash when the server sends no certificate - https://github.com/advisories/GHSA-525v-9gp9-w22h\nForge: Regular expression denial of service in PEM decoding (pem.decode) - https://github.com/advisories/GHSA-7wch-p9px-956x\nForge: Denial of Service via infinite loop in BigInteger.modInverse() with negative input (incomplete fix of CVE-2026-33891) - https://github.com/advisories/GHSA-h6cr-wjv9-3cpp\nForge: verifyCertificateChain() removes trusted CA certificates with the same subject from the CA store - https://github.com/advisories/GHSA-4487-j8r4-4g2f\nForge: AES-GCM authentication bypass via unvalidated tagLength option - https://github.com/advisories/GHSA-5cwg-6vw7-rj6p\nForge: PKCS#12 MAC forgery and constant-key PBE via zero iteration count - https://github.com/advisories/GHSA-jc66-7q78-782g\nForge: Denial of service in TLS record processing via a record interleaved with a fragmented handshake message - https://github.com/advisories/GHSA-8hrf-8g6f-7xwp\nForge: Denial of service in TLS record processing via call stack exhaustion - https://github.com/advisories/GHSA-hqq3-7jhf-c5jx\nForge: X.509 basicConstraints bypass in verifyCertificateChain() via deprecated extension OIDs 2.5.29.10 and 2.5.29.13 - https://github.com/advisories/GHSA-5x38-2vff-x55p\nfix available via `npm audit fix`\nnode_modules/node-forge\n\nzod  <4.6.6\nSeverity: high\nZod can exhaust memory while validating oversized constrained collections - https://github.com/advisories/GHSA-mrhx-c7xc-m3w5\nfix available via `npm audit fix`\nnode_modules/expo/node_modules/zod\n\n22 vulnerabilities (1 low, 17 moderate, 4 high)\n\nTo address issues that do not require attention, run:\n  npm audit fix\n\nTo address all issues (including breaking changes), run:\n  npm audit fix --force"
+    },
+    {
+      "id": "toolchain_4",
+      "status": "pass",
+      "detail": "npm run test:smoke\n> dmi-react-native-starter@1.0.0 test:smoke\n> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/smoke.test.tsx\n\n\nPASS course-tests/smoke.test.tsx (42.981 s)\n  ✓ renders the reproducible baseline and resolves backend state (10977 ms)\n\nTest Suites: 1 passed, 1 total\nTests:       1 passed, 1 total\nSnapshots:   0 total\nTime:        51.111 s, estimated 60 s\nRan all test suites matching /course-tests\\/smoke.test.tsx/i."
+    },
+    {
+      "id": "toolchain_5",
+      "status": "pass",
+      "detail": "npm run backend:self-test\n> dmi-react-native-starter@1.0.0 backend:self-test\n> node course-backend/self-test.mjs\n\nCampusOps backend contracts: roles, reassignment conflict, lost response, idempotency, evidence and geocoding PASS.\nControlled backend self-test passed."
+    }
+  ]
+}

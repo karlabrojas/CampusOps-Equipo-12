@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "week": 9,
+  "commitSha": "ec007ed9216805c419c00ef4fa48e681e69a383f",
+  "generatedAt": "2026-11-02T22:47:03.170Z",
+  "environment": {
+    "os": "linux",
+    "node": "v22.22.0",
+    "note": "Dobles controlados locales; ninguna consulta a un proveedor externo real."
+  },
+  "timeSource": "virtual-clock (planned delays; no real waiting)",
+  "checks": [
+    {
+      "id": "metrics::lost-response-after-commit",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "attempts=2; statuses=[\"timeout\",200]; plannedDelaysMs=[500]; retryAfterHonored=null; distinctKeysSent=1; distinctBodiesSent=1; serverEffects=1; outcome=succeeded"
+    },
+    {
+      "id": "metrics::retry-after-429",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "attempts=2; statuses=[429,200]; plannedDelaysMs=[800]; retryAfterHonored=true; distinctKeysSent=1; distinctBodiesSent=1; serverEffects=1; outcome=succeeded"
+    },
+    {
+      "id": "metrics::attempt-limit-4",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "attempts=4; statuses=[\"timeout\",\"timeout\",\"timeout\",\"timeout\"]; plannedDelaysMs=[500,1000,2000]; retryAfterHonored=null; distinctKeysSent=1; distinctBodiesSent=1; serverEffects=1; outcome=gave_up"
+    },
+    {
+      "id": "metrics::post-without-key-503",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "attempts=1; statuses=[503]; plannedDelaysMs=[]; retryAfterHonored=null; distinctKeysSent=1; distinctBodiesSent=1; serverEffects=0; outcome=not_retried"
+    }
+  ],
+  "operations": [
+    {
+      "id": "lost-response-after-commit",
+      "scenarioType": "failure",
+      "method": "POST",
+      "idempotencyKey": "resolve-campus-inc-001-op-m1",
+      "attempts": 2,
+      "statuses": [
+        "timeout",
+        200
+      ],
+      "plannedDelaysMs": [
+        500
+      ],
+      "virtualElapsedMs": 500,
+      "retryAfterMs": null,
+      "retryAfterHonored": null,
+      "outcome": "succeeded",
+      "distinctKeysSent": 1,
+      "distinctBodiesSent": 1,
+      "serverEffects": 1
+    },
+    {
+      "id": "retry-after-429",
+      "scenarioType": "boundary",
+      "method": "POST",
+      "idempotencyKey": "resolve-campus-inc-001-op-m2",
+      "attempts": 2,
+      "statuses": [
+        429,
+        200
+      ],
+      "plannedDelaysMs": [
+        800
+      ],
+      "virtualElapsedMs": 800,
+      "retryAfterMs": 800,
+      "retryAfterHonored": true,
+      "outcome": "succeeded",
+      "distinctKeysSent": 1,
+      "distinctBodiesSent": 1,
+      "serverEffects": 1
+    },
+    {
+      "id": "attempt-limit-4",
+      "scenarioType": "boundary",
+      "method": "POST",
+      "idempotencyKey": "resolve-campus-inc-001-op-m3",
+      "attempts": 4,
+      "statuses": [
+        "timeout",
+        "timeout",
+        "timeout",
+        "timeout"
+      ],
+      "plannedDelaysMs": [
+        500,
+        1000,
+        2000
+      ],
+      "virtualElapsedMs": 3500,
+      "retryAfterMs": null,
+      "retryAfterHonored": null,
+      "outcome": "gave_up",
+      "distinctKeysSent": 1,
+      "distinctBodiesSent": 1,
+      "serverEffects": 1
+    },
+    {
+      "id": "post-without-key-503",
+      "scenarioType": "failure",
+      "method": "POST",
+      "idempotencyKey": null,
+      "attempts": 1,
+      "statuses": [
+        503
+      ],
+      "plannedDelaysMs": [],
+      "virtualElapsedMs": 0,
+      "retryAfterMs": null,
+      "retryAfterHonored": null,
+      "outcome": "not_retried",
+      "distinctKeysSent": 1,
+      "distinctBodiesSent": 1,
+      "serverEffects": 0
+    }
+  ]
+}
