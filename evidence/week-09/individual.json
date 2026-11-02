@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "week": 9,
+  "teamId": "12",
+  "members": [
+    {
+      "studentId": "3523110195",
+      "commitShas": [
+        "5e2f8e3fd9624f50fd02cee424b66da589064bd7"
+      ],
+      "files": [
+        "docs/CAMPUSOPS_API.md",
+        "docs/data-model.md",
+        "docs/resilience-policy.md",
+        "src/campusops/infrastructure/geocodingProvider.ts",
+        "src/campusops/infrastructure/geocodingProvider.test.ts",
+        "src/campusops/infrastructure/locationCache.ts",
+        "src/campusops/infrastructure/locationService.ts",
+        "src/campusops/infrastructure/locationService.test.ts",
+        "src/campusops/infrastructure/localSyncStore.test.ts",
+        "src/campusops/infrastructure/sqliteMigrations.ts",
+        "src/course-evaluation/index.ts",
+        "src/course-evaluation/locationSelection.test.ts"
+      ],
+      "tests": [
+        "npm test -- --runInBand src/course-evaluation/locationSelection.test.ts src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/campusops/infrastructure/localSyncStore.test.ts course-tests/public/week-09.test.ts",
+        "npm run typecheck",
+        "npm run backend:self-test",
+        "npx eslint src/course-evaluation/locationSelection.test.ts src/campusops/infrastructure/locationCache.ts src/campusops/infrastructure/geocodingProvider.ts src/campusops/infrastructure/geocodingProvider.test.ts src/campusops/infrastructure/locationService.ts src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/sqliteMigrations.ts src/campusops/infrastructure/localSyncStore.test.ts",
+        "git diff --check"
+      ],
+      "reviews": [
+        "Revisión del contrato público selectIncidentLocation y del formato de la respuesta de geocodificación del backend.",
+        "Verificación de las restricciones de uso de Nominatim, la validez de coordenadas, vigencia de caché y fallback manual sin coordenadas inventadas."
+      ],
+      "prediction": "Esperaba que una respuesta completa y válida del proveedor se pudiera usar y almacenar de forma persistente; que resultados incompletos, fuera de rango o errores del servicio permitieran continuar con una etiqueta manual; que el TTL y la identidad del proveedor/locale impidieran reutilizar entradas vencidas o incompatibles; y que timeout, HTTP 429 y desconexión fueran reproducibles sin depender de cuotas externas.",
+      "command": "npm test -- --runInBand src/course-evaluation/locationSelection.test.ts src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/campusops/infrastructure/localSyncStore.test.ts course-tests/public/week-09.test.ts",
+      "observedResult": "Pasaron 5 suites y 50 pruebas, con 0 fallidas. Se cubrieron selección manual/proveedor, datos inválidos, caché persistente y expiración, aislamiento por proveedor/locale, timeout controlado, HTTP 429 y Retry-After, desconexión, límite local de frecuencia y rollback de la migración v3. También pasaron npm run typecheck, npm run backend:self-test y git diff --check; ESLint focalizado terminó sin errores.",
+      "explanation": "Implementé NominatimGeocodingProvider como adaptador HTTP configurable por endpoint HTTPS y User-Agent, con búsqueda explícita, timeout, normalización de coordenadas, clasificación de errores y límite local de una solicitud por segundo. Añadí IncidentLocationService para validar respuestas y recurrir a ubicación manual cuando el proveedor no está disponible, junto con SqliteLocationCache y una migración v3 que persiste sólo resultados completos validados con TTL de 30 días. Completé selectIncidentLocation y planRetry conforme al contrato público, y agregué pruebas con fetchers, reloj y caché controlables. Documenté la política y las restricciones del proveedor. Las pruebas utilizan dobles locales; no realicé una consulta externa real ni conecté el servicio a una pantalla de la aplicación."
+    }
+  ]
+}
