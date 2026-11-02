@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "week": 9,
+  "commitSha": "b727203787b29edc0ad94ef4451edf264866392c",
+  "decision": "Cubrir la integracion de reintentos con idempotencia con tres suites propias y un generador de reportes (tools/week09-report.mjs). week09.integration.test.ts verifica cache de resultados validos, misma clave y contenido sin duplicar efectos, deduplicacion por operationId, ubicacion manual con respuesta perdida, tope de 4 intentos con esperas finitas y rechazo de POST sin clave. week09.faults.test.ts inyecta fallos: Retry-After de un 429, errores de programacion que no se tragan y cache expirada sin conexion. week09.metrics.test.ts mide cuatro escenarios: respuesta perdida tras commit (un reintento, misma clave y cuerpo, un solo efecto en el servidor), 429 con Retry-After (la espera iguala el valor del servidor), timeout persistente (se detiene en el intento 4) y POST sin clave con 503 (no se reintenta). No se modifico planRetry ni las pruebas del curso.",
+  "alternatives": [
+    "Corregir yo mismo planRetry para que pasen las pruebas publicas: descartada porque la funcion es de Karla y Angel y no me corresponde editarla sin autorizacion.",
+    "Ocultar o ajustar las pruebas que fallan: descartada porque las pruebas son del curso y el reporte debe mostrar lo observado."
+  ],
+  "tradeoff": "Mis suites pasan, pero 3 pruebas publicas fallan por planRetry: requiresStableIdempotencyKey sale true aunque ya viene idempotencyKey, y no hay tope de 60000 ms para Retry-After (con 60001 devuelve retry true y delayMs 60001). Mis pruebas no cubren un Retry-After excesivo, por eso no detectaron este segundo caso. Mientras no se corrija, el resultado muestra fallas; a cambio el reporte es fiel a lo observado y la causa queda trazada a su origen.",
+  "requirementIds": [
+    "AC-02",
+    "AC-04"
+  ],
+  "verification": [
+    {
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/public/week-09.test.ts src/course-evaluation src/campusops/integration",
+      "result": "8 suites (2 fallidas), 78 pruebas, 75 pasan, 3 fallan",
+      "evidence": "Las 3 fallas estan en planRetry: week-09.test.ts:13, locationSelection.test.ts:85 y locationSelection.test.ts:110. Las 3 suites de src/campusops/integration pasan."
+    }
+  ]
+}
