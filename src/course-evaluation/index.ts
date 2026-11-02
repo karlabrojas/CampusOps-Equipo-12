@@ -373,7 +373,9 @@ export function planRetry(
     typeof input.idempotencyKey === "string" &&
     input.idempotencyKey.trim().length > 0;
 
-  const requiresStableIdempotencyKey = isPost;
+  const requiresStableIdempotencyKey = isPost && !hasStableKey;
+
+  const maxDelayMs = 60_000;
 
   const validAttempt =
     Number.isSafeInteger(input.attempt) &&
@@ -383,17 +385,13 @@ export function planRetry(
   const retryableStatus =
     input.status === "timeout" ||
     input.status === 408 ||
+    input.status === 425 ||
     input.status === 429 ||
     (typeof input.status === "number" &&
       input.status >= 500 &&
       input.status <= 599);
 
-  const canRetry =
-    validAttempt &&
-    retryableStatus &&
-    (!requiresStableIdempotencyKey || hasStableKey);
-
-  if (!canRetry) {
+  if (!validAttempt || !retryableStatus || requiresStableIdempotencyKey) {
     return {
       retry: false,
       delayMs: 0,
@@ -401,21 +399,24 @@ export function planRetry(
     };
   }
 
-  const backoffMs = Math.min(
-    500 * 2 ** (input.attempt - 1),
-    2000,
-  );
-
   const validRetryAfter =
     typeof input.retryAfterMs === "number" &&
-    Number.isFinite(input.retryAfterMs) &&
+    Number.isSafeInteger(input.retryAfterMs) &&
     input.retryAfterMs >= 0;
+
+  if (validRetryAfter && input.retryAfterMs > maxDelayMs) {
+    return {
+      retry: false,
+      delayMs: 0,
+      requiresStableIdempotencyKey,
+    };
+  }
+
+  const backoffMs = Math.min(500 * 2 ** (input.attempt - 1), maxDelayMs);
 
   return {
     retry: true,
-    delayMs: validRetryAfter
-      ? input.retryAfterMs
-      : backoffMs,
+    delayMs: validRetryAfter ? input.retryAfterMs : backoffMs,
     requiresStableIdempotencyKey,
   };
 }

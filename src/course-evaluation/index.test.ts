@@ -208,7 +208,7 @@ describe("planRetry", () => {
     ).toEqual({
       retry: true,
       delayMs: 500,
-      requiresStableIdempotencyKey: true,
+      requiresStableIdempotencyKey: false,
     });
   });
 
