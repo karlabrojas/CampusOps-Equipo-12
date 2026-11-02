@@ -52,6 +52,7 @@ La aplicación debe demostrar además recuperación de cola tras reiniciar y mig
 `selectIncidentLocation(provider, manualLabel)` recibe un resultado externo desconocido y una etiqueta manual no vacía. Acepta únicamente objeto con `label` textual no vacío y coordenadas numéricas finitas dentro de latitud [-90,90] y longitud [-180,180]. Devuelve `{ source: 'provider', label, latitude, longitude }`. Ante null, error representado como dato, objeto incompleto, coordenadas inválidas o tipos incorrectos devuelve `{ source: 'manual', label: manualLabel }`, sin inventar coordenadas. Un timeout/429/desconexión se captura en el adaptador HTTP y se presenta como resultado no disponible.
 
 El equipo prueba también caché, timeout real, reintentos con la misma clave y captura manual desde la interfaz. No basta con retornar una respuesta constante.
+La política propuesta de proveedor, caché, operación offline y evidencia externa está en [`docs/resilience-policy.md`](./resilience-policy.md). La documentación no implica que el adaptador o la caché ya estén implementados.
 
 ### Semanas 10–13 — integración acumulativa
 

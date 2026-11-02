@@ -367,12 +367,18 @@ export function planRetry(
   delayMs: number;
   requiresStableIdempotencyKey: boolean;
 }> {
-  const requiresStableIdempotencyKey = input.method === "POST";
+  const isPost = input.method === "POST";
+
   const hasStableKey =
     typeof input.idempotencyKey === "string" &&
     input.idempotencyKey.trim().length > 0;
 
-  const validAttempt = Number.isInteger(input.attempt) && input.attempt >= 1;
+  const requiresStableIdempotencyKey = isPost;
+
+  const validAttempt =
+    Number.isSafeInteger(input.attempt) &&
+    input.attempt >= 1 &&
+    input.attempt < 4;
 
   const retryableStatus =
     input.status === "timeout" ||
@@ -384,7 +390,6 @@ export function planRetry(
 
   const canRetry =
     validAttempt &&
-    input.attempt < 4 &&
     retryableStatus &&
     (!requiresStableIdempotencyKey || hasStableKey);
 
@@ -396,7 +401,10 @@ export function planRetry(
     };
   }
 
-  const backoffMs = Math.min(500 * 2 ** (input.attempt - 1), 2000);
+  const backoffMs = Math.min(
+    500 * 2 ** (input.attempt - 1),
+    2000,
+  );
 
   const validRetryAfter =
     typeof input.retryAfterMs === "number" &&
@@ -405,7 +413,9 @@ export function planRetry(
 
   return {
     retry: true,
-    delayMs: validRetryAfter ? input.retryAfterMs : backoffMs,
+    delayMs: validRetryAfter
+      ? input.retryAfterMs
+      : backoffMs,
     requiresStableIdempotencyKey,
   };
 }
@@ -434,8 +444,48 @@ export function reducePermissionLifecycle(
 
 /** Week 09: see docs/CAMPUSOPS_API.md; this is not a completed solution. */
 export function selectIncidentLocation(
-  _provider: unknown,
-  _manualLabel: string,
+  provider: unknown,
+  manualLabel: string,
 ): IncidentLocation {
-  return pending("selectIncidentLocation");
+  if (typeof manualLabel !== "string" || manualLabel.trim().length === 0) {
+    throw new Error("A nonempty manual location label is required");
+  }
+
+  if (isValidProviderLocation(provider)) {
+    return {
+      source: "provider",
+      label: provider.label.trim(),
+      latitude: provider.latitude,
+      longitude: provider.longitude,
+    };
+  }
+
+  return { source: "manual", label: manualLabel.trim() };
+}
+
+export type ProviderLocation = Readonly<{
+  label: string;
+  latitude: number;
+  longitude: number;
+}>;
+
+export function isValidProviderLocation(
+  input: unknown,
+): input is ProviderLocation {
+  if (input === null || typeof input !== "object" || Array.isArray(input)) {
+    return false;
+  }
+  const value = input as Record<string, unknown>;
+  return (
+    typeof value.label === "string" &&
+    value.label.trim().length > 0 &&
+    typeof value.latitude === "number" &&
+    Number.isFinite(value.latitude) &&
+    value.latitude >= -90 &&
+    value.latitude <= 90 &&
+    typeof value.longitude === "number" &&
+    Number.isFinite(value.longitude) &&
+    value.longitude >= -180 &&
+    value.longitude <= 180
+  );
 }
