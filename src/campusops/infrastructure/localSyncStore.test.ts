@@ -12,6 +12,10 @@ import {
   LocalSyncStore,
   type LocalSyncStoreOptions,
 } from "./localSyncStore";
+import {
+  LOCATION_CACHE_TTL_MS,
+  SqliteLocationCache,
+} from "./locationCache";
 import type {
   AttachmentFileStore,
   PersistedAttachment,
@@ -531,5 +535,105 @@ describe("local schema migrations", () => {
         "rollback-op-1",
       ),
     ).toEqual({ payload_json: JSON.stringify({ text: "keep this note" }) });
+  });
+
+  it("rolls back a failed location-cache migration without changing the prior schema", async () => {
+    const database = newDatabase();
+    await migrateLocalDatabase(database, { targetVersion: 2 });
+
+    await expect(
+      migrateLocalDatabase(database, {
+        afterStatement: (version, statementIndex) => {
+          if (version === 3 && statementIndex === 0) {
+            throw new Error("injected location-cache migration failure");
+          }
+        },
+      }),
+    ).rejects.toThrow("injected location-cache migration failure");
+
+    expect(
+      await database.getFirstAsync<{ user_version: number }>(
+        "PRAGMA user_version",
+      ),
+    ).toEqual({ user_version: 2 });
+    expect(
+      await database.getFirstAsync<{ name: string }>(
+        "SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?",
+        "geocoding_cache",
+      ),
+    ).toBeNull();
+
+    await migrateLocalDatabase(database);
+    expect(
+      await database.getFirstAsync<{ user_version: number }>(
+        "PRAGMA user_version",
+      ),
+    ).toEqual({ user_version: CURRENT_SCHEMA_VERSION });
+  });
+});
+
+describe("SqliteLocationCache", () => {
+  it("persists only validated provider results and expires them at the TTL boundary", async () => {
+    const database = newDatabase();
+    await migrateLocalDatabase(database);
+    let now = 1_800_000_000_000;
+    const cache = new SqliteLocationCache(database, () => now);
+    await cache.set(
+      "query-hash",
+      "nominatim-search-v1",
+      { label: "Zona ficticia", latitude: 0, longitude: 0 },
+      now,
+    );
+
+    const reopenedDatabase = database.reopen();
+    const reopenedCache = new SqliteLocationCache(reopenedDatabase, () => now);
+    await expect(
+      reopenedCache.get("query-hash", "nominatim-search-v1"),
+    ).resolves.toEqual({
+      label: "Zona ficticia",
+      latitude: 0,
+      longitude: 0,
+      fetchedAt: now,
+    });
+
+    now += LOCATION_CACHE_TTL_MS;
+    await expect(
+      reopenedCache.get("query-hash", "nominatim-search-v1"),
+    ).resolves.toBeNull();
+    expect(
+      await reopenedDatabase.getFirstAsync<{ cache_key: string }>(
+        "SELECT cache_key FROM geocoding_cache WHERE cache_key = ?",
+        "query-hash",
+      ),
+    ).toBeNull();
+  });
+
+  it("rejects invalid coordinates and removes entries belonging to another provider", async () => {
+    const database = newDatabase();
+    await migrateLocalDatabase(database);
+    const cache = new SqliteLocationCache(database, () => 10_000);
+
+    await expect(
+      cache.set(
+        "invalid",
+        "nominatim-search-v1",
+        { label: "invalid", latitude: 91, longitude: 0 },
+        1_000,
+      ),
+    ).rejects.toThrow("Invalid geocoding cache entry");
+    await cache.set(
+      "provider-key",
+      "nominatim-search-v1",
+      { label: "Valid", latitude: 1, longitude: 2 },
+      1_000,
+    );
+
+    await expect(cache.get("provider-key", "another-provider")).resolves.toBeNull();
+    expect(
+      await database.getFirstAsync<{ cache_key: string }>(
+        "SELECT cache_key FROM geocoding_cache WHERE cache_key = ?",
+        "provider-key",
+      ),
+    ).toBeNull();
   });
 });

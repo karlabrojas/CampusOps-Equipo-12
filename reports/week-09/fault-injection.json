@@ -1,0 +1,461 @@
+{
+  "schemaVersion": 1,
+  "week": 9,
+  "commitSha": "1138f3771484c0daa784db4c2bd4d95258218643",
+  "generatedAt": "2026-11-03T01:35:18.081Z",
+  "environment": {
+    "os": "linux",
+    "node": "v22.22.0",
+    "note": "Dobles controlados locales; ninguna consulta a un proveedor externo real."
+  },
+  "checks": [
+    {
+      "id": "locationService.test.ts::uses validated provider results and stores them in cache",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 7 ms: IncidentLocationService uses validated provider results and stores them in cache",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationService.test.ts::reuses a fresh result for a normalized query without another provider call",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: IncidentLocationService reuses a fresh result for a normalized query without another provider call",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationService.test.ts::uses a valid cached result when the provider is offline",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: IncidentLocationService uses a valid cached result when the provider is offline",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationService.test.ts::uses manual location after timeout, 429, and invalid provider results",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: IncidentLocationService uses manual location after timeout, 429, and invalid provider results",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationService.test.ts::does not cache invalid results, empty queries, or manual locations",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: IncidentLocationService does not cache invalid results, empty queries, or manual locations",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationService.test.ts::validates the manual alternative before making a provider request",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 38 ms: IncidentLocationService validates the manual alternative before making a provider request",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationService.test.ts::discards malformed cached data before requesting a fresh provider result",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: IncidentLocationService discards malformed cached data before requesting a fresh provider result",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationService.test.ts::removes expired cache entries and falls back manually when refresh is unavailable",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: IncidentLocationService removes expired cache entries and falls back manually when refresh is unavailable",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationService.test.ts::isolates cache keys by provider and locale",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: IncidentLocationService isolates cache keys by provider and locale",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationService.test.ts::propagates unexpected cache or provider errors instead of hiding them",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: IncidentLocationService propagates unexpected cache or provider errors instead of hiding them",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "geocodingProvider.test.ts::requests one user-entered result and normalizes Nominatim coordinates",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 107 ms: NominatimGeocodingProvider requests one user-entered result and normalizes Nominatim coordinates",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "geocodingProvider.test.ts::returns no result for an empty result list",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: NominatimGeocodingProvider returns no result for an empty result list",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "geocodingProvider.test.ts::reports HTTP 429 and a bounded Retry-After value",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: NominatimGeocodingProvider reports HTTP 429 and a bounded Retry-After value",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "geocodingProvider.test.ts::limits requests to one per second within the adapter instance",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: NominatimGeocodingProvider limits requests to one per second within the adapter instance",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "geocodingProvider.test.ts::classifies malformed JSON and invalid response shape as contract errors",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: NominatimGeocodingProvider classifies malformed JSON and invalid response shape as contract errors",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "geocodingProvider.test.ts::distinguishes network errors from timeout using a controlled abort",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 5 ms: NominatimGeocodingProvider distinguishes network errors from timeout using a controlled abort",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "geocodingProvider.test.ts::rejects unsafe endpoints and missing application identification",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 50 ms: NominatimGeocodingProvider rejects unsafe endpoints and missing application identification",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "week09.faults.test.ts::timeout keeps the app usable with the manual label",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 2 ms: Week 09 integration: provider faults fall back to manual location timeout keeps the app usable with the manual label",
+      "executionKind": "controlled-double"
+    },
+    {
+      "id": "week09.faults.test.ts::network keeps the app usable with the manual label",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: Week 09 integration: provider faults fall back to manual location network keeps the app usable with the manual label",
+      "executionKind": "controlled-double"
+    },
+    {
+      "id": "week09.faults.test.ts::rate_limited keeps the app usable with the manual label",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: Week 09 integration: provider faults fall back to manual location rate_limited keeps the app usable with the manual label",
+      "executionKind": "controlled-double"
+    },
+    {
+      "id": "week09.faults.test.ts::http 503 keeps the app usable with the manual label",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: Week 09 integration: provider faults fall back to manual location http 503 keeps the app usable with the manual label",
+      "executionKind": "controlled-double"
+    },
+    {
+      "id": "week09.faults.test.ts::exposes Retry-After from a 429 and planRetry honors it",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: Week 09 integration: provider faults fall back to manual location exposes Retry-After from a 429 and planRetry honors it",
+      "executionKind": "controlled-double"
+    },
+    {
+      "id": "week09.faults.test.ts::does not swallow unexpected programming errors",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 16 ms: Week 09 integration: provider faults fall back to manual location does not swallow unexpected programming errors",
+      "executionKind": "controlled-double"
+    },
+    {
+      "id": "week09.faults.test.ts::does not serve an expired cache entry while offline",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: Week 09 integration: provider faults fall back to manual location does not serve an expired cache entry while offline",
+      "executionKind": "controlled-double"
+    },
+    {
+      "id": "locationSelection.test.ts::uses only a complete finite provider result with in-range coordinates",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: selectIncidentLocation uses only a complete finite provider result with in-range coordinates",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationSelection.test.ts::falls back to manual location for invalid provider data: null",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: selectIncidentLocation falls back to manual location for invalid provider data: null",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationSelection.test.ts::falls back to manual location for invalid provider data: {\"code\": \"rate_limited\"}",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: selectIncidentLocation falls back to manual location for invalid provider data: {\"code\": \"rate_limited\"}",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationSelection.test.ts::falls back to manual location for invalid provider data: {\"label\": \"   \", \"latitude\": 0, \"longitude\": 0}",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: selectIncidentLocation falls back to manual location for invalid provider data: {\"label\": \"   \", \"latitude\": 0, \"longitude\": 0}",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationSelection.test.ts::falls back to manual location for invalid provider data: {\"label\": \"Sin coordenadas\", \"latitude\": 0}",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: selectIncidentLocation falls back to manual location for invalid provider data: {\"label\": \"Sin coordenadas\", \"latitude\": 0}",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationSelection.test.ts::falls back to manual location for invalid provider data: {\"label\": \"No numérica\", \"latitude\": \"1\", \"longitude\": 2}",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: selectIncidentLocation falls back to manual location for invalid provider data: {\"label\": \"No numérica\", \"latitude\": \"1\", \"longitude\": 2}",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationSelection.test.ts::falls back to manual location for invalid provider data: {\"label\": \"No finita\", \"latitude\": NaN, \"longitude\": 2}",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: selectIncidentLocation falls back to manual location for invalid provider data: {\"label\": \"No finita\", \"latitude\": NaN, \"longitude\": 2}",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationSelection.test.ts::falls back to manual location for invalid provider data: {\"label\": \"Latitud inválida\", \"latitude\": 90.01, \"longitude\": 0}",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: selectIncidentLocation falls back to manual location for invalid provider data: {\"label\": \"Latitud inválida\", \"latitude\": 90.01, \"longitude\": 0}",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationSelection.test.ts::falls back to manual location for invalid provider data: {\"label\": \"Longitud inválida\", \"latitude\": 0, \"longitude\": -180.01}",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: selectIncidentLocation falls back to manual location for invalid provider data: {\"label\": \"Longitud inválida\", \"latitude\": 0, \"longitude\": -180.01}",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationSelection.test.ts::requires a nonempty manual fallback label",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 36 ms: selectIncidentLocation requires a nonempty manual fallback label",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationSelection.test.ts::honors a finite Retry-After value",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: planRetry honors a finite Retry-After value",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationSelection.test.ts::uses bounded exponential delay and stops after the third attempt",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: planRetry uses bounded exponential delay and stops after the third attempt",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationSelection.test.ts::retries POST only when an idempotency key is present",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: planRetry retries POST only when an idempotency key is present",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationSelection.test.ts::does not retry non-transient client errors or invalid delays",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: planRetry does not retry non-transient client errors or invalid delays",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "locationSelection.test.ts::does not retry before an excessive Retry-After interval",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: planRetry does not retry before an excessive Retry-After interval",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "week09.integration.test.ts::caches a valid provider result and serves it without calling the provider",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: Week 09 integration: location + cache + manual fallback caches a valid provider result and serves it without calling the provider",
+      "executionKind": "controlled-double"
+    },
+    {
+      "id": "week09.integration.test.ts::uses manual location and never caches: latitude out of range",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: Week 09 integration: location + cache + manual fallback uses manual location and never caches: latitude out of range",
+      "executionKind": "controlled-double"
+    },
+    {
+      "id": "week09.integration.test.ts::uses manual location and never caches: missing coordinates",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: Week 09 integration: location + cache + manual fallback uses manual location and never caches: missing coordinates",
+      "executionKind": "controlled-double"
+    },
+    {
+      "id": "week09.integration.test.ts::uses manual location and never caches: null result",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: Week 09 integration: location + cache + manual fallback uses manual location and never caches: null result",
+      "executionKind": "controlled-double"
+    },
+    {
+      "id": "week09.integration.test.ts::keeps the same key and content, and does not duplicate effects",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: Week 09 integration: lost response after the server saved the closure keeps the same key and content, and does not duplicate effects",
+      "executionKind": "controlled-double"
+    },
+    {
+      "id": "week09.integration.test.ts::enqueueing the same operationId twice does not duplicate the operation",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: Week 09 integration: lost response after the server saved the closure enqueueing the same operationId twice does not duplicate the operation",
+      "executionKind": "controlled-double"
+    },
+    {
+      "id": "week09.integration.test.ts::combines manual location with a lost response",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: Week 09 integration: lost response after the server saved the closure combines manual location with a lost response",
+      "executionKind": "controlled-double"
+    },
+    {
+      "id": "week09.integration.test.ts::stops at attempt 4, with finite delays and a stable key",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 2 ms: Week 09 integration: bounded retries (test-level driver with planRetry) stops at attempt 4, with finite delays and a stable key",
+      "executionKind": "controlled-double"
+    },
+    {
+      "id": "week09.integration.test.ts::honors Retry-After and refuses a POST without a key",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: Week 09 integration: bounded retries (test-level driver with planRetry) honors Retry-After and refuses a POST without a key",
+      "executionKind": "controlled-double"
+    },
+    {
+      "id": "week-09.test.ts::CampusOps accepts valid geocoding and otherwise keeps manual incident location",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: CampusOps accepts valid geocoding and otherwise keeps manual incident location",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "week-09.test.ts::CampusOps can retry a lost resolution response only with a stable operation key",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: CampusOps can retry a lost resolution response only with a stable operation key",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "week-09.test.ts::retries bounded idempotent failures and honors Retry-After",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: retries bounded idempotent failures and honors Retry-After",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "week-09.test.ts::does not retry a POST without stable idempotency identity",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: does not retry a POST without stable idempotency identity",
+      "executionKind": "unit-or-public-contract"
+    },
+    {
+      "id": "week09.metrics.test.ts::lost response after commit: one retry, same key and body, one server effect",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: Week 09 retry metrics (controlled double, virtual clock) lost response after commit: one retry, same key and body, one server effect",
+      "executionKind": "controlled-double"
+    },
+    {
+      "id": "week09.metrics.test.ts::429 with Retry-After: the wait equals the server value",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: Week 09 retry metrics (controlled double, virtual clock) 429 with Retry-After: the wait equals the server value",
+      "executionKind": "controlled-double"
+    },
+    {
+      "id": "week09.metrics.test.ts::persistent timeout: stops at attempt 4 with finite delays",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 1 ms: Week 09 retry metrics (controlled double, virtual clock) persistent timeout: stops at attempt 4 with finite delays",
+      "executionKind": "controlled-double"
+    },
+    {
+      "id": "week09.metrics.test.ts::POST without key and 503: not retried",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --json --outputFile=.jest-cache/week09-jest.json src/campusops/integration src/campusops/infrastructure/locationService.test.ts src/campusops/infrastructure/geocodingProvider.test.ts src/course-evaluation/locationSelection.test.ts course-tests/public/week-09.test.ts",
+      "evidence": "Jest passed en 0 ms: Week 09 retry metrics (controlled double, virtual clock) POST without key and 503: not retried",
+      "executionKind": "controlled-double"
+    }
+  ]
+}
