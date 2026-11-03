@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "week": 9,
   "mode": "public",
-  "commitSha": "ec007ed9216805c419c00ef4fa48e681e69a383f",
-  "evaluatedAt": "2026-11-02T23:13:31.072762+00:00",
+  "commitSha": "1138f3771484c0daa784db4c2bd4d95258218643",
+  "evaluatedAt": "2026-11-03T01:48:51.346021+00:00",
   "status": "pass",
   "checks": [
     {
@@ -49,7 +49,7 @@
     {
       "id": "schema:evidence/week-09/engineering.json",
       "status": "pass",
-      "detail": "decision evidence is substantive and reproducible; report evaluates HEAD"
+      "detail": "decision evidence is substantive and reproducible; evidence-only commit; invalid changes=[]"
     },
     {
       "id": "schema:evidence/week-09/individual.json",
@@ -74,7 +74,7 @@
     {
       "id": "toolchain_4",
       "status": "pass",
-      "detail": "npm test -- --ci --runInBand course-tests/public/week-09.test.ts\n> dmi-react-native-starter@1.0.0 test\n> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/public/week-09.test.ts\n\n\nPASS course-tests/public/week-09.test.ts (23.354 s)\n  ✓ CampusOps accepts valid geocoding and otherwise keeps manual incident location (32 ms)\n  ✓ CampusOps can retry a lost resolution response only with a stable operation key (2 ms)\n  ✓ retries bounded idempotent failures and honors Retry-After (1 ms)\n  ✓ does not retry a POST without stable idempotency identity (1 ms)\n\nTest Suites: 1 passed, 1 total\nTests:       4 passed, 4 total\nSnapshots:   0 total\nTime:        32.093 s\nRan all test suites matching /course-tests\\/public\\/week-09.test.ts/i."
+      "detail": "npm test -- --ci --runInBand course-tests/public/week-09.test.ts\n> dmi-react-native-starter@1.0.0 test\n> jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/public/week-09.test.ts\n\n\nPASS course-tests/public/week-09.test.ts (160.116 s)\n  ✓ CampusOps accepts valid geocoding and otherwise keeps manual incident location (7 ms)\n  ✓ CampusOps can retry a lost resolution response only with a stable operation key\n  ✓ retries bounded idempotent failures and honors Retry-After\n  ✓ does not retry a POST without stable idempotency identity (1 ms)\n\nTest Suites: 1 passed, 1 total\nTests:       4 passed, 4 total\nSnapshots:   0 total\nTime:        169.013 s\nRan all test suites matching /course-tests\\/public\\/week-09.test.ts/i."
     }
   ]
 }
