@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 9,
-  "commitSha": "ec007ed9216805c419c00ef4fa48e681e69a383f",
+  "commitSha": "e14985b05d7b7dedf4e92fb30d1fb173ea92e9ed",
   "decision": "Integrar la resiliencia de ubicación y reintentos mediante pruebas de integración, inyección de fallos y métricas reproducibles. week09.integration.test.ts verifica caché, ubicación manual, conservación de la misma clave y contenido ante respuestas perdidas, deduplicación por operationId y límites de reintentos. week09.faults.test.ts comprueba timeout, errores de red, HTTP 429 con Retry-After, HTTP 503, caché expirada y propagación de errores inesperados. week09.metrics.test.ts mide cuatro escenarios de reintentos usando reloj virtual. tools/week09-report.mjs genera los reportes a partir de las ejecuciones reales de Jest. La política planRetry fue corregida por el integrante responsable de reintentos e idempotencia.",
   "alternatives": [
     "Ejecutar las pruebas de integración sin esperar la corrección de la política planRetry: descartada porque los reportes no representarían el estado final integrado.",
@@ -16,7 +16,7 @@
     {
       "command": "node tools/week09-report.mjs",
       "result": "PASS: 7 suites, 56 pruebas aprobadas y 0 fallidas.",
-      "evidence": "Se generaron reports/week-09/fault-injection.json y reports/week-09/retry-metrics.json con commitSha ec007ed9216805c419c00ef4fa48e681e69a383f."
+      "evidence": "Se generaron reports/week-09/fault-injection.json y reports/week-09/retry-metrics.json con commitSha e14985b05d7b7dedf4e92fb30d1fb173ea92e9ed."
     },
     {
       "command": "npx jest src/course-evaluation/index.test.ts --runInBand",
